@@ -11,6 +11,12 @@ def main():
     st.title("🏎️ F1 Strategy Analytics Simulator")
     st.markdown("---")
 
+    # Initialisation de la mémoire de session
+    if "sim_calculee" not in st.session_state:
+        st.session_state.sim_calculee = False
+    if "results" not in st.session_state:
+        st.session_state.results = None
+
     # 1. Chargement des composants de base
     config = ConfigLoader()
     defaults = config.get_simulation_defaults()
@@ -137,62 +143,98 @@ def main():
     with col2:
         st.subheader("📊 Résultats du moteur de calcul")
 
+        # 1. Gestion du clic sur le bouton de calcul
         if launch_sim:
-            # Initialisation du moteur de simulation
             sim_engine = RaceSimulation(total_laps, track_base_time, tyre_params, track_params)
 
-            # Validation du règlement
             if not sim_engine.is_strategy_valid(starting_tyre, pit_stops):
                 st.error(
-                    "🚨 **Stratégie non conforme au règlement de la FIA !** Vous devez obligatoirement utiliser au moins deux types de pneus différents pendant la course (ex: SOFT puis HARD).")
+                    "🚨 **Stratégie non conforme au règlement de la FIA !** Vous devez obligatoirement utiliser au moins deux types de pneus différents.")
+                st.session_state.sim_calculee = False
             else:
-                # Si la stratégie est valide, on exécute les calculs
-                results = sim_engine.run_strategy(starting_tyre, pit_stops)
+                st.session_state.results = sim_engine.run_strategy(starting_tyre, pit_stops)
+                st.session_state.sim_calculee = True
+                st.success("Simulation complétée avec succès !")
 
-                # Affichage des métriques globales
-                total_minutes = int(results["total_race_time"] // 60)
-                total_seconds = results["total_race_time"] % 60
+        # 2. Affichage des résultats basé sur la mémoire de session
+        if st.session_state.sim_calculee and st.session_state.results is not None:
+            results = st.session_state.results  # Récupération des données sauvegardées
 
-                st.success("Simulation complétée avec succès (Stratégie conforme) !")
+            # Affichage des métriques globales
+            total_minutes = int(results["total_race_time"] // 60)
+            total_seconds = results["total_race_time"] % 60
 
-                st.metric(
-                    label="Temps total de course simulé",
-                    value=f"{total_minutes} min {total_seconds:.2f} s"
-                )
+            st.metric(
+                label="Temps total de course simulé",
+                value=f"{total_minutes} min {total_seconds:.2f} s"
+            )
 
-                # --- AFFICHAGE DYNAMIQUE DES ARRÊTS ---
-                st.markdown("### ⏱️ Détails des arrêts aux stands")
-                for lap, pit_time in results["pitstop_events"].items():
-                    pneu_choisi = pit_stops[lap]
-                    st.info(f"🏁 **Tour {lap} :** Passage par les stands pour chausser les pneus `{pneu_choisi}`. "
-                            f"Temps total perdu : **{pit_time:.3f} secondes**.")
+            # --- AFFICHAGE DYNAMIQUE DES ARRÊTS ---
+            st.markdown("### ⏱️ Détails des arrêts aux stands")
+            for lap, pit_time in results["pitstop_events"].items():
+                pneu_choisi = pit_stops[lap]
+                st.info(f"🏁 **Tour {lap} :** Passage par les stands pour chausser les pneus `{pneu_choisi}`. "
+                        f"Temps total perdu : **{pit_time:.3f} secondes**.")
 
-                # Aperçu des chronos
-                st.markdown("**Aperçu des chronos calculés (Tours 1 à 5) :**")
-                laps_preview = {f"Tour {i + 1}": f"{time:.3f} s" for i, time in enumerate(results["lap_times"][:5])}
-                st.json(laps_preview)
+            # Aperçu des chronos
+            st.markdown("**Aperçu des chronos calculés (Tours 1 à 5) :**")
+            laps_preview = {f"Tour {i + 1}": f"{time:.3f} s" for i, time in enumerate(results["lap_times"][:5])}
+            st.json(laps_preview)
 
-                # Graphique d'analyse des relais
-                st.markdown("### 📈 Graphique d'analyse des relais")
-                fig = TelemetryVisualizer.plot_race_strategy(results["lap_times"], results["pitstop_events"])
-                st.pyplot(fig)
+            # Graphique d'analyse des relais
+            st.markdown("### 📈 Graphique d'analyse des relais")
+            fig = TelemetryVisualizer.plot_race_strategy(results["lap_times"], results["pitstop_events"])
+            st.pyplot(fig)
 
-                # Carte du circuit
-                st.markdown("### 🗺️ Carte du circuit et analyse télémétrique")
-                try:
-                    with st.spinner("Génération du tracé de la piste en cours..."):
-                        # Utilisation stricte des variables dynamiques choisies par l'utilisateur
-                        session_circuit = data_loader.load_session_data(selected_year, selected_gp,
-                                                                        defaults.get('event'))
-                        premier_pilote = session_circuit.laps['Driver'].unique()[0]
-                        telemetry_reelle = data_loader.get_driver_telemetry(session_circuit, premier_pilote)
+            # Carte du circuit fixe et Animation Live
+            st.markdown("### 🗺️ Carte du circuit et analyse télémétrique")
+            try:
+                with st.spinner("Génération du tracé de la piste en cours..."):
+                    # Récupération des données géométriques réelles via le sélecteur dynamique
+                    session_circuit = data_loader.load_session_data(selected_year, selected_gp, defaults.get('event'))
+                    premier_pilote = session_circuit.laps['Driver'].unique()[0]
+                    telemetry_reelle = data_loader.get_driver_telemetry(session_circuit, premier_pilote)
 
-                        # Génération et affichage
-                        fig_circuit = TelemetryVisualizer.plot_circuit_layout(telemetry_reelle)
-                        st.pyplot(fig_circuit)
-                except Exception as e:
-                    st.warning(f"Impossible de générer la carte du circuit : {e}")
+                    # Rendu de la carte fixe
+                    fig_circuit = TelemetryVisualizer.plot_circuit_layout(telemetry_reelle)
+                    st.pyplot(fig_circuit)
+
+                    # Séparateur pour la section Live Animation
+                    st.markdown("---")
+                    st.markdown("### 🎬 Simulation en direct (Live Tracking)")
+
+                    if st.button("🏁 Démarrer le replay de la course", type="secondary"):
+                        import time
+                        import matplotlib.pyplot as plt
+
+                        live_chart_slot = st.empty()
+                        st.toast("Démarrage de la télémétrie live...", icon="🏎️")
+
+                        total_points = len(telemetry_reelle)
+
+                        # --- AJUSTEMENT DYNAMIQUE DU RYTHME ---
+                        # On cible environ 150 frames au total pour une belle animation fluide
+                        nombre_frames_cible = 150
+
+                        # Calcul du pas idéal (minimum 1 pour ne pas diviser par zéro)
+                        step = max(1, total_points // nombre_frames_cible)
+
+                        # Temps de pause par frame (ajustable : 0.04s pour ~25 images par seconde)
+                        delai_frame = 0.04
+
+                        # Boucle d'animation avec les paramètres adaptés
+                        for i in range(0, total_points, step):
+                            fig_live = TelemetryVisualizer.plot_live_frame(telemetry_reelle, i)
+                            live_chart_slot.pyplot(fig_live)
+                            plt.close(fig_live)
+                            time.sleep(delai_frame)
+
+                        st.success("Le pilote a franchi la ligne d'arrivée !")
+
+            except Exception as e:
+                st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
         else:
+            # Message affiché par défaut si aucun calcul n'a encore été lancé
             st.info("Cliquez sur le bouton pour générer les calculs de dégradation et d'arrêts.")
 
 
