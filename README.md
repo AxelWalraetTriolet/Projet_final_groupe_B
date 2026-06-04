@@ -36,6 +36,5 @@ pip install -r requirements.txt
 ```bash
 streamlit run app.py
 ```
-```bash
 # Installer les dépendances requises
 pip install -r requirements.txt
