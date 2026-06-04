@@ -21,9 +21,38 @@ def main():
     # 2. Barre latérale : Paramètres de la simulation
     st.sidebar.header("🕹️ Configuration de la course")
 
-    total_laps = 78
-    track_base_time = 75.0
+    st.sidebar.subheader("🌍 Sélection du Grand Prix")
 
+    # Choix de l'année
+    selected_year = st.sidebar.number_input(
+        "Année du Grand Prix :",
+        min_value=2020,
+        max_value=2026,
+        value=int(defaults.get('year', 2025))
+    )
+
+    # Liste des circuits standard pour éviter un chargement infini au démarrage
+    # L'utilisateur peut taper le nom de n'importe quel autre GP (ex: "Spa", "Monza", "Bahrain")
+    selected_gp = st.sidebar.selectbox(
+        "Choisir le circuit :",
+        ["Monaco", "Monza", "Spa", "Silverstone", "Bahrain", "Australia", "Suzuka", "Austin"]
+    )
+
+    # --- INTERROGATION AUTOMATIQUE DE FASTF1 ---
+    with st.sidebar.spinner("Analyse du circuit via FastF1..."):
+        total_laps = data_loader.get_event_laps_count(selected_year, selected_gp)
+        # On extrait dynamiquement le vrai chrono de référence du circuit
+        track_base_time = data_loader.get_track_base_time(selected_year, selected_gp)
+
+    # Calcul des minutes/secondes pour l'affichage informatif
+    base_min = int(track_base_time // 60)
+    base_sec = track_base_time % 60
+
+    st.sidebar.markdown(f"**🏎️ Distance détectée :** {total_laps} tours")
+    st.sidebar.markdown(f"**⏱️ Chrono de référence :** {base_min}m {base_sec:.2f}s")
+    st.sidebar.markdown("---")
+
+    # --- REPRISE DES OPTIONS DE STRATÉGIE ---
     st.sidebar.subheader("Stratégie Pneumatique")
     starting_tyre = st.sidebar.selectbox(
         "Pneu de départ :",
@@ -31,7 +60,6 @@ def main():
         index=1
     )
 
-    # Choix du nombre d'arrêts
     nb_stops = st.sidebar.radio("Nombre d'arrêts prévus :", [1, 2], horizontal=True)
 
     # INITIALISATION DU DICTIONNAIRE VIDE (Obligatoire pour éviter les UnboundLocalError)
@@ -152,11 +180,14 @@ def main():
                 # Carte du circuit
                 st.markdown("### 🗺️ Carte du circuit et analyse télémétrique")
                 try:
-                    with st.spinner("Génération de la carte du circuit..."):
-                        session = data_loader.load_session_data(defaults.get('year'), defaults.get('gp'),
-                                                                defaults.get('event'))
-                        premier_pilote = session.laps['Driver'].unique()[0]
-                        telemetry_reelle = data_loader.get_driver_telemetry(session, premier_pilote)
+                    with st.spinner("Génération du tracé de la piste en cours..."):
+                        # Utilisation stricte des variables dynamiques choisies par l'utilisateur
+                        session_circuit = data_loader.load_session_data(selected_year, selected_gp,
+                                                                        defaults.get('event'))
+                        premier_pilote = session_circuit.laps['Driver'].unique()[0]
+                        telemetry_reelle = data_loader.get_driver_telemetry(session_circuit, premier_pilote)
+
+                        # Génération et affichage
                         fig_circuit = TelemetryVisualizer.plot_circuit_layout(telemetry_reelle)
                         st.pyplot(fig_circuit)
                 except Exception as e:
