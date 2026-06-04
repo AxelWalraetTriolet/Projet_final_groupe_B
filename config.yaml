@@ -1,0 +1,14 @@
+# Configuration initiale du simulateur F1
+
+simulation_defaults:
+  year: 2025
+  gp: 'Monaco'
+  event: 'Q'
+
+track_parameters:
+  pitstop_loss_seconds: 22.0  # Temps moyen perdu en passant par la voie des stands
+
+tyre_degradation:
+  soft_base_penalty: 0.3      # Pénalité de temps ajoutée par tour (en secondes)
+  medium_base_penalty: 0.15
+  hard_base_penalty: 0.05

@@ -1,8 +1,14 @@
 import fastf1
+import os
+
 
 class F1DataLoader:
     def __init__(self, cache_dir="fastf1_cache"):
-        # Activer le cache pour éviter de retélécharger à chaque lancement
+        # Créer le dossier de cache s'il n'existe pas déjà
+        if not os.path.exists(cache_dir):
+            os.makedirs(cache_dir)
+
+        # Activer le cache
         fastf1.Cache.enable_cache(cache_dir)
 
     def load_session_data(self, year, gp, event_type):
