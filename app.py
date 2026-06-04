@@ -21,32 +21,71 @@ def main():
     # 2. Barre latérale : Paramètres de la simulation
     st.sidebar.header("🕹️ Configuration de la course")
 
-    # Paramètres fixes pour le test (Monaco - 78 tours)
     total_laps = 78
-    track_base_time = 75.0  # Temps de base fictif en secondes (1m15s)
+    track_base_time = 75.0
 
     st.sidebar.subheader("Stratégie Pneumatique")
     starting_tyre = st.sidebar.selectbox(
         "Pneu de départ :",
         ["SOFT", "MEDIUM", "HARD"],
-        index=1  # MEDIUM par défaut
+        index=1
     )
 
-    pit_lap = st.sidebar.slider(
-        "Tour de l'arrêt au stand :",
-        min_value=1,
-        max_value=total_laps - 1,
-        value=25
-    )
+    # Choix du nombre d'arrêts
+    nb_stops = st.sidebar.radio("Nombre d'arrêts prévus :", [1, 2], horizontal=True)
 
-    next_tyre = st.sidebar.selectbox(
-        "Pneu pour le deuxième relais :",
-        ["SOFT", "MEDIUM", "HARD"],
-        index=2  # HARD par défaut
-    )
+    # INITIALISATION DU DICTIONNAIRE VIDE (Obligatoire pour éviter les UnboundLocalError)
+    pit_stops = {}
 
-    # Construction du dictionnaire d'arrêts pour le moteur de simulation
-    pit_stops = {pit_lap: next_tyre}
+    if nb_stops == 1:
+        pit_lap = st.sidebar.slider(
+            "Tour de l'arrêt au stand :",
+            min_value=1,
+            max_value=total_laps - 1,
+            value=25
+        )
+        next_tyre = st.sidebar.selectbox(
+            "Pneu pour le deuxième relais :",
+            ["SOFT", "MEDIUM", "HARD"],
+            index=2
+        )
+        # On remplit le dictionnaire pour 1 arrêt
+        pit_stops[pit_lap] = next_tyre
+
+    elif nb_stops == 2:
+        st.sidebar.markdown("---")
+        st.sidebar.write("**Premier arrêt**")
+        pit_lap_1 = st.sidebar.slider(
+            "Tour du 1er arrêt :",
+            min_value=1,
+            max_value=total_laps - 2,
+            value=20
+        )
+        next_tyre_1 = st.sidebar.selectbox(
+            "Pneu pour le relais 2 :",
+            ["SOFT", "MEDIUM", "HARD"],
+            index=1,
+            key="tyre_1"
+        )
+        # On ajoute le premier arrêt
+        pit_stops[pit_lap_1] = next_tyre_1
+
+        st.sidebar.markdown("---")
+        st.sidebar.write("**Deuxième arrêt**")
+        pit_lap_2 = st.sidebar.slider(
+            "Tour du 2e arrêt :",
+            min_value=pit_lap_1 + 1,
+            max_value=total_laps - 1,
+            value=50
+        )
+        next_tyre_2 = st.sidebar.selectbox(
+            "Pneu pour le relais 3 :",
+            ["SOFT", "MEDIUM", "HARD"],
+            index=2,
+            key="tyre_2"
+        )
+        # On ajoute le deuxième arrêt
+        pit_stops[pit_lap_2] = next_tyre_2
 
     # 3. Zone principale : Exécution du simulateur
     col1, col2 = st.columns([1, 2])
@@ -55,9 +94,15 @@ def main():
         st.subheader("📋 Résumé de votre plan")
         st.write(f"**Distance totale :** {total_laps} tours")
         st.write(f"**Relais 1 :** Départ en pneu `{starting_tyre}`")
-        st.write(f"**Arrêt prévu :** Tour {pit_lap} (Perte estimée : ~{track_params.get('pitstop_loss_seconds')}s)")
-        st.write(f"**Relais 2 :** Chaussage du pneu `{next_tyre}` jusqu'à la fin")
 
+        if nb_stops == 1:
+            st.write(f"**Arrêt prévu :** Tour {pit_lap} (Perte estimée : ~{track_params.get('pitstop_loss_seconds')}s)")
+            st.write(f"**Relais 2 :** Fin de course en `{next_tyre}`")
+        else:
+            st.write(f"**Arrêt 1 prévu :** Tour {pit_lap_1} (Pneu : `{next_tyre_1}` intermediate)")
+            st.write(f"**Arrêt 2 prévu :** Tour {pit_lap_2} (Pneu : `{next_tyre_2}` final)")
+
+        st.markdown("---")
         # Bouton pour déclencher les calculs
         launch_sim = st.button("🚀 Lancer la simulation de stratégie", type="primary")
 
@@ -68,7 +113,7 @@ def main():
             # Initialisation du moteur de simulation
             sim_engine = RaceSimulation(total_laps, track_base_time, tyre_params, track_params)
 
-            # --- AJOUT DE LA VALIDATION DU RÈGLEMENT ---
+            # Validation du règlement
             if not sim_engine.is_strategy_valid(starting_tyre, pit_stops):
                 st.error(
                     "🚨 **Stratégie non conforme au règlement de la FIA !** Vous devez obligatoirement utiliser au moins deux types de pneus différents pendant la course (ex: SOFT puis HARD).")
@@ -87,43 +132,32 @@ def main():
                     value=f"{total_minutes} min {total_seconds:.2f} s"
                 )
 
-                # Détail de l'arrêt
-                actual_pit_time = results["pitstop_events"][pit_lap]
-                st.info(
-                    f"⏱️ **Détail de l'arrêt au tour {pit_lap} :** Le passage par les stands a pris **{actual_pit_time:.3f} secondes**.")
+                # --- AFFICHAGE DYNAMIQUE DES ARRÊTS ---
+                st.markdown("### ⏱️ Détails des arrêts aux stands")
+                for lap, pit_time in results["pitstop_events"].items():
+                    pneu_choisi = pit_stops[lap]
+                    st.info(f"🏁 **Tour {lap} :** Passage par les stands pour chausser les pneus `{pneu_choisi}`. "
+                            f"Temps total perdu : **{pit_time:.3f} secondes**.")
 
                 # Aperçu des chronos
                 st.markdown("**Aperçu des chronos calculés (Tours 1 à 5) :**")
                 laps_preview = {f"Tour {i + 1}": f"{time:.3f} s" for i, time in enumerate(results["lap_times"][:5])}
                 st.json(laps_preview)
 
-                # --- AJOUT DU GRAPHIQUE VISUEL ---
+                # Graphique d'analyse des relais
                 st.markdown("### 📈 Graphique d'analyse des relais")
-
-                # Génération de la figure via notre classe visualizer
                 fig = TelemetryVisualizer.plot_race_strategy(results["lap_times"], results["pitstop_events"])
-
-                # Affichage de la figure Matplotlib dans Streamlit
                 st.pyplot(fig)
 
-                # --- AJOUT DU DEUXIÈME GRAPHIQUE : LE CIRCUIT ---
+                # Carte du circuit
                 st.markdown("### 🗺️ Carte du circuit et analyse télémétrique")
-
                 try:
-                    # Chargement des données réelles pour dessiner la piste
-                    # On initialise l'API FastF1 via notre DataLoader
                     with st.spinner("Génération de la carte du circuit..."):
                         session = data_loader.load_session_data(defaults.get('year'), defaults.get('gp'),
                                                                 defaults.get('event'))
-
-                        # On prend le premier pilote de la session pour obtenir les coordonnées géométriques du circuit
                         premier_pilote = session.laps['Driver'].unique()[0]
                         telemetry_reelle = data_loader.get_driver_telemetry(session, premier_pilote)
-
-                        # Génération de la figure du circuit
                         fig_circuit = TelemetryVisualizer.plot_circuit_layout(telemetry_reelle)
-
-                        # Affichage dans Streamlit
                         st.pyplot(fig_circuit)
                 except Exception as e:
                     st.warning(f"Impossible de générer la carte du circuit : {e}")
