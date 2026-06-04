@@ -80,3 +80,29 @@ class TelemetryVisualizer:
         plt.tight_layout()
 
         return fig
+
+    @staticmethod
+    def plot_live_frame(telemetry, current_index):
+        """
+        Génère une frame unique pour l'animation live.
+        Affiche le circuit gris et un point brillant pour la voiture.
+        """
+        x = telemetry['X'].values
+        y = telemetry['Y'].values
+
+        fig, ax = plt.subplots(figsize=(6, 6))
+
+        # 1. Dessiner le circuit complet en arrière-plan (gris)
+        ax.plot(x, y, color='#D3D3D3', linewidth=3, zorder=1)
+
+        # 2. Dessiner la position actuelle de la voiture (point rouge brillant)
+        if current_index < len(x):
+            ax.scatter(x[current_index], y[current_index], color='#FF4500', s=150, edgecolors='black', zorder=2,
+                       label="Votre Pilote")
+
+        # Ajustements esthétiques
+        ax.axis('equal')
+        ax.set_axis_off()
+        plt.tight_layout()
+
+        return fig
