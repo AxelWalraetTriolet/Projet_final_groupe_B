@@ -2,6 +2,7 @@ import streamlit as st
 from src.config_loader import ConfigLoader
 from src.data_loader import F1DataLoader
 from src.simulation import RaceSimulation
+from src.visualizer import TelemetryVisualizer
 
 
 def main():
@@ -94,6 +95,15 @@ def main():
                 st.markdown("**Aperçu des chronos calculés (Tours 1 à 5) :**")
                 laps_preview = {f"Tour {i + 1}": f"{time:.3f} s" for i, time in enumerate(results["lap_times"][:5])}
                 st.json(laps_preview)
+
+                # --- AJOUT DU GRAPHIQUE VISUEL ---
+                st.markdown("### 📈 Graphique d'analyse des relais")
+
+                # Génération de la figure via notre classe visualizer
+                fig = TelemetryVisualizer.plot_race_strategy(results["lap_times"], results["pitstop_events"])
+
+                # Affichage de la figure Matplotlib dans Streamlit
+                st.pyplot(fig)
         else:
             st.info("Cliquez sur le bouton pour générer les calculs de dégradation et d'arrêts.")
 
