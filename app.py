@@ -16,6 +16,7 @@ def main():
     defaults = config.get_simulation_defaults()
     tyre_params = config.get_tyre_parameters()
     track_params = config.get_track_parameters()
+    data_loader = F1DataLoader()
 
     # 2. Barre latérale : Paramètres de la simulation
     st.sidebar.header("🕹️ Configuration de la course")
@@ -104,6 +105,28 @@ def main():
 
                 # Affichage de la figure Matplotlib dans Streamlit
                 st.pyplot(fig)
+
+                # --- AJOUT DU DEUXIÈME GRAPHIQUE : LE CIRCUIT ---
+                st.markdown("### 🗺️ Carte du circuit et analyse télémétrique")
+
+                try:
+                    # Chargement des données réelles pour dessiner la piste
+                    # On initialise l'API FastF1 via notre DataLoader
+                    with st.spinner("Génération de la carte du circuit..."):
+                        session = data_loader.load_session_data(defaults.get('year'), defaults.get('gp'),
+                                                                defaults.get('event'))
+
+                        # On prend le premier pilote de la session pour obtenir les coordonnées géométriques du circuit
+                        premier_pilote = session.laps['Driver'].unique()[0]
+                        telemetry_reelle = data_loader.get_driver_telemetry(session, premier_pilote)
+
+                        # Génération de la figure du circuit
+                        fig_circuit = TelemetryVisualizer.plot_circuit_layout(telemetry_reelle)
+
+                        # Affichage dans Streamlit
+                        st.pyplot(fig_circuit)
+                except Exception as e:
+                    st.warning(f"Impossible de générer la carte du circuit : {e}")
         else:
             st.info("Cliquez sur le bouton pour générer les calculs de dégradation et d'arrêts.")
 
