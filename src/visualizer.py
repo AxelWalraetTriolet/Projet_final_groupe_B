@@ -39,3 +39,44 @@ class TelemetryVisualizer:
         plt.tight_layout()
 
         return fig
+
+    @staticmethod
+    def plot_circuit_layout(telemetry):
+        """
+        Génère un graphique représentant le tracé en 2D du circuit
+        avec un code couleur basé sur la vitesse du pilote.
+        """
+        import numpy as np
+        from matplotlib.collections import LineCollection
+
+        # Extraire les coordonnées X, Y et la vitesse
+        x = telemetry['X'].values
+        y = telemetry['Y'].values
+        vitesse = telemetry['Speed'].values
+
+        # Préparation des segments de ligne pour appliquer un dégradé de couleur
+        points = np.array([x, y]).T.reshape(-1, 1, 2)
+        segments = np.concatenate([points[:-1], points[1:]], axis=1)
+
+        fig, ax = plt.subplots(figsize=(8, 8))
+
+        # Création du LineCollection avec la palette 'RdYlGn' (Rouge = Lent, Vert = Rapide)
+        norm = plt.Normalize(vitesse.min(), vitesse.max())
+        lc = LineCollection(segments, cmap='RdYlGn', norm=norm, linewidth=4)
+        lc.set_array(vitesse)
+
+        # Ajout de la ligne au graphique
+        line = ax.add_collection(lc)
+
+        # Ajout d'une barre de couleur pour la vitesse
+        cbar = fig.colorbar(line, ax=ax, orientation='horizontal', pad=0.05)
+        cbar.set_label('Vitesse instantanée (km/h)', fontsize=10)
+
+        # Ajuster les axes pour éviter les déformations géométriques du circuit
+        ax.axis('equal')
+        ax.set_axis_off()  # Masquer les axes X et Y inutiles pour un circuit
+
+        ax.set_title("🗺️ Tracé géométrique du circuit et zones de vitesse", fontsize=12, pad=10)
+        plt.tight_layout()
+
+        return fig
