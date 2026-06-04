@@ -27,13 +27,13 @@ L'application permet à un ingénieur de course virtuel de configurer une strat�
 ## Installation et Lancement
 
 ### 1. Cloner le projet et configurer l'environnement
-```bash
+```
 # Installer les dépendances requises
 pip install -r requirements.txt
 ```
 
 ### 2. Lancer l'application localement
-```bash
+```
 streamlit run app.py
 ```
 # Installer les dépendances requises
