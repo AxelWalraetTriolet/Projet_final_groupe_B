@@ -8,7 +8,7 @@ from src.visualizer import TelemetryVisualizer
 def main():
     st.set_page_config(page_title="F1 Strategy Simulator", layout="wide")
 
-    st.title("🏎️ F1 Strategy Analytics Simulator")
+    st.title("🏎️ F1 Strategy Simulator")
     st.markdown("---")
 
     # Initialisation de la mémoire de session
@@ -145,7 +145,8 @@ def main():
 
         # 1. Gestion du clic sur le bouton de calcul
         if launch_sim:
-            sim_engine = RaceSimulation(total_laps, track_base_time, tyre_params, track_params)
+            track_factor = config.get_track_factor(selected_gp)
+            sim_engine = RaceSimulation(total_laps, track_base_time, tyre_params, track_params, track_factor)
 
             if not sim_engine.is_strategy_valid(starting_tyre, pit_stops):
                 st.error(
