@@ -2,7 +2,7 @@ import random
 
 
 class RaceSimulation:
-    def __init__(self, total_laps, track_base_time, tyre_config, track_config):
+    def __init__(self, total_laps, track_base_time, tyre_config, track_config, track_factor=1.0):
         """
         Initialise le moteur de simulation de course.
         """
@@ -10,6 +10,7 @@ class RaceSimulation:
         self.track_base_time = track_base_time
         self.tyre_config = tyre_config
         self.track_config = track_config
+        self.track_factor = track_factor
 
         # Constante d'ingénierie : gain de temps par tour dû à la consommation d'essence (allègement)
         # En moyenne en F1, une voiture gagne environ 0.06 seconde par tour en s'allégeant.
@@ -56,7 +57,7 @@ class RaceSimulation:
             fuel_effect = self.fuel_gain_per_lap * lap
 
             # 2. Effet des pneus : la pénalité augmente de façon non linéaire avec l'âge de la gomme
-            tyre_effect = penalty_coeff * (tyre_age ** 1.5)
+            tyre_effect = penalty_coeff * (tyre_age ** 1.5) * self.track_factor
 
             # 3. Calcul du temps au tour net (sans incident)
             lap_time = self.track_base_time - fuel_effect + tyre_effect
