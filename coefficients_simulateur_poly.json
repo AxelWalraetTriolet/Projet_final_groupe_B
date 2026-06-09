@@ -1,0 +1,20 @@
+{
+    "SOFT": {
+        "Beta_0_Intercept": 105.609,
+        "Beta_1_TyreLife": -0.07448,
+        "Beta_2_TyreLife2": 0.004812,
+        "Beta_3_LapNumber": -0.07445
+    },
+    "MEDIUM": {
+        "Beta_0_Intercept": 106.309,
+        "Beta_1_TyreLife": -0.10794,
+        "Beta_2_TyreLife2": 0.004872,
+        "Beta_3_LapNumber": -0.10787
+    },
+    "HARD": {
+        "Beta_0_Intercept": 107.159,
+        "Beta_1_TyreLife": -0.01977,
+        "Beta_2_TyreLife2": 0.007466,
+        "Beta_3_LapNumber": -0.01974
+    }
+}
