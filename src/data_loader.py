@@ -62,24 +62,19 @@ class F1DataLoader:
             # Valeur de secours si les données ne sont pas disponibles (ex: Monaco par défaut)
             return 75.0
 
-    def load_poly_coefficients(self):
+    def load_multi_season_coefficients(self):
         """
-        Charge les coefficients polynomiaux de degré 2 depuis le fichier JSON
-        situé à la racine du projet (au même niveau que app.py).
+        Charge instantanément les coefficients pluri-annuels isotoniques
+        stockés à la racine du projet.
         """
-        # 1. Trouve le chemin absolu du dossier où se trouve data_loader.py (src/)
-        dossier_src = os.path.dirname(os.path.abspath(__file__))
-
-        # 2. Remonte d'un niveau proprement pour arriver à la racine (Projet_final_groupe_B/)
-        dossier_racine = os.path.dirname(dossier_src)
-
-        # 3. Construit le chemin final vers le fichier JSON
-        json_path = os.path.join(dossier_racine, "coefficients_simulateur_poly.json")
+        import json
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        json_path = os.path.join(base_dir, "coefficients_multi_saisons.json")
 
         if not os.path.exists(json_path):
             raise FileNotFoundError(
-                f"Le fichier des coefficients est introuvable à l'emplacement requis : {json_path}\n"
-                f"Assure-toi de placer 'coefficients_simulateur_poly.json' à la racine de ton projet."
+                "Le fichier 'coefficients_multi_saisons.json' est introuvable. "
+                "Exécute d'abord le script 'generer_coefficients_professionnels.py' pour le créer."
             )
 
         with open(json_path, "r") as f:

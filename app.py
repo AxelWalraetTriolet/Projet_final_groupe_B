@@ -6,6 +6,7 @@ from src.config_loader import ConfigLoader
 from src.data_loader import F1DataLoader
 from src.simulation import RaceSimulation
 from src.visualizer import TelemetryVisualizer
+from src.regression_engine import RegressionEngine
 
 
 def format_race_time(total_seconds):
@@ -118,11 +119,13 @@ def main():
         track_base_time = track_info.get("base_lap_time_seconds", 85.0)
 
         try:
-            # Chargement des coefficients polynomiaux d2 via le data_loader
-            with st.spinner("Chargement des coefficients Scikit-Learn..."):
-                poly_coefficients = data_loader.load_poly_coefficients()
+            # 1. Lecture instantanée de la base de données pluri-annuelle
+            db_coefficients = data_loader.load_multi_season_coefficients()
 
-            # Instanciation du moteur avec injection directe des paramètres
+            # Extraction des coefficients spécifiques à ce circuit (fallback sur Bahrain si introuvable)
+            poly_coefficients = db_coefficients.get(selected_event, db_coefficients.get('Bahrain'))
+
+            # 2. Instanciation du moteur de simulation
             sim = RaceSimulation(
                 total_laps=total_laps,
                 track_base_time=track_base_time,
@@ -130,14 +133,13 @@ def main():
                 poly_config=poly_coefficients
             )
 
-            # Validation de la règle des deux composés minimum (FIA)
+            # Validation du règlement FIA
             if not sim.is_strategy_valid(starting_tyre, pit_stops):
                 st.error(
-                    "🚨 Stratégie invalide selon le règlement de la FIA ! Vous devez utiliser au moins deux composés de pneus différents pendant la course.")
+                    "🚨 Stratégie invalide selon le règlement de la FIA ! Vous devez utiliser au moins deux composés de pneus différents.")
             else:
-                with st.spinner("Modélisation polynomiale de l'usure des gommes en cours..."):
+                with st.spinner("Modélisation physique et calcul de la course..."):
                     results = sim.run_strategy(starting_tyre, pit_stops)
-
                     st.session_state.results = results
                     st.session_state.sim_calculee = True
                     st.success("Simulation terminée avec succès !")
