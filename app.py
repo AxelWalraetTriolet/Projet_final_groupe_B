@@ -44,19 +44,41 @@ def main():
     track_params = {"pitstop_loss_seconds": 22.0, "base_lap_time_seconds": 85.0}
     data_loader = F1DataLoader()
 
+    # Initialisation du moteur de régression/lecture pluri-annuel par pilote
+    @st.cache_resource
+    def init_regression_engine():
+        return RegressionEngine()
+
+    try:
+        regression_engine = init_regression_engine()
+    except Exception as e:
+        st.error(f"❌ Erreur au chargement des coefficients pilotes : {e}")
+        st.stop()
+
 
     # 2. Barre latérale : Paramètres de la simulation
     st.sidebar.header("🕹️ Configuration de la course")
-    st.sidebar.subheader("🌍 Sélection du Grand Prix")
+    st.sidebar.subheader("🌍 Sélection du Grand Prix et du Pilote")
 
-    # Récupération du calendrier officiel via FastF1 pour l'année en cours
-    try:
-        schedule = fastf1.get_event_schedule(defaults.get("year"))
-        available_events = schedule[schedule['EventFormat'] != 'testing']['EventName'].tolist()
+    # Récupération des circuits disponibles directement depuis la structure du JSON
+    available_events = list(regression_engine.coefficients_db.keys())
+    if available_events:
         selected_event = st.sidebar.selectbox("Sélectionnez le circuit :", available_events)
-    except Exception as e:
-        st.sidebar.error(f"Erreur de chargement des circuits : {e}")
-        selected_event = defaults.get("gp")
+    else:
+        st.sidebar.error("Aucun circuit trouvé dans la base de données de coefficients.")
+        selected_event = "Bahrain"
+
+    # Sélection dynamique du pilote en fonction du circuit choisi
+    if selected_event in regression_engine.coefficients_db:
+        liste_pilotes = sorted(list(regression_engine.coefficients_db[selected_event].keys()))
+    else:
+        liste_pilotes = []
+
+    selected_driver = st.sidebar.selectbox(
+        "🏎️ Sélectionnez le pilote :",
+        options=liste_pilotes,
+        help="Les courbes d'usure et le rythme initial seront calqués sur l'historique de ce pilote."
+    )
 
     st.sidebar.markdown("---")
     st.sidebar.subheader("📋 Paramètres de la Stratégie")
@@ -71,7 +93,7 @@ def main():
 
     starting_tyre = st.sidebar.selectbox("Pneu de départ :", ["SOFT", "MEDIUM", "HARD"])
 
-    # Gestion dynamique et chronologique des arrêts multiples
+    # Gestion chronologique des arrêts multiples
     st.sidebar.markdown("---")
     st.sidebar.subheader("🛑 Gestion des Arrêts aux Stands")
 
@@ -123,30 +145,31 @@ def main():
             st.warning("⚠️ Impossible de récupérer le temps de référence réel. Utilisation de la valeur par défaut.")
 
         try:
-            # 1. Lecture instantanée de la base de données pluri-annuelle
-            db_coefficients = data_loader.load_multi_season_coefficients()
+            # 1. Extraction chirurgicale des coefficients propres au couple Pilote/Circuit
+            with st.spinner(f"Chargement de la signature d'usure de {selected_driver}..."):
+                poly_coefficients = regression_engine.get_coefficients_for_driver(selected_event, selected_driver)
 
-            # Extraction des coefficients spécifiques à ce circuit (fallback sur Bahrain si introuvable)
-            poly_coefficients = db_coefficients.get(selected_event, db_coefficients.get('Bahrain'))
-
-            # 2. Instanciation du moteur de simulation
-            sim = RaceSimulation(
-                total_laps=total_laps,
-                track_base_time=track_base_time,
-                track_config=track_info,
-                poly_config=poly_coefficients
-            )
-
-            # Validation du règlement FIA
-            if not sim.is_strategy_valid(starting_tyre, pit_stops):
-                st.error(
-                    "🚨 Stratégie invalide selon le règlement de la FIA ! Vous devez utiliser au moins deux composés de pneus différents.")
+            if not poly_coefficients:
+                st.error(f"Impossible de charger des données valides pour {selected_driver} à {selected_event}.")
             else:
-                with st.spinner("Modélisation physique et calcul de la course..."):
-                    results = sim.run_strategy(starting_tyre, pit_stops)
-                    st.session_state.results = results
-                    st.session_state.sim_calculee = True
-                    st.success("Simulation terminée avec succès !")
+                # 2. Instanciation du moteur de simulation avec le profil du pilote
+                sim = RaceSimulation(
+                    total_laps=total_laps,
+                    track_base_time=track_base_time,
+                    track_config=track_info,
+                    poly_config=poly_coefficients
+                )
+
+                # Validation du règlement FIA
+                if not sim.is_strategy_valid(starting_tyre, pit_stops):
+                    st.error(
+                        "🚨 Stratégie invalide selon le règlement de la FIA ! Vous devez utiliser au moins deux composés de pneus différents.")
+                else:
+                    with st.spinner(f"Modélisation physique de la course de {selected_driver}..."):
+                        results = sim.run_strategy(starting_tyre, pit_stops)
+                        st.session_state.results = results
+                        st.session_state.sim_calculee = True
+                        st.success(f"Simulation terminée avec succès pour {selected_driver} !")
 
         except FileNotFoundError as fnf_err:
             st.error(f"🚨 {fnf_err}")
@@ -159,10 +182,9 @@ def main():
 
         col1, col2 = st.columns(2)
         with col1:
-            # --- MODIFICATION ICI : Formatage du temps de course lisible ---
             readable_time = format_race_time(res['total_race_time'])
             st.metric(
-                label="Temps de course total simulé",
+                label=f"Temps de course total ({selected_driver})",
                 value=readable_time
             )
         with col2:
@@ -172,7 +194,7 @@ def main():
             )
 
         # Tracé de la courbe de performance
-        st.subheader("📊 Analyse des performances au tour")
+        st.subheader(f"📊 Analyse des performances au tour — {selected_driver}")
         fig_laps = TelemetryVisualizer.plot_race_strategy(res["lap_times"], res["pitstop_events"])
         st.pyplot(fig_laps)
         plt.close(fig_laps)
@@ -187,14 +209,20 @@ def main():
                 with st.spinner("Téléchargement des données géométriques de la trajectoire F1..."):
                     session_reelle = data_loader.load_session_data(defaults.get("year"), selected_event, 'R')
 
-                    lap_rapide = session_reelle.laps.pick_fastest()
+                    # On essaie d'abord d'animer le tour le plus rapide spécifique du pilote sélectionné
+                    laps_pilote = session_reelle.laps.pick_driver(selected_driver)
+                    if not laps_pilote.empty:
+                        lap_rapide = laps_pilote.pick_fastest()
+                    else:
+                        lap_rapide = session_reelle.laps.pick_fastest()
+
                     telemetry_reelle = lap_rapide.get_telemetry()
 
                     if telemetry_reelle.empty:
                         st.warning("Aucune donnée de télémétrie spatiale valide trouvée pour ce Grand Prix.")
                     else:
                         live_chart_slot = st.empty()
-                        st.toast("Démarrage de la télémétrie live...", icon="🏎️")
+                        st.toast(f"Démarrage de la télémétrie pour {selected_driver}...", icon="🏎️")
 
                         total_points = len(telemetry_reelle)
                         nombre_frames_cible = 150
@@ -207,12 +235,12 @@ def main():
                             plt.close(fig_live)
                             time.sleep(delai_frame)
 
-                        st.success("Le pilote a franchi la ligne d'arrivée !")
+                        st.success(f"{selected_driver} a franchi la ligne d'arrivée !")
 
             except Exception as e:
                 st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
     else:
-        st.info("Cliquez sur le bouton pour générer les calculs de dégradation et d'arrêts.")
+        st.info("Sélectionnez un pilote et configurez sa stratégie dans la barre latérale pour lancer les calculs.")
 
 
 if __name__ == "__main__":

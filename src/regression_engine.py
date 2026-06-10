@@ -13,47 +13,49 @@ class RegressionEngine:
     def __init__(self):
         """
         Initialise le moteur en chargeant la base de données de coefficients
-        pluri-annuels générée par le script d'analyse.
+        pluri-annuels par pilote générée par le script d'analyse.
         """
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.json_path = os.path.join(base_dir, "coefficients_multi_saisons.json")
+
+        dossier_src = os.path.dirname(os.path.abspath(__file__))
+        dossier_racine = os.path.dirname(dossier_src)
+
+        # Construction du chemin vers le JSON
+        self.json_path = os.path.normpath(os.path.join(dossier_racine, "../coefficients_pilotes_saisons.json"))
+
+
         self.coefficients_db = self._load_database()
 
     def _load_database(self):
-        """Charge le fichier JSON multi-saisons."""
+        """
+        Charge le fichier JSON multi-saisons des pilotes depuis la racine.
+        """
         if not os.path.exists(self.json_path):
             raise FileNotFoundError(
-                f"Le fichier '{self.json_path}' est introuvable. "
-                "Veuillez exécuter le script 'generer_coefficients_professionnels.py' au préalable."
+                f"Le fichier est introuvable.\n"
+                f"Chemin testé par Python : '{self.json_path}'\n"
+                f"Vérifie que le fichier est bien nommé exactement ainsi et placé dans ce dossier."
             )
-        with open(self.json_path, "r") as f:
+        with open(self.json_path, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def get_coefficients_for_circuit(self, circuit_name):
+    def get_coefficients_for_driver(self, circuit_name, driver_name):
         """
-        Récupère les coefficients bruts (SOFT, MEDIUM, HARD) extraits des données
-        pour un circuit spécifique.
+        Récupère les coefficients bruts (SOFT, MEDIUM, HARD) extraits de la frontière
+        inférieure des données de performance pour un pilote et un circuit spécifiques.
         """
-        coefficients = self.coefficients_db.get(circuit_name)
+        circuit_data = self.coefficients_db.get(circuit_name, {})
 
-        if coefficients is None:
-            # Sécurité (Ligne 39 corrigée) : On s'assure que le dictionnaire n'est pas vide avant le fallback
-            db_keys = list(self.coefficients_db.keys())
-            if not db_keys:
-                raise ValueError("La base de données des coefficients JSON est vide.")
+        if not circuit_data:
+            premier_circuit = list(self.coefficients_db.keys())[0]
+            circuit_data = self.coefficients_db.get(premier_circuit, {})
+            print(f"⚠️ Circuit '{circuit_name}' absent du JSON. Utilisation par défaut du circuit : {premier_circuit}")
 
-            premier_circuit = db_keys[0]
-            coefficients = self.coefficients_db.get(premier_circuit)
+        driver_data = circuit_data.get(driver_name)
 
-            # Note : Idéalement, traitez cette alerte dans app.py avec st.warning()
-            # plutôt qu'un print() invisible pour l'utilisateur de l'interface.
-            st.warning("⚠️ Circuit '{circuit_name}' introuvable dans le JSON. Utilisation par défaut de : {premier_circuit}")
+        if driver_data is None and circuit_data:
+            premier_pilote = list(circuit_data.keys())[0]
+            driver_data = circuit_data.get(premier_pilote)
+            print(
+                f"⚠️ Données pour {driver_name} absentes à {circuit_name}. Profil de {premier_pilote} appliqué par défaut.")
 
-        return coefficients
-
-
-
-
-
-
-
+        return driver_data
