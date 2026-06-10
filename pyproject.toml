@@ -1,0 +1,20 @@
+[build-system]
+requires=["setuptools>=61.0"]
+build-backend ="setuptools.build_meta"
+
+[project]
+name = "F1StrategieSimulateur"
+version = "0.1"
+description="Projet final pour le cours de MGA802"
+authors = [
+  {name = "Nais Vigroux"},
+  {name = "Paul Serra"},
+  {name = "Axel Walraet-Triolet"}
+]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE.md"]
+keywords = ["F1", "Formule 1", "Strategie", "Simulateur", "pneus", "stand"]
+
+[project.urls]
+Repository = "https://github.com/AxelWalraetTriolet/Projet_final_groupe_B.git"
