@@ -92,7 +92,7 @@ def main():
 
     starting_tyre = st.sidebar.selectbox("Pneu de départ :", ["SOFT", "MEDIUM", "HARD"])
 
-    # Gestion dynamique et chronologique des arrêts multiples
+    # Gestion chronologique des arrêts multiples
     st.sidebar.markdown("---")
     st.sidebar.subheader("🛑 Gestion des Arrêts aux Stands")
 

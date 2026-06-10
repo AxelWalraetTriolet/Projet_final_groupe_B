@@ -8,13 +8,11 @@ class RegressionEngine:
         Initialise le moteur en chargeant la base de données de coefficients
         pluri-annuels par pilote générée par le script d'analyse.
         """
-        # __file__ est le chemin de regression_engine.py (C:\...\src\regression_engine.py)
-        # os.path.dirname(__file__) nous donne le dossier 'src'
-        # os.path.dirname(os.path.dirname(__file__)) nous remonte à la racine 'Projet_final_groupe_B'
+
         dossier_src = os.path.dirname(os.path.abspath(__file__))
         dossier_racine = os.path.dirname(dossier_src)
 
-        # Construction propre et absolue du chemin vers le JSON
+        # Construction du chemin vers le JSON
         self.json_path = os.path.normpath(os.path.join(dossier_racine, "../coefficients_pilotes_saisons.json"))
 
 

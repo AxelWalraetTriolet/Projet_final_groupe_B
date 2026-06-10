@@ -25,14 +25,14 @@ TRACK_EVOLUTION_PER_LAP = -0.035
 # -------------------------------
 
 def recuperer_tous_les_circuits():
-    """Extrait dynamiquement tous les noms de circuits officiels de la saison via FastF1."""
+    """Extrait tous les noms de circuits officiels de la saison via FastF1."""
     try:
         schedule = fastf1.get_event_schedule(ANNEE_CALENDRIER_CIBLE)
         # On filtre les séances d'essais (testing) pour ne garder que les vrais Grands Prix
         circuits = schedule[schedule['EventFormat'] != 'testing']['EventName'].tolist()
         return circuits
     except Exception as e:
-        # Repli de sécurité minimal si l'API FastF1 est inaccessible au démarrage
+        # Repli de sécurité si l'API FastF1 est inaccessible au démarrage
         return ['Bahrain', 'Saudi Arabia', 'Australia', 'Japan', 'Monaco', 'Great Britain', 'Italy', 'Abu Dhabi']
 
 
@@ -112,7 +112,7 @@ def ajuster_spline_morceaux(df_target):
 def main():
     base_finale = {}
 
-    # Récupération dynamique de la liste complète des circuits de l'année
+    # Récupération de la liste complète des circuits de l'année
     liste_circuits_officiels = recuperer_tous_les_circuits()
 
     for circuit in liste_circuits_officiels:
@@ -133,7 +133,7 @@ def main():
 
                 base_finale[circuit][driver][compound] = ajuster_spline_morceaux(group)
 
-    # Exportation directe du fichier JSON épuré à la racine
+    # Exportation directe du fichier JSON à la racine
     with open('../coefficients_pilotes_saisons.json', 'w', encoding='utf-8') as f:
         json.dump(base_finale, f, indent=4)
 
