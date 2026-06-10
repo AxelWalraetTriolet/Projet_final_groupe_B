@@ -1,9 +1,82 @@
 import matplotlib.pyplot as plt
 
-
 class TelemetryVisualizer:
     @staticmethod
-    def plot_race_strategy(lap_times, pitstop_events):
+
+    def plot_race_strategy(lap_times, pitstop_events, historical_data=None, historical_pit_stops=None, selected_pilot,
+                           year=None):
+        """
+        Génère un graphique Matplotlib montrant l'évolution des temps au tour simulés,
+        marque visuellement l'emplacement de l'arrêt au stand, et superpose les données réelles.
+        """
+        # Création de la figure
+        fig, ax = plt.subplots(figsize=(10, 5))
+
+        # --- 1. TRACÉ DE LA SIMULATION (Votre base existante) ---
+        total_laps = len(lap_times)
+        tours = list(range(1, total_laps + 1))
+
+        ax.plot(tours, lap_times, label="Simulation du rythme", color="#1E90FF", linewidth=2)
+
+        # Ajout des repères visuels pour les arrêts aux stands de la simulation
+        for pit_lap, pit_time in pitstop_events.items():
+            # Ligne verticale pointillée au tour du pitstop
+            ax.axvline(x=pit_lap, color="#FF4500", linestyle="--", alpha=0.8,
+                       label=f"BOX Simulé (Tour {pit_lap})")
+
+            # Petite annotation textuelle sur le graphique
+            ax.text(pit_lap + 1, max(lap_times) - 0.5, 'BOX SIM', color="#FF4500", weight='bold', fontsize=9)
+
+        # --- 2. TRACÉ DES DONNÉES RÉELLES (Nouvel ajout) ---
+        if historical_data is not None:
+            ax.plot(
+                historical_data['LapNumber'],
+                historical_data['LapTimeSeconds'],
+                label=f"Réel - {selected_pilot} ({year})",
+                color="#555555",  # Gris anthracite contrastant avec la simulation
+                linestyle="-.",
+                linewidth=1.5,
+                alpha=0.7
+            )
+
+            # Ajout des repères pour les arrêts aux stands réels
+            if historical_pit_stops:
+                for i, pit in enumerate(historical_pit_stops):
+                    # On ne met le label qu'une seule fois pour ne pas polluer la légende
+                    label_pit = "BOX Réel" if i == 0 else ""
+                    ax.axvline(x=pit, color="#555555", linestyle=":", alpha=0.7, label=label_pit)
+
+                    # Annotation textuelle placée un peu plus bas pour ne pas chevaucher 'BOX SIM'
+                    ax.text(pit + 1, min(lap_times) + 1, 'BOX RÉEL', color="#555555", weight='bold', fontsize=8)
+
+            # Ajustement de l'axe Y : crucial pour ignorer les temps aberrants (Safety Car)
+            # On calcule la médiane réelle et on restreint la vue autour des temps normaux
+            median_time = historical_data['LapTimeSeconds'].median()
+            ax.set_ylim(min(lap_times) - 2, median_time + 10)
+
+        # --- 3. CONFIGURATION DES AXES ET TITRES (Votre base existante) ---
+        ax.set_title("📊 Analyse du Rythme de Course et Dégradation des Pneumatiques", fontsize=12, pad=15)
+        ax.set_xlabel("Numéro du Tour", fontsize=10)
+        ax.set_ylabel("Temps au Tour (secondes)", fontsize=10)
+
+        # Personnalisation de la grille pour une meilleure lisibilité
+        ax.grid(True, linestyle=":", alpha=0.6)
+
+        # Sécurisation de la légende (évite les doublons si on a plusieurs clés avec le même label)
+        handles, labels = ax.get_legend_handles_labels()
+        by_label = dict(zip(labels, handles))
+        ax.legend(by_label.values(), by_label.keys(), loc="upper right", fontsize=9)
+
+        # Ajustement des marges
+        plt.tight_layout()
+
+        return fig
+
+
+
+
+
+    #def plot_race_strategy(lap_times, pitstop_events):
         """
         Génère un graphique Matplotlib montrant l'évolution des temps au tour
         et marque visuellement l'emplacement de l'arrêt au stand.
