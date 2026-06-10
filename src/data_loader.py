@@ -69,11 +69,11 @@ class F1DataLoader:
         """
         import json
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        json_path = os.path.join(base_dir, "coefficients_multi_saisons.json")
+        json_path = os.path.join(base_dir, "../coefficients_pilotes_saisons.json")
 
         if not os.path.exists(json_path):
             raise FileNotFoundError(
-                "Le fichier 'coefficients_multi_saisons.json' est introuvable. "
+                "Le fichier 'coefficients_pilotes_saisons.json' est introuvable. "
                 "Exécute d'abord le script 'generer_coefficients_professionnels.py' pour le créer."
             )
 
