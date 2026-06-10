@@ -1,3 +1,10 @@
+"""
+GESTIONNAIRE DES DONNEES FastF1
+Ce module centralise la récupération, le cache et le formatage des données
+officielles de la Formule 1 (via l'API FastF1) ainsi que le chargement des
+coefficients de performance.
+"""
+
 import fastf1
 import os
 import json
@@ -10,10 +17,10 @@ class F1DataLoader:
             os.makedirs(cache_dir)
 
         # Activer le cache
-        fastf1.Cache.enable_cache(cache_dir)
+        fastf1.cache.enable_cache(cache_dir)
 
-    def load_session_data(self, year, gp, event_type):
-        """Loads a specific F1 session (e.g., year=2025, gp='Monaco', event_type='Q')"""
+    def load_session_data(self, year, gp, event_type='R'):
+        """Loads a specific F1 race (e.g., year=2025, gp='Monaco')."""
         session = fastf1.get_session(year, gp, event_type)
         session.load()
         return session
@@ -29,7 +36,6 @@ class F1DataLoader:
         Récupère le nombre total de tours pour un GP donné
         sans charger toute la télémétrie lourde.
         """
-        import fastf1
         try:
             # Charger uniquement l'objet session de la course ('R')
             session = fastf1.get_session(year, gp_name, event_type)
@@ -48,26 +54,22 @@ class F1DataLoader:
         Récupère le meilleur temps au tour global de la course
         pour servir de base réaliste au moteur de simulation.
         """
-        import fastf1
-        try:
-            session = fastf1.get_session(year, gp_name, event_type)
-            session.load(laps=True, telemetry=False, weather=False, messages=False)
 
-            # Récupérer le meilleur tour absolu de la course en secondes
-            best_lap = session.laps.pick_fastest()
-            base_time_seconds = best_lap['LapTime'].total_seconds()
+        session = fastf1.get_session(year, gp_name, event_type)
+        session.load(laps=True, telemetry=False, weather=False, messages=False)
 
-            return base_time_seconds
-        except Exception:
-            # Valeur de secours si les données ne sont pas disponibles (ex: Monaco par défaut)
-            return 75.0
+        # Récupérer le meilleur tour absolu de la course en secondes
+        best_lap = session.laps.pick_fastest()
+        base_time_seconds = best_lap['LapTime'].total_seconds()
+
+        return base_time_seconds
+
 
     def load_multi_season_coefficients(self):
         """
         Charge instantanément les coefficients pluri-annuels isotoniques
         stockés à la racine du projet.
         """
-        import json
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         json_path = os.path.join(base_dir, "coefficients_multi_saisons.json")
 

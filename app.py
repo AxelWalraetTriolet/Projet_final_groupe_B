@@ -1,13 +1,17 @@
+"""
+APPLICATION PRINCIPALE
+Ce module:- définit l'interface utilisateur Streamlit,
+          - récupère les choix de stratégie de l'utilisateur,
+          - calcule et affiche les résultats et graphiques de la simulation.
+"""
+
 import streamlit as st
 import matplotlib.pyplot as plt
 import time
 import fastf1
-from src.config_loader import ConfigLoader
 from src.data_loader import F1DataLoader
 from src.simulation import RaceSimulation
 from src.visualizer import TelemetryVisualizer
-from src.regression_engine import RegressionEngine
-
 
 def format_race_time(total_seconds):
     """
@@ -36,13 +40,10 @@ def main():
         st.session_state.results = None
 
     # 1. Chargement des composants de configuration et de données
-    config = ConfigLoader()
-    defaults = config.get_simulation_defaults()
-    track_params = config.get_track_parameters()
+    defaults = {"year": 2025, "gp": "Monaco", "event": "Q", "total_laps": 50}
+    track_params = {"pitstop_loss_seconds": 22.0, "base_lap_time_seconds": 85.0}
     data_loader = F1DataLoader()
 
-    # Année figée par défaut (2024)
-    CURRENT_YEAR = 2024
 
     # 2. Barre latérale : Paramètres de la simulation
     st.sidebar.header("🕹️ Configuration de la course")
@@ -50,19 +51,19 @@ def main():
 
     # Récupération du calendrier officiel via FastF1 pour l'année en cours
     try:
-        schedule = fastf1.get_event_schedule(CURRENT_YEAR)
+        schedule = fastf1.get_event_schedule(defaults.get("year"))
         available_events = schedule[schedule['EventFormat'] != 'testing']['EventName'].tolist()
         selected_event = st.sidebar.selectbox("Sélectionnez le circuit :", available_events)
     except Exception as e:
         st.sidebar.error(f"Erreur de chargement des circuits : {e}")
-        selected_event = "Monaco"
+        selected_event = defaults.get("gp")
 
     st.sidebar.markdown("---")
     st.sidebar.subheader("📋 Paramètres de la Stratégie")
 
     # Détection automatique stricte et sans curseur du nombre de tours
     try:
-        total_laps = data_loader.get_event_laps_count(CURRENT_YEAR, selected_event)
+        total_laps = data_loader.get_event_laps_count(defaults.get("year"), selected_event)
         st.sidebar.success(f"📏 Distance officielle : **{total_laps} tours**")
     except Exception:
         total_laps = int(defaults.get("total_laps", 50))
@@ -114,9 +115,12 @@ def main():
     st.header("⚡ Simulation et Résultats")
 
     if st.sidebar.button("🏎️ Lancer la simulation de stratégie", type="primary"):
-        track_key = selected_event.lower().replace(" ", "_")
-        track_info = track_params.get(track_key, {})
-        track_base_time = track_info.get("base_lap_time_seconds", 85.0)
+        track_info = track_params
+        try:
+            track_base_time = data_loader.get_track_base_time(defaults.get("year"), selected_event)
+        except Exception:
+            track_base_time = track_info.get("base_lap_time_seconds", 85.0)
+            st.warning("⚠️ Impossible de récupérer le temps de référence réel. Utilisation de la valeur par défaut.")
 
         try:
             # 1. Lecture instantanée de la base de données pluri-annuelle
@@ -181,7 +185,7 @@ def main():
         if st.button("🎬 Lancer l'animation sur le tracé"):
             try:
                 with st.spinner("Téléchargement des données géométriques de la trajectoire F1..."):
-                    session_reelle = data_loader.load_session_data(CURRENT_YEAR, selected_event, 'R')
+                    session_reelle = data_loader.load_session_data(defaults.get("year"), selected_event, 'R')
 
                     lap_rapide = session_reelle.laps.pick_fastest()
                     telemetry_reelle = lap_rapide.get_telemetry()

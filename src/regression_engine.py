@@ -1,5 +1,12 @@
+"""
+MOTEUR DE RÉGRESSION : INTERFACE DES COEFFICIENTS
+Ce module sert d'interface d'accès aux coefficients polynomiaux stockés localement au format JSON.
+Il extrait les données de performance des pneus (Soft, Medium, Hard) pour un circuit donné.
+"""
+
 import os
 import json
+import streamlit as st
 
 
 class RegressionEngine:
@@ -17,7 +24,7 @@ class RegressionEngine:
         if not os.path.exists(self.json_path):
             raise FileNotFoundError(
                 f"Le fichier '{self.json_path}' est introuvable. "
-                "Veuillez exécuter le script 'generer_base_brute_et_graphiques.py' au préalable."
+                "Veuillez exécuter le script 'generer_coefficients_professionnels.py' au préalable."
             )
         with open(self.json_path, "r") as f:
             return json.load(f)
@@ -27,14 +34,26 @@ class RegressionEngine:
         Récupère les coefficients bruts (SOFT, MEDIUM, HARD) extraits des données
         pour un circuit spécifique.
         """
-        # Sécurité pour correspondre au format du fichier JSON (ex: 'Bahrain', 'Japan')
         coefficients = self.coefficients_db.get(circuit_name)
 
         if coefficients is None:
-            # Fallback de secours sur le premier circuit disponible si le nom est mal orthographié
-            premier_circuit = list(self.coefficients_db.keys())[0]
+            # Sécurité (Ligne 39 corrigée) : On s'assure que le dictionnaire n'est pas vide avant le fallback
+            db_keys = list(self.coefficients_db.keys())
+            if not db_keys:
+                raise ValueError("La base de données des coefficients JSON est vide.")
+
+            premier_circuit = db_keys[0]
             coefficients = self.coefficients_db.get(premier_circuit)
-            print(
-                f"⚠️ Circuit '{circuit_name}' introuvable dans le JSON. Utilisation par défaut de : {premier_circuit}")
+
+            # Note : Idéalement, traitez cette alerte dans app.py avec st.warning()
+            # plutôt qu'un print() invisible pour l'utilisateur de l'interface.
+            st.warning("⚠️ Circuit '{circuit_name}' introuvable dans le JSON. Utilisation par défaut de : {premier_circuit}")
 
         return coefficients
+
+
+
+
+
+
+
