@@ -1,0 +1,442 @@
+{
+    "Bahrain": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.1435,
+            "Beta_1_TyreLife": 0.07686,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.02095
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 101.9435,
+            "Beta_1_TyreLife": 0.19216,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.0343
+        },
+        "HARD": {
+            "Beta_0_Intercept": 102.9935,
+            "Beta_1_TyreLife": 0.07686,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.01437
+        }
+    },
+    "Saudi Arabia": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.8181,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": 0.01386
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.6181,
+            "Beta_1_TyreLife": 0.01,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.02982
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.6681,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.04343
+        }
+    },
+    "Australia": {
+        "SOFT": {
+            "Beta_0_Intercept": 102.1908,
+            "Beta_1_TyreLife": 0.02301,
+            "Beta_2_TyreLife2": 0.0095,
+            "Beta_3_LapNumber": -0.04
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.9908,
+            "Beta_1_TyreLife": 0.05752,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00903
+        },
+        "HARD": {
+            "Beta_0_Intercept": 104.0408,
+            "Beta_1_TyreLife": 0.02301,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.03505
+        }
+    },
+    "Japan": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.5264,
+            "Beta_1_TyreLife": 0.02408,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.05449
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.3264,
+            "Beta_1_TyreLife": 0.06021,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.03512
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.3764,
+            "Beta_1_TyreLife": 0.02408,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00145
+        }
+    },
+    "Miami": {
+        "SOFT": {
+            "Beta_0_Intercept": 100.9897,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.06376
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 101.7897,
+            "Beta_1_TyreLife": 0.01,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.02642
+        },
+        "HARD": {
+            "Beta_0_Intercept": 102.8397,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.02436
+        }
+    },
+    "Monaco": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.0851,
+            "Beta_1_TyreLife": 0.00949,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": 0.01748
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 101.8851,
+            "Beta_1_TyreLife": 0.02372,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.00083
+        },
+        "HARD": {
+            "Beta_0_Intercept": 102.9351,
+            "Beta_1_TyreLife": 0.00949,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00433
+        }
+    },
+    "Canada": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.1869,
+            "Beta_1_TyreLife": 0.00834,
+            "Beta_2_TyreLife2": 0.0095,
+            "Beta_3_LapNumber": -0.04
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 101.9869,
+            "Beta_1_TyreLife": 0.02085,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.03049
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.0369,
+            "Beta_1_TyreLife": 0.00834,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.01174
+        }
+    },
+    "Spain": {
+        "SOFT": {
+            "Beta_0_Intercept": 102.795,
+            "Beta_1_TyreLife": 0.01213,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.01614
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 103.595,
+            "Beta_1_TyreLife": 0.03032,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00798
+        },
+        "HARD": {
+            "Beta_0_Intercept": 104.645,
+            "Beta_1_TyreLife": 0.01213,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.01755
+        }
+    },
+    "Austria": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.6248,
+            "Beta_1_TyreLife": 0.02655,
+            "Beta_2_TyreLife2": 0.0095,
+            "Beta_3_LapNumber": -0.04
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.4248,
+            "Beta_1_TyreLife": 0.06638,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.00677
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.4748,
+            "Beta_1_TyreLife": 0.02655,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.01075
+        }
+    },
+    "Great Britain": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.8633,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.04555
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.6633,
+            "Beta_1_TyreLife": 0.01,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.01438
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.7133,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.0021
+        }
+    },
+    "Hungary": {
+        "SOFT": {
+            "Beta_0_Intercept": 100.9355,
+            "Beta_1_TyreLife": 0.0207,
+            "Beta_2_TyreLife2": 0.014437,
+            "Beta_3_LapNumber": 0.0977
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 101.7355,
+            "Beta_1_TyreLife": 0.05176,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00116
+        },
+        "HARD": {
+            "Beta_0_Intercept": 102.7855,
+            "Beta_1_TyreLife": 0.0207,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00421
+        }
+    },
+    "Belgium": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.5752,
+            "Beta_1_TyreLife": 0.01916,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": 0.00159
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.3752,
+            "Beta_1_TyreLife": 0.04789,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00231
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.4252,
+            "Beta_1_TyreLife": 0.01916,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00046
+        }
+    },
+    "Netherlands": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.2831,
+            "Beta_1_TyreLife": 0.0201,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.03374
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.0831,
+            "Beta_1_TyreLife": 0.05024,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.02355
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.1331,
+            "Beta_1_TyreLife": 0.0201,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.006
+        }
+    },
+    "Italy": {
+        "SOFT": {
+            "Beta_0_Intercept": 100.2234,
+            "Beta_1_TyreLife": 0.01803,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.07275
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 101.0234,
+            "Beta_1_TyreLife": 0.04509,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.00414
+        },
+        "HARD": {
+            "Beta_0_Intercept": 102.0734,
+            "Beta_1_TyreLife": 0.01803,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00783
+        }
+    },
+    "Azerbaijan": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.303,
+            "Beta_1_TyreLife": 0.01379,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.05857
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.103,
+            "Beta_1_TyreLife": 0.03448,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.01884
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.153,
+            "Beta_1_TyreLife": 0.01379,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.01507
+        }
+    },
+    "Singapore": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.3469,
+            "Beta_1_TyreLife": 0.01807,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.01963
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.1469,
+            "Beta_1_TyreLife": 0.04517,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.02607
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.1969,
+            "Beta_1_TyreLife": 0.01807,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.0079
+        }
+    },
+    "United States": {
+        "SOFT": {
+            "Beta_0_Intercept": 99.921,
+            "Beta_1_TyreLife": 0.02685,
+            "Beta_2_TyreLife2": 0.0095,
+            "Beta_3_LapNumber": -0.04
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 100.721,
+            "Beta_1_TyreLife": 0.06713,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.01462
+        },
+        "HARD": {
+            "Beta_0_Intercept": 101.771,
+            "Beta_1_TyreLife": 0.02685,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.0083
+        }
+    },
+    "Mexico": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.7067,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.00583
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.5067,
+            "Beta_1_TyreLife": 0.01,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.01414
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.5567,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.00122
+        }
+    },
+    "Brazil": {
+        "SOFT": {
+            "Beta_0_Intercept": 101.931,
+            "Beta_1_TyreLife": 0.01544,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": -0.02862
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.731,
+            "Beta_1_TyreLife": 0.0386,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.00233
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.781,
+            "Beta_1_TyreLife": 0.01544,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": 0.15907
+        }
+    },
+    "Las Vegas": {
+        "SOFT": {
+            "Beta_0_Intercept": 102.257,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.028342,
+            "Beta_3_LapNumber": -0.11562
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 103.057,
+            "Beta_1_TyreLife": 0.01,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.0239
+        },
+        "HARD": {
+            "Beta_0_Intercept": 104.107,
+            "Beta_1_TyreLife": 0.004,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.04868
+        }
+    },
+    "Qatar": {
+        "SOFT": {
+            "Beta_0_Intercept": 102.0033,
+            "Beta_1_TyreLife": 0.01415,
+            "Beta_2_TyreLife2": 0.013783,
+            "Beta_3_LapNumber": -0.14441
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 102.8033,
+            "Beta_1_TyreLife": 0.03537,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.02408
+        },
+        "HARD": {
+            "Beta_0_Intercept": 103.8533,
+            "Beta_1_TyreLife": 0.01415,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.08393
+        }
+    },
+    "Abu Dhabi": {
+        "SOFT": {
+            "Beta_0_Intercept": 100.8828,
+            "Beta_1_TyreLife": 0.02933,
+            "Beta_2_TyreLife2": 0.0085,
+            "Beta_3_LapNumber": 0.14694
+        },
+        "MEDIUM": {
+            "Beta_0_Intercept": 101.6828,
+            "Beta_1_TyreLife": 0.07332,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.01054
+        },
+        "HARD": {
+            "Beta_0_Intercept": 102.7328,
+            "Beta_1_TyreLife": 0.02933,
+            "Beta_2_TyreLife2": 0.0,
+            "Beta_3_LapNumber": -0.00617
+        }
+    }
+}
