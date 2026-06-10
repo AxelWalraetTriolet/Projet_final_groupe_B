@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 class TelemetryVisualizer:
     @staticmethod
 
-    def plot_race_strategy(lap_times, pitstop_events, historical_data=None, historical_pit_stops=None, selected_pilot,
+    def plot_race_strategy(lap_times, pitstop_events, selected_pilot, historical_data=None, historical_pit_stops=None,
                            year=None):
         """
         Génère un graphique Matplotlib montrant l'évolution des temps au tour simulés,
