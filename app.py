@@ -32,6 +32,27 @@ def format_race_time(total_seconds):
 def main():
     st.set_page_config(page_title="F1 Strategy Simulator", layout="wide")
 
+    # --- AJOUT DU CSS POUR REDIMENSIONNER LES METRICS ---
+    st.markdown(
+        """
+        <style>
+        /* Force les titres des metrics à aller à la ligne au lieu de mettre ... */
+        [data-testid="stMetricLabel"] {
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        /* Rend la taille des valeurs dynamique selon l'espace disponible */
+        [data-testid="stMetricValue"] {
+            word-wrap: break-word;
+            white-space: normal;
+            font-size: clamp(1.2rem, 2vw, 1.8rem) !important; 
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    # ----------------------------------------------------
+
     # Initialisation de la mémoire de session pour Streamlit
     if "validated" not in st.session_state:
         st.session_state.validated = False
@@ -44,7 +65,7 @@ def main():
     if "home_driver" not in st.session_state:
         st.session_state.home_driver = None
 
-    # Chargement des composants de configuration et de données
+    # 1. Chargement des composants de configuration et de données
     defaults = {"year": 2025, "gp": "Monaco", "event": "Q", "total_laps": 50}
     track_params = {"pitstop_loss_seconds": 22.0, "base_lap_time_seconds": 85.0}
     data_loader = F1DataLoader()
@@ -92,7 +113,7 @@ def main():
             st.session_state.home_event = st.session_state.init_event
             st.session_state.home_driver = st.session_state.init_driver
             st.session_state.validated = True
-            st.sidebar.empty()  # Force le rafraîchissement
+            st.sidebar.empty()  # Force le rafraîchissement de la sidebar
             st.rerun()
 
     # ========================================================================================================
@@ -103,7 +124,7 @@ def main():
         st.info(
             f"📊 **Analyse active :** Simulation de la course de **{st.session_state.home_driver}** au **{st.session_state.home_event}**")
 
-        # Bouton pour revenir à l'accueil si nécessaire
+        # Bouton Revenir à l'accueil tout en haut de la barre latérale
         if st.sidebar.button("🏠 Revenir à l'accueil"):
             st.session_state.validated = False
             st.session_state.sim_calculee = False
@@ -116,7 +137,6 @@ def main():
         st.sidebar.header("🕹️ Configuration de la course")
         st.sidebar.subheader("🌍 Sélection du Grand Prix et du Pilote")
 
-        # Synchronisation de l'index du selectbox avec le choix de la page d'accueil
         try:
             event_index = available_events.index(st.session_state.home_event)
         except ValueError:
@@ -128,13 +148,11 @@ def main():
             index=event_index
         )
 
-        # Si l'utilisateur change de GP dans la sidebar, on met à jour la mémoire
         if selected_event != st.session_state.home_event:
             st.session_state.home_event = selected_event
             st.session_state.sim_calculee = False
             st.rerun()
 
-        # Sélection dynamique du pilote
         if selected_event in regression_engine.coefficients_db:
             liste_pilotes = sorted(list(regression_engine.coefficients_db[selected_event].keys()))
         else:
@@ -157,7 +175,6 @@ def main():
             st.session_state.sim_calculee = False
             st.rerun()
 
-        # Seconde moitié de la colonne : Gestion de la stratégie et des arrêts
         st.sidebar.markdown("---")
         st.sidebar.subheader("📋 Paramètres de la Stratégie")
 
@@ -204,7 +221,6 @@ def main():
 
             pit_stops[p_lap] = p_tyre
             last_pit_lap = p_lap
-
 
         # 3. Zone principale d'affichage et d'exécution des calculs
         st.header("⚡ Simulation et Résultats")
@@ -265,12 +281,12 @@ def main():
         if st.session_state.sim_calculee and st.session_state.results:
             res = st.session_state.results
 
-            # --- CRÉATION DES ONGLETS ---
+            # Création du système d'onglets
             tab_dashboard, tab_telemetry = st.tabs(["📊 Tableau de bord comparatif", "🏎️ Télémétrie & Animation Live"])
 
-            # ==========================================
-            # ONGLET 1 : TABLEAU DE BORD & GRAPH_STRAT
-            # ==========================================
+            # ==================================================================
+            # ONGLET 1 : DONNÉES COMPARATIVES ET GRAPH_STRAT
+            # ==================================================================
             with tab_dashboard:
                 st.markdown(f"### Simulation de {selected_driver} au {selected_event}")
                 col1, col2, col3 = st.columns(3)
@@ -324,7 +340,6 @@ def main():
                             real_strategy = "Non disponible"
                         st.metric(label="Choix des pneumatiques", value=real_strategy)
 
-                # Le graphique statique reste dans cet onglet principal
                 st.markdown("---")
                 st.subheader(f"📊 Analyse des performances au tour de {selected_driver} au {selected_event}")
                 fig_laps = TelemetryVisualizer.plot_race_strategy(
@@ -338,9 +353,9 @@ def main():
                 st.pyplot(fig_laps)
                 plt.close(fig_laps)
 
-            # ==========================================
-            # ONGLET 2 : ANIMATION DE LA TÉLÉMÉTRIE
-            # ==========================================
+            # ==================================================================
+            # ONGLET 2 : ANIMATION GÉOMÉTRIQUE EN TEMPS RÉEL
+            # ==================================================================
             with tab_telemetry:
                 st.subheader("🏎️ Animation de la Télémétrie en temps réel")
 
@@ -355,8 +370,7 @@ def main():
                             if telemetry_reelle.empty:
                                 st.warning("Aucune donnée de télémétrie spatiale valide trouvée pour ce Grand Prix.")
                             else:
-                                # Création de 3 colonnes pour restreindre la largeur et centrer le tracé
-                                # [1, 1, 1] prend 33% de la largeur. Vous pouvez changer pour [1, 2, 1] (50%) si besoin.
+                                # Création des colonnes pour restreindre la taille du tracé Matplotlib
                                 col_gauche, col_centre, col_droite = st.columns([1, 1, 1])
 
                                 with col_centre:
@@ -370,15 +384,16 @@ def main():
                                 for i in range(0, total_points, step):
                                     fig_live = TelemetryVisualizer.plot_live_frame(telemetry_reelle, i)
 
-                                    # Affichage dynamique confiné à la colonne centrale
+                                    # Rendu proportionnel restreint à la colonne du milieu
                                     live_chart_slot.pyplot(fig_live, use_container_width=True)
 
                                     plt.close(fig_live)
                                     time.sleep(0.04)
-
                                 st.success(f"{selected_driver} a franchi la ligne d'arrivée !")
                     except Exception as e:
                         st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
+        else:
+            st.info("Utilisez les options de la barre latérale pour configurer la stratégie et lancer les calculs.")
 
 if __name__ == "__main__":
     main()
