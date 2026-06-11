@@ -112,3 +112,65 @@ class RaceSimulation:
             composes_utilises.add(tyre.upper())
 
         return len(composes_utilises) >= 2
+
+    def find_optimal_two_stops_strategy(self):
+        """
+        Trouve la meilleure stratégie à adopter pour une course et un pilote
+        (choix du tour d'arrêts, du nombre d'arrêts et du type de pneu). Pour alléger le programme on ne prend
+        en compte qu'au maximum deux arrêts.
+        """
+        best_time = float('inf')
+        best_strategy = None
+
+        composes = ['SOFT', 'MEDIUM', 'HARD']
+
+        # Premier cas où il n'y a qu'un seul arrêt
+        # On ne change pas les pneus au premier et au dernier tour.
+        for tour_arret_1 in range(2, self.total_laps):
+            for pneu_depart in composes: # Choix du pneu de départ
+                for pneu_relais_2 in composes: #Boucle pour choisir le 2nd type de pneu
+
+                    pit_stops = {tour_arret_1: pneu_relais_2}
+
+                    if self.is_strategy_valid(pneu_depart, pit_stops):  # On vérifie qu'il y a bien 2 types de pneus
+
+                        # Lancement de la simulation
+                        result = self.run_strategy(pneu_depart, pit_stops)
+
+                        # Sauvegarde si c'est le nouveau meilleur temps
+                        if result['total_race_time'] < best_time:
+                            best_time = result['total_race_time']
+                            best_strategy = {
+                                'type': '1 arrêt',
+                                'starting_tyre': pneu_depart,
+                                'pit_stops': pit_stops,
+                                'results': result
+                            }
+        # Boucles pour choisir les tours d'arrêt (tour 1 < tour 2)
+        # On ne change pas les pneus au premier, au dernier tour ou sur le même tour que le précédent changement
+        # La nouvelle boucle fonctionne comme celle ci-dessus
+        for tour_arret_1 in range(2, self.total_laps - 1):
+            for tour_arret_2 in range(tour_arret_1 + 1, self.total_laps):
+
+                for pneu_depart in composes:
+                    for pneu_relais_2 in composes:
+                        for pneu_relais_3 in composes:
+
+                            pit_stops = {
+                                tour_arret_1: pneu_relais_2,
+                                tour_arret_2: pneu_relais_3
+                            }
+
+                            if self.is_strategy_valid(pneu_depart, pit_stops):
+
+                                result = self.run_strategy(pneu_depart, pit_stops)
+
+                                if result['total_race_time'] < best_time:
+                                    best_time = result['total_race_time']
+                                    best_strategy = {
+                                        'starting_tyre': pneu_depart,
+                                        'pit_stops': pit_stops,
+                                        'results': result
+                                    }
+
+        return best_strategy
