@@ -1,62 +1,75 @@
 """
 AFFICHAGE DES RESULTATS
-Ce module affiche l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel.
-Il affiche également une animation 3D du circuit.
+Ce module affiche:
+- la stratégie et le temps total de course (simulation & réel)
+- l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel.
+- animation 3D du circuit.
 """
 
 import matplotlib.pyplot as plt
 
 class TelemetryVisualizer:
     @staticmethod
-
-
     def plot_race_strategy(lap_times, pitstop_events, selected_driver, historical_data=None, historical_pit_stops=None,
                            year=None):
         """
         Génère un graphique Matplotlib montrant l'évolution des temps au tour simulés,
-        marque visuellement l'emplacement de l'arrêt au stand, et superpose les données réelles.
+        marque visuellement l'emplacement de l'arrêt au stand, superpose les données réelles
+        et ajuste dynamiquement l'axe Y pour ne pas couper les pics de temps au tour.
         """
         fig, ax = plt.subplots(figsize=(10, 5))
 
-        # Initialisation des tours et du plafond visuel sur l'axe y
+        # Initialisation des tours
         total_laps = len(lap_times)
         tours = list(range(1, total_laps + 1))
 
+        # CALCUL DYNAMIQUE DE L'AXE Y (Évite que les courbes ne soient coupées)
+        min_y = min(lap_times)
+        max_y = max(lap_times)
+
         if historical_data is not None and not historical_data.empty:
-            median_time = historical_data['LapTimeSeconds'].median()
-            upper_limit = median_time + 6
-        else:
-            upper_limit = max(lap_times) + 2
+            median_real = historical_data['LapTimeSeconds'].median()
+            # On filtre les anomalies extrêmes (ex: drapeau rouge prolongé) pour garder une échelle cohérente,
+            # mais on conserve les pics d'arrêts aux stands ou de ralentissements sous SC (< 1.5 * médiane).
+            filtered_real = historical_data['LapTimeSeconds'][historical_data['LapTimeSeconds'] < median_real * 1.5]
 
-        # Fixation des limites de l'axe Y pour éviter les débordements
-        ax.set_ylim(min(lap_times) - 1.5, upper_limit)
+            if not filtered_real.empty:
+                min_y = min(min_y, filtered_real.min())
+                max_y = max(max_y, filtered_real.max())
+            else:
+                min_y = min(min_y, historical_data['LapTimeSeconds'].min())
+                max_y = max(max_y, historical_data['LapTimeSeconds'].max())
 
+        # Fixation des limites de l'axe Y avec une marge de confort en haut et en bas
+        ax.set_ylim(min_y - 1.5, max_y + 2.5)
+
+        # 1. Tracé de la simulation
         ax.plot(tours, lap_times, label="Simulation du rythme", color="#1E90FF", linewidth=2)
 
-        # Marquage des arrêts aux stands simulés
+        # 2. Marquage des arrêts aux stands simulés
         for pit_lap, pit_time in pitstop_events.items():
             ax.axvline(x=pit_lap, color="#FF4500", linestyle="--", alpha=0.8, label=f"BOX Simulé (Tour {pit_lap})")
             ax.text(pit_lap, ax.get_ylim()[0] + 0.3, 'BOX SIM', color="#FF4500", weight='bold', fontsize=9, ha='center')
 
-        # Tracé des données réelles (si disponibles)
-            if historical_data is not None:
-                ax.plot(
-                    historical_data['LapNumber'],
-                    historical_data['LapTimeSeconds'],
-                    label=f"Réel - {selected_driver} ({year})",
-                    color="#555555",
-                    linestyle="-.",
-                    linewidth=1.5,
-                    alpha=0.7
-                )
+        # 3. Tracé des données réelles (Indentation corrigée)
+        if historical_data is not None and not historical_data.empty:
+            ax.plot(
+                historical_data['LapNumber'],
+                historical_data['LapTimeSeconds'],
+                label=f"Réel - {selected_driver} ({year})",
+                color="#555555",
+                linestyle="-.",
+                linewidth=1.5,
+                alpha=0.7
+            )
 
             # Ajout des repères visuels pour les arrêts aux stands réels
             if historical_pit_stops:
                 for i, pit in enumerate(historical_pit_stops):
                     label_pit = "BOX Réel" if i == 0 else ""
                     ax.axvline(x=pit, color="#555555", linestyle=":", alpha=0.7, label=label_pit)
-                    # Le texte 'BOX RÉEL' est placé en bas du graphique pour éviter les collisions
-                    ax.text(pit , ax.get_ylim()[0] + 0.3, 'BOX RÉEL', color="#555555", weight='bold', fontsize=8, ha='center')
+                    ax.text(pit, ax.get_ylim()[0] + 0.3, 'BOX RÉEL', color="#555555", weight='bold', fontsize=8,
+                            ha='center')
 
         # 4. Configuration et mise en page: titre, axes, grille
         ax.set_title("Analyse du Rythme de Course et Dégradation des Pneumatiques", fontsize=12, pad=15)
@@ -75,45 +88,6 @@ class TelemetryVisualizer:
         return fig
 
 
-
-
-
-    #def plot_race_strategy(lap_times, pitstop_events):
-        """
-        Génère un graphique Matplotlib montrant l'évolution des temps au tour
-        et marque visuellement l'emplacement de l'arrêt au stand.
-        """
-        # Création de la figure
-        fig, ax = plt.subplots(figsize=(10, 5))
-
-        # Tracé de la courbe des temps au tour
-        total_laps = len(lap_times)
-        tours = list(range(1, total_laps + 1))
-
-        ax.plot(tours, lap_times, label="Évolution du rythme de course", color="#1E90FF", linewidth=2)
-
-        # Ajout des repères visuels pour les arrêts aux stands
-        for pit_lap, pit_time in pitstop_events.items():
-            # Ligne verticale pointillée au tour du pitstop
-            ax.axvline(x=pit_lap, color="#FF4500", linestyle="--", alpha=0.8,
-                       label=f"Arrêt au stand (Tour {pit_lap})")
-
-            # Petite annotation textuelle sur le graphique
-            ax.text(pit_lap + 1, max(lap_times) - 0.5, 'BOX', color="#FF4500", weight='bold')
-
-        # Configuration des axes et titres
-        ax.set_title("📊 Analyse du Rythme de Course et Dégradation des Pneumatiques", fontsize=12, pad=15)
-        ax.set_xlabel("Numéro du Tour", fontsize=10)
-        ax.set_ylabel("Temps au Tour (secondes)", fontsize=10)
-
-        # Personnalisation de la grille pour une meilleure lisibilité
-        ax.grid(True, linestyle=":", alpha=0.6)
-        ax.legend(loc="upper right")
-
-        # Ajustement des marges
-        plt.tight_layout()
-
-        return fig
 
     @staticmethod
     def plot_circuit_layout(telemetry):
