@@ -196,7 +196,35 @@ def main():
 
         # Tracé de la courbe de performance
         st.subheader(f"📊 Analyse des performances au tour — {selected_driver}")
-        fig_laps = TelemetryVisualizer.plot_race_strategy(res["lap_times"], res["pitstop_events"], selected_driver)
+
+        # 1. Initialisation des variables par défaut
+        historical_data = None
+        historical_pit_stops = None
+        recent_year = None
+
+        # 2. Récupération dynamique des données historiques avec gestion des erreurs
+        try:
+            with st.spinner("🔄 Recherche et chargement des données historiques réelles (FastF1)..."):
+                recent_year = data_loader.find_most_recent_year(selected_event, selected_driver)
+                if recent_year:
+                    historical_data, historical_pit_stops = data_loader.get_historical_driver_data(
+                        recent_year, selected_event, selected_driver
+                    )
+                else:
+                    st.info(f"ℹ️ Aucun historique récent (depuis 2018) trouvé pour {selected_driver} ayant fini ce GP.")
+        except Exception as e:
+            st.warning(f"⚠️ Impossible de superposer les données réelles : {e}")
+
+        # 3. Tracé du graphique mis à jour avec toutes les variables requises
+        fig_laps = TelemetryVisualizer.plot_race_strategy(
+            lap_times=res["lap_times"],
+            pitstop_events=res["pitstop_events"],
+            selected_driver=selected_driver,
+            historical_data=historical_data,
+            historical_pit_stops=historical_pit_stops,
+            year=recent_year
+        )
+
         st.pyplot(fig_laps)
         plt.close(fig_laps)
 

@@ -50,6 +50,10 @@ class RaceSimulation:
         lap_times = []
         pitstop_events = {}
 
+        coefs = self.poly_config.get(current_tyre)
+        if not coefs:
+            raise ValueError(f"Le composé [{current_tyre}] n'est pas répertorié dans le fichier JSON des coefficients.")
+
         for lap in range(1, self.total_laps + 1):
 
 
