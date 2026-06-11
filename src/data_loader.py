@@ -72,7 +72,7 @@ class F1DataLoader:
         stockés à la racine du projet.
         """
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        json_path = os.path.join(base_dir, "../coefficients_pilotes_saisons.json")
+        json_path = os.path.join(base_dir, "coefficients_pilotes_saisons.json")
 
         if not os.path.exists(json_path):
             raise FileNotFoundError(
