@@ -1,3 +1,9 @@
+"""
+AFFICHAGE DES RESULTATS
+Ce module affiche l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel.
+Il affiche également une animation 3D du circuit.
+"""
+
 import matplotlib.pyplot as plt
 
 class TelemetryVisualizer:

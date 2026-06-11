@@ -1,7 +1,11 @@
-import json
-import os
-import random
+"""
+MOTEUR DE SIMULATION
+Ce module simule le déroulement d'une course de F1 avec:
+ - les modèles prédictifs de dégradation des pneus
+ - des aléas pour l'arrêt aux stands
+"""
 
+import random
 
 class RaceSimulation:
 
@@ -47,12 +51,7 @@ class RaceSimulation:
         pitstop_events = {}
 
         for lap in range(1, self.total_laps + 1):
-            # Récupération des coefficients polynomiaux d2 pour le pneu actuel
-            coefs = self.poly_config.get(current_tyre)
-            if not coefs:
-                raise ValueError(
-                    f"Le composé [{current_tyre}] n'est pas répertorié dans le fichier JSON des coefficients."
-                )
+
 
             # --- APPLICATION DU MODÈLE SCIKIT-LEARN DEGRÉ 2 ---
             # La formule calcule un pourcentage théorique par rapport au meilleur tour
@@ -68,15 +67,24 @@ class RaceSimulation:
 
             # Gestion de l'événement d'arrêt au stand
             if lap in pit_stops:
+
+
                 pit_time = self.simulate_pitstop()
                 lap_time += pit_time
 
                 # Enregistrement de l'événement pour la télémétrie finale
                 pitstop_events[lap] = pit_time
 
+                # Récupération des coefficients polynomiaux d2 pour le pneu actuel
+                coefs = self.poly_config.get(current_tyre)
+                if not coefs:
+                    raise ValueError(
+                        f"Le composé [{current_tyre}] n'est pas répertorié dans le fichier JSON des coefficients."
+                    )
+
                 # Changement de pneu et réinitialisation de l'âge de la gomme
                 current_tyre = pit_stops[lap].upper()
-                tyre_age = 0
+                tyre_age = -1
 
             # Accumulation des données physiques
             total_race_time += lap_time
