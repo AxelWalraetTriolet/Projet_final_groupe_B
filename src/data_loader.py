@@ -84,7 +84,7 @@ class F1DataLoader:
             return json.load(f)
 
 
-    def find_most_recent_year(selected_event, selected_pilot, start_year=2025):
+    def find_most_recent_year(self, selected_event, selected_driver, start_year=2025):
         """
         Parcourt les années à l'envers pour trouver l'année la plus récente
         où le pilote a croisé le drapeau à damier (classé / a fini la course).
@@ -99,8 +99,8 @@ class F1DataLoader:
                 results = session.results
                 # On cherche le pilote par son abréviation (ex: HAM) ou son nom
                 driver_row = results[
-                    (results['Abbreviation'] == selected_pilot) |
-                    (results['LastName'].str.lower() == selected_pilot.lower())
+                    (results['Abbreviation'] == selected_driver) |
+                    (results['LastName'].str.lower() == selected_driver.lower())
                     ]
 
                 if not driver_row.empty:
@@ -114,7 +114,7 @@ class F1DataLoader:
 
         return None
 
-    def get_historical_driver_data(year, selected_event, selected_pilot):
+    def get_historical_driver_data(self, year, selected_event, selected_driver):
         """
         Récupère les temps au tour et les tours de passage par les stands
         pour un pilote, un circuit et une année donnée.
@@ -123,7 +123,7 @@ class F1DataLoader:
         session.load(telemetry=False, weather=False)  # On ne charge que les laps pour aller vite
 
         # Filtrer pour n'avoir que les tours du pilote sélectionné
-        driver_laps = session.laps.pick_driver(selected_pilot)
+        driver_laps = session.laps.pick_driver(selected_driver)
 
         # 1. Extraction des temps au tour (convertis en secondes pour le graphique)
         driver_laps['LapTimeSeconds'] = driver_laps['LapTime'].dt.total_seconds()

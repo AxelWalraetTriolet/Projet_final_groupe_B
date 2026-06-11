@@ -81,6 +81,7 @@ def main():
         help="Les courbes d'usure et le rythme initial seront calqués sur l'historique de ce pilote."
     )
 
+    # Sélection de la stratégie: arrêt au stand et pneumatiques
     st.sidebar.markdown("---")
     st.sidebar.subheader("📋 Paramètres de la Stratégie")
 
@@ -170,39 +171,153 @@ def main():
                         results = sim.run_strategy(starting_tyre, pit_stops)
                         st.session_state.results = results
                         st.session_state.sim_calculee = True
-                        st.success(f"Simulation terminée avec succès pour {selected_driver} !")
+                        st.success(f"Simulation terminée avec succès pour {selected_driver} au {selected_event}!")
 
         except FileNotFoundError as fnf_err:
             st.error(f"🚨 {fnf_err}")
         except Exception as sim_err:
             st.error(f"Une erreur est survenue pendant la simulation : {sim_err}")
 
+    # --------------------------------------------------------------------------------------------------------
     # 4. Affichage des résultats et rendus graphiques
+
+    # Initialisation des variables historiques par défaut
+    historical_data = None
+    historical_pit_stops = None
+    recent_year = None
+
+    # Récupération dynamique des données historiques avec gestion des erreurs
+    try:
+        with st.spinner("🔄 Recherche et chargement des données historiques réelles (FastF1)..."):
+            recent_year = data_loader.find_most_recent_year(selected_event, selected_driver)
+            if recent_year:
+                historical_data, historical_pit_stops = data_loader.get_historical_driver_data(
+                    recent_year, selected_event, selected_driver
+                )
+            else:
+                st.info(f"ℹ️ Aucun historique récent (depuis 2018) trouvé pour {selected_driver} ayant fini ce GP.")
+    except Exception as e:
+        st.warning(f"⚠️ Impossible de superposer les données réelles : {e}")
+
+    # 1. Affichage des stratégies & temps total de course (simulation & historique)
+
     if st.session_state.sim_calculee and st.session_state.results:
         res = st.session_state.results
 
-        col1, col2 = st.columns(2)
+        # LIGNE 1 : LA SIMULATION
+        st.markdown(f"### Simulation de {selected_driver} au {selected_event}")
+
+        col1, col2, col3 = st.columns(3)
+
         with col1:
+            # Temps total de course
             readable_time = format_race_time(res['total_race_time'])
             st.metric(
-                label=f"Temps de course total ({selected_driver})",
+                label="Temps de course total",
                 value=readable_time
             )
+
         with col2:
+            # Arrêts au stand: nombre d'arrêts & numéro de tour
+            sim_pit_laps = list(res['pitstop_events'].keys())
+            sim_count = len(sim_pit_laps)
+            if sim_count > 0:
+                sim_laps_str = ", ".join(str(int(lap)) for lap in sim_pit_laps)
+                sim_value = f"{sim_count} (Tour{'s' if sim_count > 1 else ''} {sim_laps_str})"
+            else:
+                sim_value = "0"
+
             st.metric(
-                label="Nombre d'arrêts effectués",
-                value=f"{len(res['pitstop_events'])}"
+                label="Arrêts au stand",
+                value=sim_value
             )
 
-        # Tracé de la courbe de performance
-        st.subheader(f"📊 Analyse des performances au tour — {selected_driver}")
-        fig_laps = TelemetryVisualizer.plot_race_strategy(res["lap_times"], res["pitstop_events"], selected_driver)
+        with col3:
+            # Choix des pneumatiques
+            sim_compounds = [starting_tyre] + list(pit_stops.values())
+            sim_strategy = " - ".join([str(c).strip().title() for c in sim_compounds])
+
+            st.metric(
+                label="Choix des pneumatiques",
+                value=sim_strategy
+            )
+
+
+        # LIGNE 2 : LE RÉEL / HISTORIQUE (Affiché uniquement si les données existent)
+        if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
+            st.markdown("---")  # Petite ligne fine de séparation visuelle
+            st.markdown(f"### Résultats réels de {selected_driver} au {selected_event} de {recent_year}")
+
+            col4, col5, col6 = st.columns(3)
+
+            with col4:
+                # Temps total de course réel
+                real_total_seconds = historical_data['LapTimeSeconds'].sum()
+                readable_real_time = format_race_time(real_total_seconds)
+                st.metric(
+                    label="Temps de course total",
+                    value=readable_real_time
+                )
+
+            with col5:
+                # Arrêts au stand réels
+                if 'historical_pit_stops' in locals() and historical_pit_stops is not None:
+                    real_count = len(historical_pit_stops)
+                    if real_count > 0:
+                        real_laps_str = ", ".join(str(int(lap)) for lap in historical_pit_stops)
+                        real_value = f"{real_count} (Tour{'s' if real_count > 1 else ''} {real_laps_str})"
+                    else:
+                        real_value = "0"
+                else:
+                    real_value = "Non disponible"
+
+                st.metric(
+                    label="Arrêts au stand",
+                    value=real_value
+                )
+
+            with col6:
+                # Choix de pneumatiques réels
+                if 'Stint' in historical_data.columns and 'Compound' in historical_data.columns:
+                    stints_sequence = historical_data.sort_values('LapNumber').drop_duplicates(subset=['Stint'])[
+                        'Compound'].dropna().tolist()
+                    real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
+                elif 'Compound' in historical_data.columns:
+                    raw_compounds = historical_data.sort_values('LapNumber')['Compound'].dropna().tolist()
+                    stints_sequence = [raw_compounds[0]] if raw_compounds else []
+                    for c in raw_compounds[1:]:
+                        if c != stints_sequence[-1]:
+                            stints_sequence.append(c)
+                    real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
+                else:
+                    real_strategy = "Non disponible"
+
+                st.metric(
+                    label="Choix des pneumatiques",
+                    value=real_strategy
+                )
+
+
+
+
+        # 2. Tracé de la courbe de performance
+        st.subheader(f"📊 Analyse des performances au tour de {selected_driver} au {selected_event}")
+
+        fig_laps = TelemetryVisualizer.plot_race_strategy(
+            lap_times=res["lap_times"],
+            pitstop_events=res["pitstop_events"],
+            selected_driver=selected_driver,
+            historical_data=historical_data,
+            historical_pit_stops=historical_pit_stops,
+            year=recent_year
+        )
+
         st.pyplot(fig_laps)
         plt.close(fig_laps)
 
         st.markdown("---")
 
-        # Section Télémétrie Live Animée Spatialisée
+        # 3. Section Télémétrie Live Animée Spatialisée
         st.subheader("🏎️ Animation de la Télémétrie en temps réel")
 
         if st.button("🎬 Lancer l'animation sur le tracé"):
