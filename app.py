@@ -277,18 +277,32 @@ def main():
                 )
 
             with col6:
-                # Choix de pneumatiques réels
-                if 'Stint' in historical_data.columns and 'Compound' in historical_data.columns:
-                    stints_sequence = historical_data.sort_values('LapNumber').drop_duplicates(subset=['Stint'])[
-                        'Compound'].dropna().tolist()
-                    real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
-                elif 'Compound' in historical_data.columns:
-                    raw_compounds = historical_data.sort_values('LapNumber')['Compound'].dropna().tolist()
-                    stints_sequence = [raw_compounds[0]] if raw_compounds else []
-                    for c in raw_compounds[1:]:
-                        if c != stints_sequence[-1]:
-                            stints_sequence.append(c)
-                    real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
+                # Choix de pneumatiques - réel
+                if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
+                    if 'Compound' in historical_data.columns:
+                        # NETTOYAGE STRICT : On supprime les vrais NaN ET les textes "nan" / "unknown"
+                        df_tires = historical_data.dropna(subset=['Compound'])
+                        df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
+                            ['nan', 'none', 'unknown', ''])]
+
+                        if not df_tires.empty:
+                            if 'Stint' in df_tires.columns:
+                                # On prend le premier pneu VALIDE pour chaque relais (Stint)
+                                stints_sequence = df_tires.sort_values('LapNumber').drop_duplicates(subset=['Stint'])[
+                                    'Compound'].tolist()
+                            else:
+                                # Sécurité alternative si la colonne 'Stint' venait à manquer
+                                raw_compounds = df_tires.sort_values('LapNumber')['Compound'].tolist()
+                                stints_sequence = [raw_compounds[0]] if raw_compounds else []
+                                for c in raw_compounds[1:]:
+                                    if c != stints_sequence[-1]:
+                                        stints_sequence.append(c)
+
+                            real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
+                        else:
+                            real_strategy = "Non disponible"
+                    else:
+                        real_strategy = "Non disponible"
                 else:
                     real_strategy = "Non disponible"
 
@@ -296,8 +310,6 @@ def main():
                     label="Choix des pneumatiques",
                     value=real_strategy
                 )
-
-
 
 
         # 2. Tracé de la courbe de performance
