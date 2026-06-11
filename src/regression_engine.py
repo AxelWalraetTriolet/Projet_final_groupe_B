@@ -20,7 +20,7 @@ class RegressionEngine:
         dossier_racine = os.path.dirname(dossier_src)
 
         # Construction du chemin vers le JSON
-        self.json_path = os.path.normpath(os.path.join(dossier_racine, "../coefficients_pilotes_saisons.json"))
+        self.json_path = os.path.normpath(os.path.join(dossier_racine, "coefficients_pilotes_saisons.json"))
 
 
         self.coefficients_db = self._load_database()

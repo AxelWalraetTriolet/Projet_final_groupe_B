@@ -195,7 +195,7 @@ def main():
 
         # Tracé de la courbe de performance
         st.subheader(f"📊 Analyse des performances au tour — {selected_driver}")
-        fig_laps = TelemetryVisualizer.plot_race_strategy(res["lap_times"], res["pitstop_events"])
+        fig_laps = TelemetryVisualizer.plot_race_strategy(res["lap_times"], res["pitstop_events"], selected_driver)
         st.pyplot(fig_laps)
         plt.close(fig_laps)
 
