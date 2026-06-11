@@ -17,13 +17,15 @@ class F1DataLoader:
             os.makedirs(cache_dir)
 
         # Activer le cache
-        fastf1.cache.enable_cache(cache_dir)
+        fastf1.Cache.enable_cache(cache_dir)
 
     def load_session_data(self, year, gp, event_type='R'):
-    """Loads a specific F1 race (e.g., year=2025, gp='Monaco')."""
+        """Loads a specific F1 race (e.g., year=2025, gp='Monaco')."""
         session = fastf1.get_session(year, gp, event_type)
         session.load()
         return session
+
+
 
     def get_driver_telemetry(self, session, driver_code):
         lap = session.laps.pick_driver(driver_code).pick_fastest()

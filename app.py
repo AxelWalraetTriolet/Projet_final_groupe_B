@@ -12,6 +12,7 @@ import fastf1
 from src.data_loader import F1DataLoader
 from src.simulation import RaceSimulation
 from src.visualizer import TelemetryVisualizer
+from src.regression_engine import RegressionEngine
 
 def format_race_time(total_seconds):
     """
