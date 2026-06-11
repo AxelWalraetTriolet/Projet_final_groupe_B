@@ -355,7 +355,13 @@ def main():
                             if telemetry_reelle.empty:
                                 st.warning("Aucune donnée de télémétrie spatiale valide trouvée pour ce Grand Prix.")
                             else:
-                                live_chart_slot = st.empty()
+                                # Création de 3 colonnes pour restreindre la largeur et centrer le tracé
+                                # [1, 1, 1] prend 33% de la largeur. Vous pouvez changer pour [1, 2, 1] (50%) si besoin.
+                                col_gauche, col_centre, col_droite = st.columns([1, 1, 1])
+
+                                with col_centre:
+                                    live_chart_slot = st.empty()
+
                                 st.toast(f"Démarrage de la télémétrie pour {selected_driver}...", icon="🏎️")
                                 total_points = len(telemetry_reelle)
                                 nombre_frames_cible = 150
@@ -363,15 +369,16 @@ def main():
 
                                 for i in range(0, total_points, step):
                                     fig_live = TelemetryVisualizer.plot_live_frame(telemetry_reelle, i)
-                                    live_chart_slot.pyplot(fig_live)
+
+                                    # Affichage dynamique confiné à la colonne centrale
+                                    live_chart_slot.pyplot(fig_live, use_container_width=True)
+
                                     plt.close(fig_live)
                                     time.sleep(0.04)
+
                                 st.success(f"{selected_driver} a franchi la ligne d'arrivée !")
                     except Exception as e:
                         st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
-        else:
-            st.info("Utilisez les options de la barre latérale pour configurer la stratégie et lancer les calculs.")
-
 
 if __name__ == "__main__":
     main()
