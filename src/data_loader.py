@@ -17,7 +17,7 @@ class F1DataLoader:
             os.makedirs(cache_dir)
 
         # Activer le cache
-        fastf1.cache.enable_cache(cache_dir)
+        fastf1.Cache.enable_cache(cache_dir)
 
     def load_session_data(self, year, gp, event_type='R'):
         """Loads a specific F1 race (e.g., year=2025, gp='Monaco')."""
@@ -70,7 +70,7 @@ class F1DataLoader:
         stockés à la racine du projet.
         """
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        json_path = os.path.join(base_dir, "../coefficients_pilotes_saisons.json")
+        json_path = os.path.join(base_dir, "coefficients_pilotes_saisons.json")
 
         if not os.path.exists(json_path):
             raise FileNotFoundError(
