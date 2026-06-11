@@ -18,51 +18,37 @@ class TelemetryVisualizer:
         """
         fig, ax = plt.subplots(figsize=(10, 5))
 
-        # --- 1. INITIALISATION DES TOURS ET DU PLAFOND VISUEL (UPPER_LIMIT) ---
+        # Initialisation des tours et du plafond visuel sur l'axe y
         total_laps = len(lap_times)
         tours = list(range(1, total_laps + 1))
 
-        # On calcule le plafond dès le départ pour l'utiliser dans les tracés et les textes
         if historical_data is not None and not historical_data.empty:
             median_time = historical_data['LapTimeSeconds'].median()
             upper_limit = median_time + 6
         else:
             upper_limit = max(lap_times) + 2
 
-        # Fixation immédiate des limites de l'axe Y pour éviter les débordements
+        # Fixation des limites de l'axe Y pour éviter les débordements
         ax.set_ylim(min(lap_times) - 1.5, upper_limit)
 
-        # --- 2. NETTOYAGE ET TRACÉ DE LA SIMULATION ---
-        # On remplace le tour de stand simulé par 'nan' pour couper proprement la ligne
-        sim_times_clean = [
-            float('nan') if t in pitstop_events else time
-            for t, time in zip(tours, lap_times)
-        ]
-        ax.plot(tours, sim_times_clean, label="Simulation du rythme", color="#1E90FF", linewidth=2)
+        ax.plot(tours, lap_times, label="Simulation du rythme", color="#1E90FF", linewidth=2)
 
-        # Marquage des arrêts aux stands simulés (Verticales + Textes sous le plafond)
+        # Marquage des arrêts aux stands simulés
         for pit_lap, pit_time in pitstop_events.items():
             ax.axvline(x=pit_lap, color="#FF4500", linestyle="--", alpha=0.8, label=f"BOX Simulé (Tour {pit_lap})")
-            ax.text(pit_lap + 0.5, upper_limit - 1.5, 'BOX SIM', color="#FF4500", weight='bold', fontsize=9)
+            ax.text(pit_lap, ax.get_ylim()[0] + 0.3, 'BOX SIM', color="#FF4500", weight='bold', fontsize=9, ha='center')
 
-        # --- 3. NETTOYAGE ET TRACÉ DES DONNÉES RÉELLES (SI DISPONIBLES) ---
-        if historical_data is not None:
-            historical_data_clean = historical_data.copy()
-
-            # On remplace aussi les arrêts réels par 'nan' pour couper la ligne grise
-            if historical_pit_stops:
-                historical_data_clean.loc[
-                    historical_data_clean['LapNumber'].isin(historical_pit_stops), 'LapTimeSeconds'] = float('nan')
-
-            ax.plot(
-                historical_data_clean['LapNumber'],
-                historical_data_clean['LapTimeSeconds'],
-                label=f"Réel - {selected_driver} ({year})",
-                color="#555555",
-                linestyle="-.",
-                linewidth=1.5,
-                alpha=0.7
-            )
+        # Tracé des données réelles (si disponibles)
+            if historical_data is not None:
+                ax.plot(
+                    historical_data['LapNumber'],
+                    historical_data['LapTimeSeconds'],
+                    label=f"Réel - {selected_driver} ({year})",
+                    color="#555555",
+                    linestyle="-.",
+                    linewidth=1.5,
+                    alpha=0.7
+                )
 
             # Ajout des repères visuels pour les arrêts aux stands réels
             if historical_pit_stops:
@@ -70,15 +56,13 @@ class TelemetryVisualizer:
                     label_pit = "BOX Réel" if i == 0 else ""
                     ax.axvline(x=pit, color="#555555", linestyle=":", alpha=0.7, label=label_pit)
                     # Le texte 'BOX RÉEL' est placé en bas du graphique pour éviter les collisions
-                    ax.text(pit + 0.5, min(lap_times) + 0.5, 'BOX RÉEL', color="#555555", weight='bold', fontsize=8)
+                    ax.text(pit , ax.get_ylim()[0] + 0.3, 'BOX RÉEL', color="#555555", weight='bold', fontsize=8, ha='center')
 
-        # --- 4. CONFIGURATION ET ESTHÉTIQUE DES AXES ---
-        # Titre nettoyé de l'émoji pour éviter le bug du carré vide []
+        # 4. Configuration et mise en page: titre, axes, grille
         ax.set_title("Analyse du Rythme de Course et Dégradation des Pneumatiques", fontsize=12, pad=15)
         ax.set_xlabel("Numéro du Tour", fontsize=10)
+        ax.set_xlim(0, total_laps + 2)
         ax.set_ylabel("Temps au Tour (secondes)", fontsize=10)
-
-        # Grille en pointillés légers
         ax.grid(True, linestyle=":", alpha=0.6)
 
         # Nettoyage de la légende pour éviter les doublons d'étiquettes
@@ -89,7 +73,7 @@ class TelemetryVisualizer:
         plt.tight_layout()
 
         return fig
-    
+
 
 
 
