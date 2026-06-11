@@ -1,7 +1,9 @@
 """
 AFFICHAGE DES RESULTATS
-Ce module affiche l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel.
-Il affiche également une animation 3D du circuit.
+Ce module affiche:
+- la stratégie et le temps total de course (simulation & réel)
+- l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel.
+- animation 3D du circuit.
 """
 
 import matplotlib.pyplot as plt

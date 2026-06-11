@@ -251,7 +251,7 @@ def main():
             col4, col5, col6 = st.columns(3)
 
             with col4:
-                # Temps total de course réel
+                # Temps total de course - réel
                 real_total_seconds = historical_data['LapTimeSeconds'].sum()
                 readable_real_time = format_race_time(real_total_seconds)
                 st.metric(
