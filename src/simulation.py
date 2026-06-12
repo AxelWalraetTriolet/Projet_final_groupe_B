@@ -146,13 +146,21 @@ class RaceSimulation:
         best_time = float('inf')
         best_strategy = None
 
-        composes = ['SOFT', 'MEDIUM', 'HARD']
+        # --- Filtrage dynamique des pneus valides ---
+        tous_les_composes = ['SOFT', 'MEDIUM', 'HARD']
+        # On retire de cette liste les types de pneus qui n'ont pas de coefficients de dégradation (lorsque cela a lieu)
+        composes = [pneu for pneu in tous_les_composes if self.poly_config.get(pneu) is not None]
+
+        # Sécurité : S'il y a moins de 2 composés disponibles, on ne peut pas respecter le règlement FIA
+        if len(composes) < 2:
+            return None
+        # -----------------------------------------------------------
 
         # Premier cas où il n'y a qu'un seul arrêt
         # On ne change pas les pneus au premier et au dernier tour.
         for tour_arret_1 in range(2, self.total_laps):
-            for pneu_depart in composes: # Choix du pneu de départ
-                for pneu_relais_2 in composes: #Boucle pour choisir le 2nd type de pneu
+            for pneu_depart in composes:  # Choix du pneu de départ
+                for pneu_relais_2 in composes:  # Boucle pour choisir le 2nd type de pneu
 
                     pit_stops = {tour_arret_1: pneu_relais_2}
 
@@ -170,6 +178,7 @@ class RaceSimulation:
                                 'pit_stops': pit_stops,
                                 'results': result
                             }
+
         # Boucles pour choisir les tours d'arrêt (tour 1 < tour 2)
         # On ne change pas les pneus au premier, au dernier tour ou sur le même tour que le précédent changement
         # La nouvelle boucle fonctionne comme celle ci-dessus
@@ -192,6 +201,7 @@ class RaceSimulation:
                                 if result['total_race_time'] < best_time:
                                     best_time = result['total_race_time']
                                     best_strategy = {
+                                        'type': '2 arrêts',
                                         'starting_tyre': pneu_depart,
                                         'pit_stops': pit_stops,
                                         'results': result
