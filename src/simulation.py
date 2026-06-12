@@ -113,7 +113,7 @@ class RaceSimulation:
 
         return len(composes_utilises) >= 2
 
-    def find_optimal_two_stops_strategy(self):
+    def find_optimal_stops_strategy(self):
         """
         Trouve la meilleure stratégie à adopter pour une course et un pilote
         (choix du tour d'arrêts, du nombre d'arrêts et du type de pneu). Pour alléger le programme on ne prend

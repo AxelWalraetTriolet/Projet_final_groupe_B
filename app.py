@@ -64,6 +64,8 @@ def main():
         st.session_state.home_event = None
     if "home_driver" not in st.session_state:
         st.session_state.home_driver = None
+    if "optimal_strategy" not in st.session_state:
+        st.session_state.optimal_strategy = None
 
     # 1. Chargement des composants de configuration et de données
     defaults = {"year": 2025, "gp": "Monaco", "event": "Q", "total_laps": 50}
@@ -151,6 +153,8 @@ def main():
         if selected_event != st.session_state.home_event:
             st.session_state.home_event = selected_event
             st.session_state.sim_calculee = False
+            st.session_state.optimal_strategy = None
+            if "toggle_ia" in st.session_state: del st.session_state["toggle_ia"]
             st.rerun()
 
         if selected_event in regression_engine.coefficients_db:
@@ -173,6 +177,8 @@ def main():
         if selected_driver != st.session_state.home_driver:
             st.session_state.home_driver = selected_driver
             st.session_state.sim_calculee = False
+            st.session_state.optimal_strategy = None
+            if "toggle_ia" in st.session_state: del st.session_state["toggle_ia"]
             st.rerun()
 
         st.sidebar.markdown("---")
@@ -288,7 +294,59 @@ def main():
             # ONGLET 1 : DONNÉES COMPARATIVES ET GRAPH_STRAT
             # ==================================================================
             with tab_dashboard:
-                st.markdown(f"### Simulation de {selected_driver} au {selected_event}")
+
+                # --- 1. SECTION STRATEGIE OPTIMISÉE (Bouton Toggle) ---
+                st.markdown("### 🤖 Assistant Stratégique")
+
+                # Le bouton toggle
+                afficher_ia = st.toggle("✨ Calculer et afficher la stratégie optimale", key="toggle_ia")
+
+                # Initialisation des variables pour le graphique optimisé(vides par défaut)
+                opt_lap_times = None
+                opt_pit_events = None
+
+                if afficher_ia:
+                    # On calcule uniquement si ce n'est pas déjà dans la mémoire
+                    if st.session_state.optimal_strategy is None:
+                        with st.spinner("Analyse des stratégies en cours (1 à 2 arrêts)..."):
+                            track_info = track_params
+                            try:
+                                track_base_time = data_loader.get_track_base_time(defaults.get("year"), selected_event)
+                            except Exception:
+                                track_base_time = track_info.get("base_lap_time_seconds", 85.0)
+
+                            poly_coefficients = regression_engine.get_coefficients_for_driver(selected_event,
+                                                                                              selected_driver)
+                            sim_ia = RaceSimulation(total_laps, track_base_time, track_info, poly_coefficients)
+
+                            # Appel de la fonction IA
+                            st.session_state.optimal_strategy = sim_ia.find_optimal_stops_strategy()
+
+                    # On récupère les résultats de l'IA et on prépare les variables pour le graphique final
+                    opt_strat = st.session_state.optimal_strategy
+                    if opt_strat:
+                        opt_lap_times = opt_strat['results']["lap_times"]
+                        opt_pit_events = opt_strat['results']["pitstop_events"]
+
+                        st.success(f"✅ La meilleure stratégie trouvée est à **{opt_strat['type']}** !")
+                        col_ia1, col_ia2, col_ia3 = st.columns(3)
+                        with col_ia1:
+                            st.metric(label="Temps de course estimé (IA)",
+                                      value=format_race_time(opt_strat['results']['total_race_time']))
+                        with col_ia2:
+                            ia_pit_laps = list(opt_strat['pit_stops'].keys())
+                            ia_count = len(ia_pit_laps)
+                            ia_value = f"{ia_count} (Tour{'s' if ia_count > 1 else ''} {', '.join(str(int(lap)) for lap in ia_pit_laps)})" if ia_count > 0 else "0"
+                            st.metric(label="Arrêts optimaux", value=ia_value)
+                        with col_ia3:
+                            ia_compounds = [opt_strat['starting_tyre']] + list(opt_strat['pit_stops'].values())
+                            st.metric(label="Pneumatiques idéaux",
+                                      value=" - ".join([str(c).strip().title() for c in ia_compounds]))
+
+                st.markdown("---")
+
+                # --- 2. SECTION SIMULATION MANUELLE ---
+                st.markdown(f"### Simulation manuelle de {selected_driver} au {selected_event}")
                 col1, col2, col3 = st.columns(3)
 
                 with col1:
@@ -305,6 +363,7 @@ def main():
                     st.metric(label="Choix des pneumatiques",
                               value=" - ".join([str(c).strip().title() for c in sim_compounds]))
 
+                # --- 3. SECTION HISTORIQUE RÉEL ---
                 if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
                     st.markdown("---")
                     st.markdown(f"### Résultats réels de {selected_driver} au {selected_event} de {recent_year}")
@@ -340,15 +399,20 @@ def main():
                             real_strategy = "Non disponible"
                         st.metric(label="Choix des pneumatiques", value=real_strategy)
 
+                # --- 4. GRAPHIQUE COMPARATIF GLOBAL ---
                 st.markdown("---")
-                st.subheader(f"📊 Analyse des performances au tour de {selected_driver} au {selected_event}")
+                st.subheader(f"📊 Analyse des performances au tour comparées - {selected_driver}")
+
+                # On envoie toutes les données à plot_race_strategy (les données IA seront nulles si le bouton est éteint)
                 fig_laps = TelemetryVisualizer.plot_race_strategy(
                     lap_times=res["lap_times"],
                     pitstop_events=res["pitstop_events"],
                     selected_driver=selected_driver,
                     historical_data=historical_data,
                     historical_pit_stops=historical_pit_stops,
-                    year=recent_year
+                    year=recent_year,
+                    optimal_lap_times=opt_lap_times,
+                    optimal_pit_events=opt_pit_events
                 )
                 st.pyplot(fig_laps)
                 plt.close(fig_laps)
@@ -370,7 +434,6 @@ def main():
                             if telemetry_reelle.empty:
                                 st.warning("Aucune donnée de télémétrie spatiale valide trouvée pour ce Grand Prix.")
                             else:
-                                # Création des colonnes pour restreindre la taille du tracé Matplotlib
                                 col_gauche, col_centre, col_droite = st.columns([1, 1, 1])
 
                                 with col_centre:
@@ -383,10 +446,7 @@ def main():
 
                                 for i in range(0, total_points, step):
                                     fig_live = TelemetryVisualizer.plot_live_frame(telemetry_reelle, i)
-
-                                    # Rendu proportionnel restreint à la colonne du milieu
                                     live_chart_slot.pyplot(fig_live, use_container_width=True)
-
                                     plt.close(fig_live)
                                     time.sleep(0.04)
                                 st.success(f"{selected_driver} a franchi la ligne d'arrivée !")
@@ -394,6 +454,5 @@ def main():
                         st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
         else:
             st.info("Utilisez les options de la barre latérale pour configurer la stratégie et lancer les calculs.")
-
 if __name__ == "__main__":
     main()
