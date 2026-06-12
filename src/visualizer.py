@@ -10,12 +10,13 @@ import matplotlib.pyplot as plt
 
 class TelemetryVisualizer:
     @staticmethod
-    def plot_race_strategy(lap_times, pitstop_events, selected_driver, historical_data=None, historical_pit_stops=None,
-                           year=None):
+    def plot_race_strategy(lap_times, pitstop_events, selected_driver,
+        historical_data=None, historical_pit_stops=None, year=None, optimal_lap_times=None,
+                           optimal_pit_events=None):
         """
         Génère un graphique Matplotlib montrant l'évolution des temps au tour simulés,
         marque visuellement l'emplacement de l'arrêt au stand, superpose les données réelles
-        et ajuste dynamiquement l'axe Y pour ne pas couper les pics de temps au tour.
+        ainsi que la stratégie IA, avec un axe Y calculé dynamiquement de façon simplifiée.
         """
         fig, ax = plt.subplots(figsize=(10, 5))
 
@@ -23,27 +24,25 @@ class TelemetryVisualizer:
         total_laps = len(lap_times)
         tours = list(range(1, total_laps + 1))
 
-        # CALCUL DYNAMIQUE DE L'AXE Y (Évite que les courbes ne soient coupées)
+        # =======================================================
+        # CALCUL DYNAMIQUE DE L'AXE Y (Simple)
+        # =======================================================
         min_y = min(lap_times)
         max_y = max(lap_times)
 
+        # On ajuste avec les données réelles (en ignorant les drapeaux rouges > 200 secondes)
         if historical_data is not None and not historical_data.empty:
-            median_real = historical_data['LapTimeSeconds'].median()
-            # On filtre les anomalies extrêmes (ex: drapeau rouge prolongé) pour garder une échelle cohérente,
-            # mais on conserve les pics d'arrêts aux stands ou de ralentissements sous SC (< 1.5 * médiane).
-            filtered_real = historical_data['LapTimeSeconds'][historical_data['LapTimeSeconds'] < median_real * 1.5]
+            temps_valides = historical_data['LapTimeSeconds'][historical_data['LapTimeSeconds'] < 200]
 
-            if not filtered_real.empty:
-                min_y = min(min_y, filtered_real.min())
-                max_y = max(max_y, filtered_real.max())
-            else:
-                min_y = min(min_y, historical_data['LapTimeSeconds'].min())
-                max_y = max(max_y, historical_data['LapTimeSeconds'].max())
+            if not temps_valides.empty:
+                min_y = min(min_y, temps_valides.min())
+                max_y = max(max_y, temps_valides.max())
 
-        # Fixation des limites de l'axe Y avec une marge de confort en haut et en bas
-        ax.set_ylim(min_y - 1.5, max_y + 2.5)
+        # Application directe avec une petite marge esthétique
+        ax.set_ylim(min_y - 2, max_y + 5)
+        # =======================================================
 
-        # 1. Tracé de la simulation
+        # 1. Tracé de la simulation manuelle
         ax.plot(tours, lap_times, label="Simulation du rythme", color="#1E90FF", linewidth=2)
 
         # 2. Marquage des arrêts aux stands simulés
@@ -51,7 +50,7 @@ class TelemetryVisualizer:
             ax.axvline(x=pit_lap, color="#FF4500", linestyle="--", alpha=0.8, label=f"BOX Simulé (Tour {pit_lap})")
             ax.text(pit_lap, ax.get_ylim()[0] + 0.3, 'BOX SIM', color="#FF4500", weight='bold', fontsize=9, ha='center')
 
-        # 3. Tracé des données réelles (Indentation corrigée)
+        # 3. Tracé des données réelles
         if historical_data is not None and not historical_data.empty:
             ax.plot(
                 historical_data['LapNumber'],
@@ -71,7 +70,17 @@ class TelemetryVisualizer:
                     ax.text(pit, ax.get_ylim()[0] + 0.3, 'BOX RÉEL', color="#555555", weight='bold', fontsize=8,
                             ha='center')
 
-        # 4. Configuration et mise en page: titre, axes, grille
+        # 4. Tracé de la stratégie optimale
+        if optimal_lap_times is not None:
+            laps_ia = list(range(1, len(optimal_lap_times) + 1))
+            ax.plot(laps_ia, optimal_lap_times, label="Stratégie Optimale", color="#8A2BE2", linestyle="--", linewidth=2.5)
+
+            if optimal_pit_events is not None:
+                for pit_lap, pit_time in optimal_pit_events.items():
+                    if 0 < pit_lap <= len(optimal_lap_times):
+                        ax.plot(pit_lap, optimal_lap_times[pit_lap - 1], marker="*", color="#8A2BE2", markersize=12, linestyle="None")
+
+        # 5. Configuration et mise en page: titre, axes, grille
         ax.set_title("Analyse du Rythme de Course et Dégradation des Pneumatiques", fontsize=12, pad=15)
         ax.set_xlabel("Numéro du Tour", fontsize=10)
         ax.set_xlim(0, total_laps + 2)
