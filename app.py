@@ -295,7 +295,62 @@ def main():
             # ==================================================================
             with tab_dashboard:
 
-                # --- 1. SECTION STRATEGIE OPTIMISÉE (Bouton Toggle) ---
+                # --- 1. SECTION SIMULATION MANUELLE ---
+                st.markdown(f"### Simulation manuelle de {selected_driver} au {selected_event}")
+                col1, col2, col3 = st.columns(3)
+
+                with col1:
+                    st.metric(label="Temps de course total", value=format_race_time(res['total_race_time']))
+
+                with col2:
+                    sim_pit_laps = list(res['pitstop_events'].keys())
+                    sim_count = len(sim_pit_laps)
+                    sim_value = f"{sim_count} (Tour{'s' if sim_count > 1 else ''} {', '.join(str(int(lap)) for lap in sim_pit_laps)})" if sim_count > 0 else "0"
+                    st.metric(label="Arrêts au stand", value=sim_value)
+
+                with col3:
+                    sim_compounds = [starting_tyre] + list(pit_stops.values())
+                    st.metric(label="Choix des pneumatiques",
+                              value=" - ".join([str(c).strip().title() for c in sim_compounds]))
+
+                # --- 2. SECTION HISTORIQUE RÉEL ---
+                if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
+                    st.markdown("---")
+                    st.markdown(f"### Résultats réels de {selected_driver} au {selected_event} de {recent_year}")
+                    col4, col5, col6 = st.columns(3)
+
+                    with col4:
+                        real_total_seconds = historical_data['LapTimeSeconds'].sum()
+                        st.metric(label="Temps de course total", value=format_race_time(real_total_seconds))
+
+                    with col5:
+                        if 'historical_pit_stops' in locals() and historical_pit_stops is not None:
+                            real_count = len(historical_pit_stops)
+                            real_value = f"{real_count} (Tour{'s' if real_count > 1 else ''} {', '.join(str(int(lap)) for lap in historical_pit_stops)})" if real_count > 0 else "0"
+                        else:
+                            real_value = "Non disponible"
+                        st.metric(label="Arrêts au stand", value=real_value)
+
+                    with col6:
+                        df_tires = historical_data.dropna(subset=['Compound'])
+                        df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
+                            ['nan', 'none', 'unknown', ''])]
+                        if not df_tires.empty:
+                            if 'Stint' in df_tires.columns:
+                                stints_sequence = df_tires.sort_values('LapNumber').drop_duplicates(subset=['Stint'])[
+                                    'Compound'].tolist()
+                            else:
+                                raw_compounds = df_tires.sort_values('LapNumber')['Compound'].tolist()
+                                stints_sequence = [raw_compounds[0]] if raw_compounds else []
+                                for c in raw_compounds[1:]:
+                                    if c != stints_sequence[-1]: stints_sequence.append(c)
+                            real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
+                        else:
+                            real_strategy = "Non disponible"
+                        st.metric(label="Choix des pneumatiques", value=real_strategy)
+
+                # --- 3. SECTION STRATEGIE OPTIMISÉE (Bouton Toggle) ---
+                st.markdown("---")
                 st.markdown("### 🤖 Assistant Stratégique")
 
                 # Le bouton toggle
@@ -331,7 +386,7 @@ def main():
                         st.success(f"✅ La meilleure stratégie trouvée est à **{opt_strat['type']}** !")
                         col_ia1, col_ia2, col_ia3 = st.columns(3)
                         with col_ia1:
-                            st.metric(label="Temps de course estimé (IA)",
+                            st.metric(label="Temps de course estimé (optimal)",
                                       value=format_race_time(opt_strat['results']['total_race_time']))
                         with col_ia2:
                             ia_pit_laps = list(opt_strat['pit_stops'].keys())
@@ -342,62 +397,6 @@ def main():
                             ia_compounds = [opt_strat['starting_tyre']] + list(opt_strat['pit_stops'].values())
                             st.metric(label="Pneumatiques idéaux",
                                       value=" - ".join([str(c).strip().title() for c in ia_compounds]))
-
-                st.markdown("---")
-
-                # --- 2. SECTION SIMULATION MANUELLE ---
-                st.markdown(f"### Simulation manuelle de {selected_driver} au {selected_event}")
-                col1, col2, col3 = st.columns(3)
-
-                with col1:
-                    st.metric(label="Temps de course total", value=format_race_time(res['total_race_time']))
-
-                with col2:
-                    sim_pit_laps = list(res['pitstop_events'].keys())
-                    sim_count = len(sim_pit_laps)
-                    sim_value = f"{sim_count} (Tour{'s' if sim_count > 1 else ''} {', '.join(str(int(lap)) for lap in sim_pit_laps)})" if sim_count > 0 else "0"
-                    st.metric(label="Arrêts au stand", value=sim_value)
-
-                with col3:
-                    sim_compounds = [starting_tyre] + list(pit_stops.values())
-                    st.metric(label="Choix des pneumatiques",
-                              value=" - ".join([str(c).strip().title() for c in sim_compounds]))
-
-                # --- 3. SECTION HISTORIQUE RÉEL ---
-                if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
-                    st.markdown("---")
-                    st.markdown(f"### Résultats réels de {selected_driver} au {selected_event} de {recent_year}")
-                    col4, col5, col6 = st.columns(3)
-
-                    with col4:
-                        real_total_seconds = historical_data['LapTimeSeconds'].sum()
-                        st.metric(label="Temps de course total", value=format_race_time(real_total_seconds))
-
-                    with col5:
-                        if 'historical_pit_stops' in locals() and historical_pit_stops is not None:
-                            real_count = len(historical_pit_stops)
-                            real_value = f"{real_count} (Tour{'s' if real_count > 1 else ''} {', '.join(str(int(lap)) for lap in historical_pit_stops)})" if real_count > 0 else "0"
-                        else:
-                            real_value = "Non disponible"
-                        st.metric(label="Arrêts au stand", value=real_value)
-
-                    with col6:
-                        df_tires = historical_data.dropna(subset=['Compound'])
-                        df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
-                            ['nan', 'none', 'unknown', ''])]
-                        if not df_tires.empty:
-                            if 'Stint' in df_tires.columns:
-                                stints_sequence = df_tires.sort_values('LapNumber').drop_duplicates(subset=['Stint'])[
-                                    'Compound'].tolist()
-                            else:
-                                raw_compounds = df_tires.sort_values('LapNumber')['Compound'].tolist()
-                                stints_sequence = [raw_compounds[0]] if raw_compounds else []
-                                for c in raw_compounds[1:]:
-                                    if c != stints_sequence[-1]: stints_sequence.append(c)
-                            real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
-                        else:
-                            real_strategy = "Non disponible"
-                        st.metric(label="Choix des pneumatiques", value=real_strategy)
 
                 # --- 4. GRAPHIQUE COMPARATIF GLOBAL ---
                 st.markdown("---")
