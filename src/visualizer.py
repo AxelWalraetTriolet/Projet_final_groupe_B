@@ -1,15 +1,35 @@
 """
 AFFICHAGE DES RESULTATS
-Ce module affiche:
-- la stratégie et le temps total de course (simulation & réel)
-- l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel.
-- animation 3D du circuit.
+Ce module permet d'afficher:
+- un temps formaté en h/min/s
+- l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel
+- l'écart au tour par rapport à un tour de référence de la simulation et comparaison avec le cas réel
+- une animation 3D du circuit.
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-class TelemetryVisualizer:
+class Visualizer:
+
+    @staticmethod
+    def format_race_time(total_seconds):
+        """
+        Convertit un temps en secondes en une chaîne lisible : heures, minutes et secondes.
+        :param total_seconds : temps en secondes
+        :type total_seconds: float
+        :return: le temps formaté en h/min/s
+        :rtype: str
+        """
+        hours = int(total_seconds // 3600)
+        minutes = int((total_seconds % 3600) // 60)
+        seconds = total_seconds % 60
+
+        if hours > 0:
+            return f"{hours} h {minutes} min {seconds:.3f} s"
+        else:
+            return f"{minutes} min {seconds:.3f} s"
+
     @staticmethod
     def plot_race_strategy(lap_times, pitstop_events, selected_driver,
         historical_data=None, historical_pit_stops=None, year=None, optimal_lap_times=None,
@@ -18,6 +38,24 @@ class TelemetryVisualizer:
         Génère un graphique Matplotlib montrant l'évolution des temps au tour simulés,
         marque visuellement l'emplacement de l'arrêt au stand, superpose les données réelles
         ainsi que la stratégie IA, avec un axe Y calculé dynamiquement de façon simplifiée.
+        :param lap_times: Liste des temps au tour simulés en secondes.
+        :type lap_times: list[float]
+        :param pitstop_events: Dictionnaire associant le numéro du tour de l'arrêt à ses détails.
+        :type pitstop_events: dict[int, str]
+        :param selected_driver: Code du pilote analysé (ex: 'VER', 'HAM').
+        :type selected_driver: str
+        :param historical_data: Données historiques de FastF1 contenant les chronos réels, optionnel
+        :type historical_data: pandas.DataFrame, optional
+        :param historical_pit_stops: Liste des numéros de tours des arrêts au stand réels, optionnel
+        :type historical_pit_stops: list[int], optional
+        :param year: Année de la course sélectionnée finie (pas de DNF) la plus récente, optionnel.
+        :type year: int, optional
+        :param optimal_lap_times: Liste des temps au tour de la stratégie optimale calculée par l'IA, optionnel.
+        :type optimal_lap_times: list[float], optional
+        :param optimal_pit_events: Événements d'arrêts aux stands de la stratégie IA, optionnel.
+        :type optimal_pit_events: dict[int, str], optional
+        :return: La figure Matplotlib contenant le graphique comparatif généré.
+        :rtype: matplotlib.figure.Figure
         """
         fig, ax = plt.subplots(figsize=(10, 5))
 
@@ -25,13 +63,11 @@ class TelemetryVisualizer:
         total_laps = len(lap_times)
         tours = list(range(1, total_laps + 1))
 
-        # =======================================================
-        # CALCUL DYNAMIQUE DE L'AXE Y (Simple)
-        # =======================================================
+        # Calcul dynamique de l'axe y
         min_y = min(lap_times)
         max_y = max(lap_times)
 
-        # On ajuste avec les données réelles (en ignorant les drapeaux rouges > 200 secondes)
+        # Ajustement de l'axe y avec les données réelles (en ignorant les drapeaux rouges > 200 secondes)
         if historical_data is not None and not historical_data.empty:
             temps_valides = historical_data['LapTimeSeconds'][historical_data['LapTimeSeconds'] < 200]
 
@@ -39,14 +75,13 @@ class TelemetryVisualizer:
                 min_y = min(min_y, temps_valides.min())
                 max_y = max(max_y, temps_valides.max())
 
-        # Application directe avec une petite marge esthétique
+        # Application directe avec une petite marge
         ax.set_ylim(min_y - 2, max_y + 5)
-        # =======================================================
 
-        # 1. Tracé de la simulation manuelle
+        # 1. Tracé des résultats de la simulation
         ax.plot(tours, lap_times, label="Simulation du rythme", color="#1E90FF", linewidth=2)
 
-        # 2. Marquage des arrêts aux stands simulés
+        # 2. Marquage des arrêts aux stands de la simulation
         for pit_lap, pit_time in pitstop_events.items():
             ax.axvline(x=pit_lap, color="#FF4500", linestyle="--", alpha=0.8, label=f"BOX Simulé (Tour {pit_lap})")
             ax.text(pit_lap, ax.get_ylim()[0] + 0.3, 'BOX SIM', color="#FF4500", weight='bold', fontsize=9, ha='center')
@@ -98,13 +133,16 @@ class TelemetryVisualizer:
         return fig
 
 
-
     @staticmethod
     def plot_circuit_layout(telemetry):
         """
-        Génère un graphique représentant le tracé en 2D du circuit
-        avec un code couleur basé sur la vitesse du pilote.
+        Génère un graphique représentant le tracé en 2D du circuit avec un code couleur basé sur la vitesse du pilote.
+        :param telemetry: Données de télémétrie FastF1 (coordonnées X, Y et Speed)
+        :type telemetry: pandas.DataFrame
+        :return: La figure Matplotlib affichant la carte du tracé avec son dégradé de vitesse
+        :rtype: matplotlib.figure.Figure
         """
+
         import numpy as np
         from matplotlib.collections import LineCollection
 
@@ -145,6 +183,12 @@ class TelemetryVisualizer:
         """
         Génère une frame unique pour l'animation live.
         Affiche le circuit gris et un point brillant pour la voiture.
+        :param telemetry: Données de télémétrie FastF1 (coordonnées spatiales ('X', 'Y'))
+        :type telemetry: pandas.DataFrame
+        :param current_index: l'indice actuel dans le tableau de télémétrie représentant la position de la voiture
+        :type current_index: int
+        :return: La figure Matplotlib représentant l'état de l'animation à l'instant ciblé
+        :rtype: matplotlib.figure.Figure
         """
         x = telemetry['X'].values
         y = telemetry['Y'].values
@@ -169,8 +213,20 @@ class TelemetryVisualizer:
     @staticmethod
     def plot_cumulative_gap(lap_times, pitstop_events, selected_driver, historical_data=None, year=None):
         """
-        Génère un graphique d'écarts cumulés par rapport à un rythme de référence.
+        Génère un graphique d'écarts cumulés par rapport à un rythme de référence de la simulation.
         Permet de visualiser les gains/pertes de temps, les arrêts et les écarts Simu vs Réel.
+        :param lap_times: Liste des temps au tour simulés en secondes.
+        :type lap_times: list[float]
+        :param pitstop_events: Dictionnaire contenant les tours des arrêts au stand simulés en clés.
+        :type pitstop_events: dict[int, str]
+        :param selected_driver: Nom ou trigramme du pilote sélectionné (ex: 'LEC', 'HAM').
+        :type selected_driver: str
+        :param historical_data: Données de course réelles issues de FastF1, optionnel.
+        :type historical_data: pandas.DataFrame, optional
+        :param year: Année de la saison de référence pour les données historiques, optionnel.
+        :type year: int, optional
+        :return: La figure Matplotlib contenant le graphique des écarts cumulés généré.
+        :rtype: matplotlib.figure.Figure
         """
         fig, ax = plt.subplots(figsize=(10, 4.5)) # Création de la figure
 

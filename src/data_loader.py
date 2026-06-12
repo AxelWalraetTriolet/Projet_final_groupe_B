@@ -21,21 +21,47 @@ class F1DataLoader:
         fastf1.Cache.enable_cache(cache_dir)
 
     def load_session_data(self, year, gp, event_type='R'):
-        """Loads a specific F1 race (e.g., year=2025, gp='Monaco')."""
+        """Loads a specific F1 race (e.g., year=2025, gp='Monaco').
+        :param year: Année de la session choisie.
+        :type year: int
+        :param gp: Nom du circuit choisi.
+        :type gp: str
+        :param event_type: Type de session, par défaut 'R' pour Race.
+        :type event_type: str
+        :return: L'objet session de FastF1 contenant toutes les données chargées (tours, télémétrie, météo).
+        :rtype: fastf1.core.Session
+        """
         session = fastf1.get_session(year, gp, event_type)
         session.load()
         return session
 
 
     def get_driver_telemetry(self, session, driver_code):
+        """
+        Récupère la télémétrie du tour le plus rapide d'un pilote pour une session donnée.
+        :param session: L'objet session FastF1 préalablement chargé.
+        :type session: fastf1.core.Session
+        :param driver_code: Le code du pilote (ex: 'VER', 'HAM', 'LEC').
+        :type driver_code: str
+        :return: Un DataFrame contenant les données de télémétrie (vitesse, RPM, X, Y, etc.).
+        :rtype: fastf1.core.Telemetry
+        """
         lap = session.laps.pick_driver(driver_code).pick_fastest()
         telemetry = lap.get_telemetry()
         return telemetry
 
     def get_event_laps_count(self, year, gp_name, event_type='R'):
         """
-        Récupère le nombre total de tours pour un GP donné
-        sans charger toute la télémétrie.
+        Récupère le nombre total de tours pour un GP donné sans charger toute la télémétrie.
+        :param year: Année de la saison de Formule 1.
+        :type year: int
+        :param gp_name: Nom du circuit ou du Grand Prix (ex: 'Bahrain', 'Spa').
+        :type gp_name: str
+        :param event_type: Type de session de l'événement, par défaut 'R' (Race).
+        :type event_type: str, optional
+        :return: Le nombre total de tours prévus ou complétés pour la course,
+             ou une valeur par défaut de 50 en cas d'erreur.
+        :rtype: int
         """
         try:
             # Charger uniquement l'objet session de la course ('R')
@@ -52,8 +78,15 @@ class F1DataLoader:
 
     def get_track_base_time(self, year, gp_name, event_type='R'):
         """
-        Récupère le meilleur temps au tour global de la course
-        pour servir de base réaliste au moteur de simulation.
+        Récupère le meilleur temps au tour global de la course pour servir de base réaliste au moteur de simulation.
+        :param year: Année de la saison de Formule 1.
+        :type year: int
+        :param gp_name: Nom du circuit ou du Grand Prix.
+        :type gp_name: str
+        :param event_type: Type de session de l'événement, par défaut 'R' (Race).
+        :type event_type: str, optional
+        :return: Le chrono absolu du meilleur tour de la session, exprimé en secondes.
+        :rtype: float
         """
 
         session = fastf1.get_session(year, gp_name, event_type)
@@ -68,8 +101,10 @@ class F1DataLoader:
 
     def load_multi_season_coefficients(self):
         """
-        Charge  les coefficients pluri-annuels
-        stockés à la racine du projet.
+        Charge  les coefficients pluri-annuels stockés à la racine du projet.
+        :return: Un dictionnaire contenant la structure complète des coefficients par circuit, pilote et composé.
+        :rtype: dict
+        :raises FileNotFoundError: Si le fichier 'coefficients_pilotes_saisons.json' n'existe pas à l'emplacement attendu.
         """
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         json_path = os.path.join(base_dir, "coefficients_pilotes_saisons.json")
@@ -88,6 +123,15 @@ class F1DataLoader:
         """
         Parcourt les années à l'envers pour trouver l'année la plus récente
         où le pilote a croisé le drapeau à damier (classé / a fini la course).
+        :param selected_event: Le nom du Grand Prix à tester (ex: 'Monaco').
+        :type selected_event: str
+        :param selected_driver: Le code du pilote recherché (ex: 'LEC').
+        :type selected_driver: str
+        :param start_year: L'année de départ pour la recherche inversée, par défaut 2025.
+        :type start_year: int, optional
+        :return: L'année la plus récente trouvée où le pilote est classé,
+                ou None si aucune occurrence valide n'existe entre 2019 et 2025.
+        :rtype: int ou None
         """
         # On remonte dans le temps jusqu'à 2018
         for year in range(start_year, 2018, -1):
@@ -118,6 +162,16 @@ class F1DataLoader:
         """
         Récupère les temps au tour et les tours de passage par les stands
         pour un pilote, un circuit et une année donnée.
+        :param year: Année de la saison.
+        :type year: int
+        :param selected_event: Nom du Grand Prix (ex: 'Monaco').
+        :type selected_event: str
+        :param selected_driver: Code du pilote (ex: 'HAM', 'LEC').
+        :type selected_driver: str
+        :return: Un tuple contenant :
+             -  Un DataFrame nettoyé avec les colonnes ['LapNumber', 'LapTimeSeconds', 'Compound', 'Stint'].
+             -  Une liste des numéros de tours où le pilote est rentré aux stands.
+        :rtype: tuple[pandas.DataFrame, list[int]]
         """
         session = fastf1.get_session(year, selected_event, 'R')
         session.load(telemetry=False, weather=False)  # On ne charge que les laps pour aller vite
@@ -140,7 +194,23 @@ class F1DataLoader:
 
     @st.cache_data
     def _cached_historical_data(_data_loader, selected_event, selected_driver):
-        """Télécharge et met en cache les données de course historiques."""
+        """
+        Télécharge et met en cache les données d'une course.
+        Recherche l'année la plus récente disponible pour le pilote et l'événement
+        donnés, puis extrait ses chronos ainsi que ses arrêts aux stands réels.
+
+        :param _data_loader: L'instance du gestionnaire de données utilisé pour l'extraction.
+        :type _data_loader: DataLoader
+        :param selected_event: Nom du Grand Prix.
+        :type selected_event: str
+        :param selected_driver: Code du pilote recherché (ex: 'VER').
+        :type selected_driver: str
+        :return: Un tuple contenant :
+             - Le DataFrame des chronos historiques (ou None si introuvable).
+             - La liste des tours d'arrêts aux stands réels (ou None si introuvable).
+             - L'année correspondante trouvée (ou None si introuvable).
+        :rtype: tuple[pandas.DataFrame ou None, list[int] ou None, int ou None]
+        """
         recent_year = _data_loader.find_most_recent_year(selected_event, selected_driver)
         if recent_year:
             hist_data, hist_pits = _data_loader.get_historical_driver_data(
@@ -151,7 +221,23 @@ class F1DataLoader:
 
     @st.cache_data
     def _cached_telemetry_data(_data_loader, year, selected_event, selected_driver):
-        """Télécharge et met en cache la trajectoire spatiale pour l'animation."""
+        """
+        Télécharge et met en cache la trajectoire spatiale pour l'animation.
+        Récupère la télémétrie du tour le plus rapide du pilote sélectionné. Si le pilote
+        n'a aucun tour enregistré dans la session, la télémétrie du meilleur tour absolu
+        de la session est renvoyée par sécurité.
+
+        :param _data_loader: L'instance du gestionnaire de données utilisé pour charger la session.
+        :type _data_loader: DataLoader
+        :param year: Année de la saison historique ciblée.
+        :type year: int
+        :param selected_event: Nom du Grand Prix.
+        :type selected_event: str
+        :param selected_driver: Code du pilote recherché (ex: 'LEC').
+        :type selected_driver: str
+        :return: Un DataFrame contenant la télémétrie complète (coordonnées X, Y, vitesse, etc.).
+        :rtype: fastf1.core.Telemetry
+        """
         session_reelle = _data_loader.load_session_data(year, selected_event, 'R')
         laps_pilote = session_reelle.laps.pick_driver(selected_driver)
         lap_rapide = laps_pilote.pick_fastest() if not laps_pilote.empty else session_reelle.laps.pick_fastest()

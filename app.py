@@ -1,57 +1,41 @@
 """
 APPLICATION PRINCIPALE
-Ce module : - définit l'interface utilisateur Streamlit avec page d'accueil,
+Ce module : - définit l'interface utilisateur Streamlit avec notamment la page d'accueil,
             - récupère les choix de stratégie de l'utilisateur,
-            - calcule et affiche les résultats et graphiques de la simulation.
+            - effectue les calculs de la simulation choisie et le calcul de la stratégie optimale si demandé
+            - affiche les résultats et graphiques de la simulation en comparaison avec une course réelle.
 """
 
+# Importation des bibliothèques
 import streamlit as st
 import matplotlib.pyplot as plt
 import time
-import fastf1
+
+# Importation des classes
 from src.data_loader import F1DataLoader
 from src.simulation import RaceSimulation
-from src.visualizer import TelemetryVisualizer
+from src.visualizer import Visualizer
 from src.regression_engine import RegressionEngine
 
-
-def format_race_time(total_seconds):
-    """
-    Convertit un temps en secondes en une chaîne lisible : heures, minutes et secondes.
-    """
-    hours = int(total_seconds // 3600)
-    minutes = int((total_seconds % 3600) // 60)
-    seconds = total_seconds % 60
-
-    if hours > 0:
-        return f"{hours} h {minutes} min {seconds:.3f} s"
-    else:
-        return f"{minutes} min {seconds:.3f} s"
-
-
 def main():
+    """
+    Implémente l'application principale sur Streamlit.
+    """
+
     st.set_page_config(page_title="F1 Strategy Simulator", layout="wide")
 
-    # --- AJOUT DU CSS POUR REDIMENSIONNER LES METRICS ---
+    # Ajout du CSS pour corriger l'affichage des metrics
     st.markdown(
         """
         <style>
         /* Force les titres des metrics à aller à la ligne au lieu de mettre ... */
-        [data-testid="stMetricLabel"] {
-            word-wrap: break-word;
-            white-space: normal;
-        }
+        [data-testid="stMetricLabel"] { word-wrap: break-word; white-space: normal;}
         /* Rend la taille des valeurs dynamique selon l'espace disponible */
-        [data-testid="stMetricValue"] {
-            word-wrap: break-word;
-            white-space: normal;
-            font-size: clamp(1.2rem, 2vw, 1.8rem) !important; 
-        }
+        [data-testid="stMetricValue"] { word-wrap: break-word; white-space: normal; font-size: clamp(1.2rem, 2vw, 1.8rem) !important;}
         </style>
         """,
         unsafe_allow_html=True
     )
-    # ----------------------------------------------------
 
     # Initialisation de la mémoire de session pour Streamlit
     if "validated" not in st.session_state:
@@ -67,7 +51,7 @@ def main():
     if "optimal_strategy" not in st.session_state:
         st.session_state.optimal_strategy = None
 
-    # 1. Chargement des composants de configuration et de données
+    # 1. Chargement des composants de configuration et de données par défaut
     defaults = {"year": 2025, "gp": "Monaco", "event": "Q", "total_laps": 50}
     track_params = {"pitstop_loss_seconds": 22.0, "base_lap_time_seconds": 85.0}
     data_loader = F1DataLoader()
@@ -122,7 +106,7 @@ def main():
     # INTERFACE D'ANALYSE PRINCIPALE (SI VALIDÉ)
     # ========================================================================================================
     else:
-        # Témoin d'activité tout en haut de la page
+        # 1. Témoin d'activité tout en haut de la page
         st.info(
             f"📊 **Analyse active :** Simulation de la course de **{st.session_state.home_driver}** au **{st.session_state.home_event}**")
 
@@ -132,6 +116,7 @@ def main():
             st.session_state.sim_calculee = False
             st.rerun()
 
+        # Titre de la page
         st.title("🏎️ Simulateur de course F1")
         st.markdown("---")
 
@@ -282,47 +267,48 @@ def main():
         if st.session_state.sim_calculee and st.session_state.results:
             res = st.session_state.results
 
-            # Création du système d'onglets
+            # Création du système de 3 onglets
             tab_dashboard, tab_gaps, tab_telemetry = st.tabs([
                 "📊 Tableau de bord comparatif",
-                "📈 Analyse graphique des performances ",
+                "📈 Analyse graphique des performances",
                 "🏎️ Télémétrie & Animation Live"
             ])
 
 
             # ==================================================================
-            # ONGLET 1 : DONNÉES COMPARATIVES ET GRAPH_STRAT
+            # ONGLET 1 : Tableau comparatif
             # ==================================================================
             with tab_dashboard:
-                # --- 1. SECTION SIMULATION  ---
-                st.markdown(f"### Simulation de {selected_driver} au {selected_event}")
+                # 1.SIMULATION
+                st.markdown(f"### Simulation de {selected_driver} au {selected_event}") # Titre de la ligne
                 col1, col2, col3 = st.columns(3)
 
-                with col1:
-                    st.metric(label="Temps de course total", value=format_race_time(res['total_race_time']))
+                with col1: # Temps de course total
+                    st.metric(label="Temps de course total", value=Visualizer.format_race_time(res['total_race_time']))
 
-                with col2:
+                with col2: # Arrêts au stand: nombre d'arrêt et numéro du tour
                     sim_pit_laps = list(res['pitstop_events'].keys())
                     sim_count = len(sim_pit_laps)
                     sim_value = f"{sim_count} (Tour{'s' if sim_count > 1 else ''} {', '.join(str(int(lap)) for lap in sim_pit_laps)})" if sim_count > 0 else "0"
                     st.metric(label="Arrêts au stand", value=sim_value)
 
-                with col3:
+                with col3: # Types des pneumatiques choisies dans l'ordre
                     sim_compounds = [starting_tyre] + list(pit_stops.values())
                     st.metric(label="Choix des pneumatiques",
                               value=" - ".join([str(c).strip().title() for c in sim_compounds]))
 
-                # --- 2. SECTION HISTORIQUE RÉEL ---
+                # 2. Course réelle
+                # Vérification que les données existent bien sinon aucun affichage (sans arrêt du programme)
                 if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
                     st.markdown("---")
                     st.markdown(f"### Résultats réels de {selected_driver} au {selected_event} de {recent_year}")
                     col4, col5, col6 = st.columns(3)
 
-                    with col4:
+                    with col4: # Temps de course total
                         real_total_seconds = historical_data['LapTimeSeconds'].sum()
-                        st.metric(label="Temps de course total", value=format_race_time(real_total_seconds))
+                        st.metric(label="Temps de course total", value=Visualizer.format_race_time(real_total_seconds))
 
-                    with col5:
+                    with col5: # Arrêts au stand: nombre d'arrêt et numéro du tour
                         if 'historical_pit_stops' in locals() and historical_pit_stops is not None:
                             real_count = len(historical_pit_stops)
                             real_value = f"{real_count} (Tour{'s' if real_count > 1 else ''} {', '.join(str(int(lap)) for lap in historical_pit_stops)})" if real_count > 0 else "0"
@@ -330,7 +316,7 @@ def main():
                             real_value = "Non disponible"
                         st.metric(label="Arrêts au stand", value=real_value)
 
-                    with col6:
+                    with col6: # Types des pneumatiques choisies dans l'ordre
                         # Nettoyage et tri des données de pneumatiques
                         df_tires = historical_data.dropna(subset=['Compound']).sort_values('LapNumber')
                         df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
@@ -345,7 +331,7 @@ def main():
 
                         st.metric(label="Choix des pneumatiques", value=real_strategy)
 
-                # --- 3. SECTION STRATEGIE OPTIMISÉE (Bouton Toggle) ---
+                # 3. Stratégie optimale (Bouton Toggle)
                 st.markdown("---")
                 st.markdown("### 🤖 Assistant Stratégique")
 
@@ -383,7 +369,7 @@ def main():
                         col_ia1, col_ia2, col_ia3 = st.columns(3)
                         with col_ia1:
                             st.metric(label="Temps de course estimé (optimal)",
-                                      value=format_race_time(opt_strat['results']['total_race_time']))
+                                      value=Visualizer.format_race_time(opt_strat['results']['total_race_time']))
                         with col_ia2:
                             ia_pit_laps = list(opt_strat['pit_stops'].keys())
                             ia_count = len(ia_pit_laps)
@@ -395,7 +381,6 @@ def main():
                                       value=" - ".join([str(c).strip().title() for c in ia_compounds]))
 
 
-
             # ==================================================================
             # ONGLET 2 : GRAPHIQUES DES PERFORMANCES
             # ==================================================================
@@ -403,8 +388,8 @@ def main():
                 # Graphique 1: Temps au tour
                 st.subheader(f"📊 Analyse des performances au tour comparées - {selected_driver}")
 
-                # On envoie toutes les données à plot_race_strategy (les données IA seront nulles si le bouton est éteint)
-                fig_laps = TelemetryVisualizer.plot_race_strategy(
+                # Appel de la fonction plot_race_strategy
+                fig_laps = Visualizer.plot_race_strategy(
                     lap_times=res["lap_times"],
                     pitstop_events=res["pitstop_events"],
                     selected_driver=selected_driver,
@@ -426,7 +411,7 @@ def main():
                 )
 
                 # Appel de la fonction Gap Chart
-                fig_gap = TelemetryVisualizer.plot_cumulative_gap(
+                fig_gap = Visualizer.plot_cumulative_gap(
                     lap_times=res["lap_times"],
                     pitstop_events=res["pitstop_events"],
                     selected_driver=selected_driver,
@@ -435,6 +420,7 @@ def main():
                 )
                 st.pyplot(fig_gap)
                 plt.close(fig_gap)  # Libère proprement la mémoire
+
             # ==================================================================
             # ONGLET 3 : ANIMATION GÉOMÉTRIQUE EN TEMPS RÉEL
             # ==================================================================
@@ -462,7 +448,7 @@ def main():
                                 step = max(1, total_points // nombre_frames_cible)
 
                                 for i in range(0, total_points, step):
-                                    fig_live = TelemetryVisualizer.plot_live_frame(telemetry_reelle, i)
+                                    fig_live = Visualizer.plot_live_frame(telemetry_reelle, i)
                                     live_chart_slot.pyplot(fig_live, use_container_width=True)
                                     plt.close(fig_live)
                                     time.sleep(0.04)
@@ -471,5 +457,7 @@ def main():
                         st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
         else:
             st.info("Utilisez les options de la barre latérale pour configurer la stratégie et lancer les calculs.")
+
+
 if __name__ == "__main__":
     main()
