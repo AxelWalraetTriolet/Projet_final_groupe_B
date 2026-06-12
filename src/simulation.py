@@ -19,8 +19,9 @@ class RaceSimulation:
     def simulate_pitstop(self):
         """
         Calcule la durée de l'arrêt au stand en combinant le temps de perte fixe
-        dans la pitlane et un tirage probabiliste (stochastique) pour l'erreur
-        humaine.
+        dans la pitlane et un tirage probabiliste (stochastique) pour l'erreur humaine.
+        :return: Le temps total perdu lors du passage par les stands (perte de pitlane + durée de l'arrêt).
+        :rtype: float
         """
         base_loss = self.track_config.get("pitstop_loss_seconds", 22.0)
 
@@ -43,6 +44,16 @@ class RaceSimulation:
         """
         Exécute la simulation de la course tour par tour selon la stratégie choisie.
         pit_stops est un dictionnaire. Ex: {15: 'HARD'} signifie arrêt au tour 15.
+        :param starting_tyre: Le composé pneumatique de départ (ex: 'SOFT', 'MEDIUM', 'HARD').
+        :type starting_tyre: str
+        :param pit_stops: Dictionnaire associant le numéro du tour de l'arrêt au nouveau composé choisi.
+        :type pit_stops: dict[int, str]
+        :return: Un dictionnaire contenant les résultats agrégés de la simulation :
+                - ``"total_race_time"`` (float) : Le temps total de course en secondes.
+                - ``"lap_times"`` (list[float]) : La liste des chronos individuels de chaque tour.
+                - ``"pitstop_events"`` (dict[int, float]) : Les tours d'arrêts associés à leur durée exacte.
+        :rtype: dict[str, any]
+        :raises ValueError: Si les coefficients d'un composé demandé sont introuvables dans la configuration.
         """
         current_tyre = starting_tyre.upper()
         tyre_age = 0
@@ -105,6 +116,13 @@ class RaceSimulation:
     def is_strategy_valid(self, starting_tyre, pit_stops):
         """
         Vérifie si la stratégie respecte la réglementation de la FIA (au moins deux composés différents obligatoires).
+        :param starting_tyre: Le composé pneumatique utilisé au départ de la course (ex: 'SOFT').
+        :type starting_tyre: str
+        :param pit_stops: Dictionnaire répertoriant les arrêts aux stands, avec le numéro du tour en clé
+                      et le nouveau composé chaussé en valeur. Exemple : ``{20: 'MEDIUM'}``.
+        :type pit_stops: dict[int, str]
+        :return: True si la stratégie utilise au moins 2 composés différents conformément au règlement FIA, False sinon.
+        :rtype: bool
         """
         composes_utilises = {starting_tyre.upper()}
 
@@ -113,11 +131,17 @@ class RaceSimulation:
 
         return len(composes_utilises) >= 2
 
-    def find_optimal_two_stops_strategy(self):
+    def find_optimal_stops_strategy(self):
         """
         Trouve la meilleure stratégie à adopter pour une course et un pilote
         (choix du tour d'arrêts, du nombre d'arrêts et du type de pneu). Pour alléger le programme on ne prend
         en compte qu'au maximum deux arrêts.
+        :return: Un dictionnaire décrivant la stratégie optimale trouvée, structuré ainsi :
+                - ``"type"`` (str) : Le type de stratégie ('1 arrêt' ou '2 arrêts').
+                - ``"starting_tyre"`` (str) : Le composé du premier relais.
+                - ``"pit_stops"`` (dict[int, str]) : Les détails des arrêts (ex: ``{15: 'MEDIUM', 38: 'HARD'}``).
+                - ``"results"`` (dict) : Les données de course associées (temps total, chronos par tour).
+        :rtype: dict[str, any] ou None
         """
         best_time = float('inf')
         best_strategy = None

@@ -22,7 +22,6 @@ class RegressionEngine:
         # Construction du chemin vers le JSON
         self.json_path = os.path.normpath(os.path.join(dossier_racine, "coefficients_pilotes_saisons.json"))
 
-
         self.coefficients_db = self._load_database()
 
     def _load_database(self):
@@ -42,6 +41,12 @@ class RegressionEngine:
         """
         Récupère les coefficients bruts (SOFT, MEDIUM, HARD) extraits de la frontière
         inférieure des données de performance pour un pilote et un circuit spécifiques.
+        :param circuit_name: Le nom du Grand Prix sélectionné.
+        :type circuit_name: str
+        :param driver_name: Le code du pilote sélectionné (ex: 'VER').
+        :type driver_name: str
+        :return: Un dictionnaire contenant les listes de coefficients polynomiaux par composé de pneu
+        :rtype: dict[str, list[float]]
         """
         circuit_data = self.coefficients_db.get(circuit_name, {})
 
