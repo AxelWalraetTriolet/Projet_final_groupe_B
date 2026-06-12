@@ -132,7 +132,7 @@ def main():
             st.session_state.sim_calculee = False
             st.rerun()
 
-        st.title("🏎️ F1 Strategy Simulator")
+        st.title("🏎️ Simulateur de course F1")
         st.markdown("---")
 
         # 2. Barre latérale : Paramètres de la simulation
@@ -267,7 +267,7 @@ def main():
             except FileNotFoundError as fnf_err:
                 st.error(f"🚨 {fnf_err}")
             except Exception as sim_err:
-                st.error(f"Une erreur est survenue pendant la simulation : {sim_err}")
+                st.error(f"Une erreur est survenue pendant la simulation : {sim_err}  \n Veuillez essayer une autre stratégie.")
 
         # 4. Affichage des résultats et rendus graphiques
         historical_data = None
