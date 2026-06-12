@@ -7,6 +7,7 @@ Ce module affiche:
 """
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 class TelemetryVisualizer:
     @staticmethod
@@ -163,4 +164,84 @@ class TelemetryVisualizer:
         ax.set_axis_off()
         plt.tight_layout()
 
+        return fig
+
+    @staticmethod
+    def plot_cumulative_gap(lap_times, pitstop_events, selected_driver, historical_data=None, year=None):
+        """
+        Génère un graphique d'écarts cumulés par rapport à un rythme de référence.
+        Permet de visualiser les gains/pertes de temps, les arrêts et les écarts Simu vs Réel.
+        """
+        fig, ax = plt.subplots(figsize=(10, 4.5)) # Création de la figure
+
+        total_laps = len(lap_times)
+        tours = list(range(1, total_laps + 1))
+
+        # 1. Définition du rythme de référence basé sur la simulation
+        # On retire les tours avec arrêt
+        clean_sim_times = [t for i, t in enumerate(lap_times) if (i + 1) not in pitstop_events]
+        # On calcule la médiane des tours de simulation hors arrêts
+        reference_lap_time = np.median(clean_sim_times) if clean_sim_times else np.median(lap_times)
+
+        # 2. Calcul des écarts cumulés pour la simulation
+        sim_gaps = np.cumsum([t - reference_lap_time for t in lap_times])
+        ax.plot(tours, sim_gaps, label="Simulation (Écart cumulé)", color="#1E90FF", linewidth=2.5)
+
+        # Marquage des arrêts simulés
+        for pit_lap in pitstop_events.keys():
+            if pit_lap <= len(sim_gaps):
+                y_pos = sim_gaps[pit_lap - 1]
+                ax.plot(pit_lap, y_pos, marker='o', color="#FF4500", markersize=8)
+                ax.text(pit_lap, y_pos + (max(sim_gaps) * 0.05), 'BOX SIM', color="#FF4500", weight='bold', fontsize=8,
+                        ha='center')
+
+        # 3. Calcul des écarts cumulés pour les résultats réels
+        if historical_data is not None and not historical_data.empty:
+            df_real = historical_data.sort_values('LapNumber').copy()
+
+            # On calcule l'écart par rapport à la même référence que la simulation
+            df_real['GapToRef'] = df_real['LapTimeSeconds'] - reference_lap_time
+            df_real['CumulativeGap'] = df_real['GapToRef'].cumsum()
+
+            ax.plot(
+                df_real['LapNumber'],
+                df_real['CumulativeGap'],
+                label=f"Réel - {selected_driver} ({year})",
+                color="#555555",
+                linestyle="-.",
+                linewidth=1.5,
+                alpha=0.8
+            )
+
+            # Marquage des arrêts réels (changement de Stint) & affichage en légende
+            if 'Stint' in df_real.columns:
+                real_pits = df_real.drop_duplicates(subset=['Stint'], keep='last')
+                real_pits = real_pits[real_pits['LapNumber'] < total_laps]
+
+                legend_added = False
+                for _, row in real_pits.iterrows():
+                    # On n'affiche le label dans la légende que pour la toute première croix rencontrée
+                    lbl = "Arrêt au stand Réel (FastF1)" if not legend_added else ""
+                    ax.plot(
+                        row['LapNumber'],
+                        row['CumulativeGap'],
+                        marker='x',
+                        color="#555555",
+                        markersize=8,
+                        markeredgewidth=2,  
+                        label=lbl
+                    )
+                    legend_added = True
+
+        # 4. Habillage du graphique
+        ax.set_title(f"Graphique des Écarts Cumulés - {selected_driver}", fontsize=11, pad=10)
+        ax.set_xlabel("Numéro du Tour", fontsize=10)
+        ax.set_ylabel("Temps cumulé vs référence (s)\n⬅️ Plus rapide (Gain)  |  Plus lent (Perte) ➡️", fontsize=9)
+
+        # Inverser l'axe Y est la norme des ingénieurs F1 : vers le bas = gain de temps
+        ax.invert_yaxis()
+        ax.grid(True, linestyle=":", alpha=0.6)
+        ax.legend(loc="upper left", fontsize=9)
+
+        plt.tight_layout()
         return fig

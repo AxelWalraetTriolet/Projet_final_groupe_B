@@ -283,15 +283,19 @@ def main():
             res = st.session_state.results
 
             # Création du système d'onglets
-            tab_dashboard, tab_telemetry = st.tabs(["📊 Tableau de bord comparatif", "🏎️ Télémétrie & Animation Live"])
+            tab_dashboard, tab_gaps, tab_telemetry = st.tabs([
+                "📊 Tableau de bord comparatif",
+                "📈 Analyse graphique des performances ",
+                "🏎️ Télémétrie & Animation Live"
+            ])
+
 
             # ==================================================================
             # ONGLET 1 : DONNÉES COMPARATIVES ET GRAPH_STRAT
             # ==================================================================
             with tab_dashboard:
-
-                # --- 1. SECTION SIMULATION MANUELLE ---
-                st.markdown(f"### Simulation manuelle de {selected_driver} au {selected_event}")
+                # --- 1. SECTION SIMULATION  ---
+                st.markdown(f"### Simulation de {selected_driver} au {selected_event}")
                 col1, col2, col3 = st.columns(3)
 
                 with col1:
@@ -390,8 +394,13 @@ def main():
                             st.metric(label="Pneumatiques idéaux",
                                       value=" - ".join([str(c).strip().title() for c in ia_compounds]))
 
-                # --- 4. GRAPHIQUE COMPARATIF GLOBAL ---
-                st.markdown("---")
+
+
+            # ==================================================================
+            # ONGLET 2 : GRAPHIQUES DES PERFORMANCES
+            # ==================================================================
+            with tab_gaps:
+                # Graphique 1: Temps au tour
                 st.subheader(f"📊 Analyse des performances au tour comparées - {selected_driver}")
 
                 # On envoie toutes les données à plot_race_strategy (les données IA seront nulles si le bouton est éteint)
@@ -408,8 +417,26 @@ def main():
                 st.pyplot(fig_laps)
                 plt.close(fig_laps)
 
+                # Graphique 2: Ecarts cumulés
+                st.markdown("---")
+                st.subheader("⏱️ Chronologie de la course (Gain / Perte de temps)")
+                st.markdown(
+                    "Ce graphique montre l'évolution des écarts cumulés par rapport au rythme moyen en simulation. "
+                    "  \n Une ligne qui **descend** indique que le pilote gagne du temps. Un saut brutal représente un arrêt."
+                )
+
+                # Appel de la fonction Gap Chart
+                fig_gap = TelemetryVisualizer.plot_cumulative_gap(
+                    lap_times=res["lap_times"],
+                    pitstop_events=res["pitstop_events"],
+                    selected_driver=selected_driver,
+                    historical_data=historical_data,
+                    year=recent_year
+                )
+                st.pyplot(fig_gap)
+                plt.close(fig_gap)  # Libère proprement la mémoire
             # ==================================================================
-            # ONGLET 2 : ANIMATION GÉOMÉTRIQUE EN TEMPS RÉEL
+            # ONGLET 3 : ANIMATION GÉOMÉTRIQUE EN TEMPS RÉEL
             # ==================================================================
             with tab_telemetry:
                 st.subheader("🏎️ Animation de la Télémétrie en temps réel")
