@@ -151,7 +151,7 @@ class RaceSimulation:
         # On retire de cette liste les types de pneus qui n'ont pas de coefficients de dégradation (lorsque cela a lieu)
         composes = [pneu for pneu in tous_les_composes if self.poly_config.get(pneu) is not None]
 
-        # Sécurité : S'il y a moins de 2 composés disponibles, on ne peut pas respecter le règlement FIA
+        # Sécurité : S'il n'y a qu'1 type de pneu disponible, on ne peut pas respecter le règlement FIA
         if len(composes) < 2:
             return None
         # -----------------------------------------------------------

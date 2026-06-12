@@ -402,6 +402,8 @@ def main():
                             ia_compounds = [opt_strat['starting_tyre']] + list(opt_strat['pit_stops'].values())
                             st.metric(label="Pneumatiques idéaux",
                                       value=" - ".join([str(c).strip().title() for c in ia_compounds]))
+                    else:
+                        st.warning("⚠️ L'Assistant Stratégique ne peut pas formuler de recommandation : les données historiques de ce pilote pour cette course sont insuffisantes (moins de 2 composés disponibles).")
 
 
             # ==================================================================
