@@ -270,19 +270,14 @@ def main():
                 st.error(f"Une erreur est survenue pendant la simulation : {sim_err}  \n Veuillez essayer une autre stratégie.")
 
         # 4. Affichage des résultats et rendus graphiques
-        historical_data = None
-        historical_pit_stops = None
-        recent_year = None
-
         try:
-            with st.spinner("🔄 Recherche et chargement des données historiques réelles (FastF1)..."):
-                recent_year = data_loader.find_most_recent_year(selected_event, selected_driver)
-                if recent_year:
-                    historical_data, historical_pit_stops = data_loader.get_historical_driver_data(
-                        recent_year, selected_event, selected_driver
-                    )
+            with st.spinner("🔄 Récupération des données historiques (FastF1)..."):
+                historical_data, historical_pit_stops, recent_year = F1DataLoader._cached_historical_data(
+                    data_loader, selected_event, selected_driver
+                )
         except Exception as e:
             st.warning(f"⚠️ Impossible de superposer les données réelles : {e}")
+            historical_data, historical_pit_stops, recent_year = None, None, None
 
         if st.session_state.sim_calculee and st.session_state.results:
             res = st.session_state.results
@@ -337,10 +332,7 @@ def main():
                         df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
                             ['nan', 'none', 'unknown', ''])]
 
-                        if not df_tires.empty:
-                            # Grâce à l'ajout de 'Stint', drop_duplicates garde le 1er tour de chaque relais.
-                            # Même si le Compound est identique (ex: Hard au Stint 2 et Hard au Stint 3),
-                            # le numéro de Stint étant différent, les deux seront conservés !
+                        if not df_tires.empty: #Vérification s'il y a eu un arrêt au stand = changement de pneu
                             stints_sequence = df_tires.drop_duplicates(subset=['Stint'])['Compound'].tolist()
 
                             real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
@@ -424,11 +416,10 @@ def main():
 
                 if st.button("🎬 Lancer l'animation sur le tracé"):
                     try:
-                        with st.spinner("Téléchargement des données géométriques de la trajectoire F1..."):
-                            session_reelle = data_loader.load_session_data(defaults.get("year"), selected_event, 'R')
-                            laps_pilote = session_reelle.laps.pick_driver(selected_driver)
-                            lap_rapide = laps_pilote.pick_fastest() if not laps_pilote.empty else session_reelle.laps.pick_fastest()
-                            telemetry_reelle = lap_rapide.get_telemetry()
+                        with st.spinner("Récupération de la trajectoire en cache..."):
+                            telemetry_reelle = F1DataLoader._cached_telemetry_data(
+                                data_loader, defaults.get("year"), selected_event, selected_driver
+                            )
 
                             if telemetry_reelle.empty:
                                 st.warning("Aucune donnée de télémétrie spatiale valide trouvée pour ce Grand Prix.")

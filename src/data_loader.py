@@ -8,6 +8,7 @@ coefficients de performance.
 import fastf1
 import os
 import json
+import streamlit as st
 
 
 class F1DataLoader:
@@ -135,3 +136,23 @@ class F1DataLoader:
         pit_stops = driver_laps[driver_laps['PitInTime'].notna()]['LapNumber'].tolist()
 
         return lap_data, pit_stops
+
+
+    @st.cache_data
+    def _cached_historical_data(_data_loader, selected_event, selected_driver):
+        """Télécharge et met en cache les données de course historiques."""
+        recent_year = _data_loader.find_most_recent_year(selected_event, selected_driver)
+        if recent_year:
+            hist_data, hist_pits = _data_loader.get_historical_driver_data(
+                recent_year, selected_event, selected_driver
+            )
+            return hist_data, hist_pits, recent_year
+        return None, None, None
+
+    @st.cache_data
+    def _cached_telemetry_data(_data_loader, year, selected_event, selected_driver):
+        """Télécharge et met en cache la trajectoire spatiale pour l'animation."""
+        session_reelle = _data_loader.load_session_data(year, selected_event, 'R')
+        laps_pilote = session_reelle.laps.pick_driver(selected_driver)
+        lap_rapide = laps_pilote.pick_fastest() if not laps_pilote.empty else session_reelle.laps.pick_fastest()
+        return lap_rapide.get_telemetry()
