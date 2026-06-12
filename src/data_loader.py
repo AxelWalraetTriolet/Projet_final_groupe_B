@@ -26,7 +26,6 @@ class F1DataLoader:
         return session
 
 
-
     def get_driver_telemetry(self, session, driver_code):
         lap = session.laps.pick_driver(driver_code).pick_fastest()
         telemetry = lap.get_telemetry()
@@ -129,7 +128,7 @@ class F1DataLoader:
         driver_laps['LapTimeSeconds'] = driver_laps['LapTime'].dt.total_seconds()
 
         # Nettoyage rapide pour enlever les tours sans chrono (ex: drapeau rouge)
-        lap_data = driver_laps[['LapNumber', 'LapTimeSeconds', 'Compound']].dropna(subset=['LapTimeSeconds'])
+        lap_data = driver_laps[['LapNumber', 'LapTimeSeconds', 'Compound','Stint']].dropna(subset=['LapTimeSeconds'])
 
         # 2. Extraction des tours où il y a eu un arrêt au stand
         # Dans fastf1, PitInTime n'est pas nul sur le tour où le pilote entre aux stands

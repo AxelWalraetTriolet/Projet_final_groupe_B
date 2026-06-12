@@ -332,21 +332,21 @@ def main():
                         st.metric(label="Arrêts au stand", value=real_value)
 
                     with col6:
-                        df_tires = historical_data.dropna(subset=['Compound'])
+                        # Nettoyage et tri des données de pneumatiques
+                        df_tires = historical_data.dropna(subset=['Compound']).sort_values('LapNumber')
                         df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
                             ['nan', 'none', 'unknown', ''])]
+
                         if not df_tires.empty:
-                            if 'Stint' in df_tires.columns:
-                                stints_sequence = df_tires.sort_values('LapNumber').drop_duplicates(subset=['Stint'])[
-                                    'Compound'].tolist()
-                            else:
-                                raw_compounds = df_tires.sort_values('LapNumber')['Compound'].tolist()
-                                stints_sequence = [raw_compounds[0]] if raw_compounds else []
-                                for c in raw_compounds[1:]:
-                                    if c != stints_sequence[-1]: stints_sequence.append(c)
+                            # Grâce à l'ajout de 'Stint', drop_duplicates garde le 1er tour de chaque relais.
+                            # Même si le Compound est identique (ex: Hard au Stint 2 et Hard au Stint 3),
+                            # le numéro de Stint étant différent, les deux seront conservés !
+                            stints_sequence = df_tires.drop_duplicates(subset=['Stint'])['Compound'].tolist()
+
                             real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
                         else:
                             real_strategy = "Non disponible"
+
                         st.metric(label="Choix des pneumatiques", value=real_strategy)
 
                 # --- 3. SECTION STRATEGIE OPTIMISÉE (Bouton Toggle) ---
