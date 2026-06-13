@@ -176,7 +176,26 @@ def main():
             total_laps = int(defaults.get("total_laps", 50))
             st.sidebar.warning(f"Impossible de détecter les tours. Valeur par défaut forcée : {total_laps} tours")
 
-        starting_tyre = st.sidebar.selectbox("Pneu de départ :", ["SOFT", "MEDIUM", "HARD"])
+            # --- Filtrage dynamique des pneumatiques ---
+            # On récupère les coefficients ici pour savoir quels pneus sont valides
+        poly_coefficients = regression_engine.get_coefficients_for_driver(selected_event, selected_driver)
+        tous_les_pneus = ["SOFT", "MEDIUM", "HARD"]
+        pneus_disponibles = []
+
+        if poly_coefficients:
+            pneus_disponibles = [pneu for pneu in tous_les_pneus if poly_coefficients.get(pneu) is not None]
+
+        # Sécurité : si on n'a vraiment aucune donnée, on remet tout pour ne pas bloquer l'interface
+        if not pneus_disponibles:
+            pneus_disponibles = tous_les_pneus
+
+        texte_aide_pneus = "Certains pneus sont masqués car nous manquons de données historiques (coefficients) pour ce pilote sur ce circuit."
+
+        starting_tyre = st.sidebar.selectbox(
+            "Pneu de départ :",
+            options=pneus_disponibles,
+            help=texte_aide_pneus
+        )
 
         st.sidebar.markdown("---")
         st.sidebar.subheader("🛑 Gestion des Arrêts aux Stands")
@@ -203,11 +222,15 @@ def main():
                     key=f"pit_lap_{stop_idx}"
                 )
             with col_tyre:
+                # On adapte l'index par défaut pour éviter une erreur si la liste est très courte
+                default_index = 1 if (stop_idx == 1 and len(pneus_disponibles) > 1) else 0
+
                 p_tyre = st.selectbox(
                     f"Nouveau pneu :",
-                    ["SOFT", "MEDIUM", "HARD"],
-                    index=1 if stop_idx == 1 else 0,
-                    key=f"pit_tyre_{stop_idx}"
+                    options=pneus_disponibles,
+                    index=default_index,
+                    key=f"pit_tyre_{stop_idx}",
+                    help=texte_aide_pneus
                 )
 
             pit_stops[p_lap] = p_tyre
@@ -379,6 +402,8 @@ def main():
                             ia_compounds = [opt_strat['starting_tyre']] + list(opt_strat['pit_stops'].values())
                             st.metric(label="Pneumatiques idéaux",
                                       value=" - ".join([str(c).strip().title() for c in ia_compounds]))
+                    else:
+                        st.warning("⚠️ L'Assistant Stratégique ne peut pas formuler de recommandation : les données historiques de ce pilote pour cette course sont insuffisantes (moins de 2 composés disponibles).")
 
 
             # ==================================================================
