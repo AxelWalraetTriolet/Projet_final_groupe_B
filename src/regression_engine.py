@@ -6,7 +6,6 @@ Il extrait les données de performance des pneus (Soft, Medium, Hard) pour un ci
 
 import os
 import json
-import streamlit as st
 
 
 class RegressionEngine:
