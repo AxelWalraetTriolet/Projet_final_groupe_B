@@ -1,3 +1,11 @@
+"""
+MOTEUR D'EXTRACTION ET DE MODELISATION PREDICTIVE DES COEFFICIENTS DE DEGRADATION F1.
+Ce module extrait les données historiques de chronométrage via l'API FastF1, applique
+un filtrage robuste des anomalies de course, puis ajuste un modèle mathématique
+(Spline cubique projetée sur un polynôme d'ordre 2) afin de générer les coefficients
+de performance nécessaires au simulateur de stratégie.
+"""
+
 import os
 import json
 import logging
@@ -17,7 +25,7 @@ if not os.path.exists(CACHE_DIR):
     os.makedirs(CACHE_DIR)
 fastf1.Cache.enable_cache(CACHE_DIR)
 
-ANNÉES_HISTORIQUES = [2019, 2020, 2021, 2022, 2023, 2024, 2025]
+ANNEES_HISTORIQUES = [2019, 2020, 2021, 2022, 2023, 2024, 2025]
 ANNEE_CALENDRIER_CIBLE = 2024  # Année pivot pour récupérer la liste de tous les circuits
 TRACK_EVOLUTION_PER_LAP = -0.035
 
@@ -25,7 +33,14 @@ TRACK_EVOLUTION_PER_LAP = -0.035
 # -------------------------------
 
 def recuperer_tous_les_circuits():
-    """Extrait tous les noms de circuits officiels de la saison via FastF1."""
+    """Extrait tous les noms de circuits officiels de la saison via FastF1.
+    Filtre les séances d'essais d'avant-saison (testing) pour ne conserver que
+    les véritables Grands Prix du calendrier officiel.
+
+    :return: Liste des noms de circuits (ex: 'Monaco', 'Silverstone Circuit').
+    :rtype: list[str]
+    :raises Exception: Si l'API FastF1 est inaccessible, retourne une liste de secours statique.
+    """
     try:
         schedule = fastf1.get_event_schedule(ANNEE_CALENDRIER_CIBLE)
         # On filtre les séances d'essais (testing) pour ne garder que les vrais Grands Prix
@@ -37,9 +52,20 @@ def recuperer_tous_les_circuits():
 
 
 def extraire_donnees_brutes_vectorisees(circuit_name):
-    """Télécharge et fusionne l'historique pluri-annuel de manière parallélisée par bloc Pandas."""
+    """Télécharge et fusionne l'historique pluri-annuel de manière parallélisée par bloc Pandas.
+
+    Cette fonction extrait les temps au tour historique, applique des filtres stricts
+    liés aux conditions de course (exclusion des tours sous voiture de sécurité, des passages aux stands
+    et des gommes pluie) et normalise les chronos par rapport au temps de référence minimal.
+    Un filtre par quantile à 50% élimine le bruit restant et les anomalies (trafic, erreurs de pilotage).
+
+    :param circuit_name: Le nom officiel du circuit à analyser.
+    :type circuit_name: str
+    :return: Un DataFrame filtré contenant les colonnes ['Driver', 'Compound', 'TyreLife', 'LapNumber', 'LapTimePct'].
+    :rtype: pandas.DataFrame
+    """
     all_laps = []
-    for year in ANNÉES_HISTORIQUES:
+    for year in ANNEES_HISTORIQUES:
         try:
             session = fastf1.get_session(year, circuit_name, 'R')
             session.load(telemetry=False, weather=False)
@@ -75,7 +101,17 @@ def extraire_donnees_brutes_vectorisees(circuit_name):
 
 
 def ajuster_spline_morceaux(df_target):
-    """ Ajuste une régression par spline cubique (par morceaux) et extrait des coefficients équivalents. """
+    """ Ajuste une régression par spline cubique (par morceaux) et extrait des coefficients équivalents.
+    Utilise l'algorithme de perte `HuberRegressor` résistant aux valeurs atypiques.
+    La courbe ajustée modélise l'usure non linéaire de la gomme, isole l'effet du poids de carburant
+    via une régression linéaire standard, et intègre un facteur correctif lié à l'évolution de la piste.
+
+    :param df_target: Sous-ensemble de données nettoyées propre à un couple pilote/composé sur un circuit.
+    :type df_target: pandas.DataFrame
+    :return: Un dictionnaire contenant les coefficients prédictifs normalisés :
+             Beta_0_Intercept, Beta_1_TyreLife, Beta_2_TyreLife2, Beta_3_LapNumber.
+    :rtype: dict
+    """
     X_age = df_target['TyreLife'].to_numpy().reshape(-1, 1)
     X_lap = df_target['LapNumber'].to_numpy().reshape(-1, 1)
     y = df_target['LapTimePct'].to_numpy()
@@ -110,6 +146,14 @@ def ajuster_spline_morceaux(df_target):
 
 
 def main():
+    """
+    Point d'entrée principal du pipeline d'extraction et de modélisation.
+
+    Parcourt l'ensemble des circuits du calendrier, extrait les données,
+    groupe les informations par pilote et type de pneumatique, et filtre les échantillons trop pauvres  pour assurer la
+    convergence mathématique du modèle.
+    Exporte la base complète dans un fichier JSON.
+    """
     base_finale = {}
 
     # Récupération de la liste complète des circuits de l'année
