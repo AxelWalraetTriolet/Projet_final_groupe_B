@@ -72,7 +72,7 @@ La simulation est réalisée en supposant une course par temps sec, sans prendre
 Ouvrez votre terminal, placez-vous dans le dossier de votre choix, puis récupérez le projet :
 ```bash
 # Cloner le dépôt
-git clone https://github.com/AxelWalraetTriolet/Projet_final_groupe_B/edit/main/README.md
+git clone https://github.com/AxelWalraetTriolet/Projet_final_groupe_B.git
 cd Projet_final_groupe_B
 
 # Créer un environnement virtuel (recommandé)
@@ -93,7 +93,8 @@ pip install -e .
 ```
 
 ### 3. Compiler et valider le modèle
-```cd src
+```
+cd src
 python generer_base_pilotes.py
 python generer_validation.py
 cd ..
