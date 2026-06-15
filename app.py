@@ -8,8 +8,11 @@ Ce module : - définit l'interface utilisateur Streamlit avec notamment la page 
 
 # Importation des bibliothèques
 import streamlit as st
-import matplotlib.pyplot as plt
 import time
+import pandas as pd
+import json
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Importation des classes
 from src.data_loader import F1DataLoader
@@ -236,253 +239,355 @@ def main():
             pit_stops[p_lap] = p_tyre
             last_pit_lap = p_lap
 
-        # 3. Zone principale d'affichage et d'exécution des calculs
-        st.header("⚡ Simulation et Résultats")
+        onglet_sim, onglet_val = st.tabs(["🎮 Simulateur de Course", "🔬 Validation & Performance"])
 
-        if st.sidebar.button("🏎️ Lancer la simulation de stratégie", type="primary"):
-            track_info = track_params
+        with onglet_sim:
+            st.subheader("Configuration de votre simulation personnalisée")
+
+            # 3. Zone principale d'affichage et d'exécution des calculs
+            st.header("⚡ Simulation et Résultats")
+
+            if st.sidebar.button("🏎️ Lancer la simulation de stratégie", type="primary"):
+                track_info = track_params
+                try:
+                    track_base_time = data_loader.get_track_base_time(defaults.get("year"), selected_event)
+                except Exception:
+                    track_base_time = track_info.get("base_lap_time_seconds", 85.0)
+                    st.warning(
+                        "⚠️ Impossible de récupérer le temps de référence réel. Utilisation de la valeur par défaut.")
+
+                try:
+                    with st.spinner(f"Chargement de la signature d'usure de {selected_driver}..."):
+                        poly_coefficients = regression_engine.get_coefficients_for_driver(selected_event, selected_driver)
+
+                    if not poly_coefficients:
+                        st.error(f"Impossible de charger des données valides pour {selected_driver} à {selected_event}.")
+                    else:
+                        sim = RaceSimulation(
+                            total_laps=total_laps,
+                            track_base_time=track_base_time,
+                            track_config=track_info,
+                            poly_config=poly_coefficients
+                        )
+
+                        if not sim.is_strategy_valid(starting_tyre, pit_stops):
+                            st.error(
+                                "🚨 Stratégie invalide selon le règlement de la FIA ! Vous devez utiliser au moins deux composés de pneus différents.")
+                        else:
+                            with st.spinner(f"Modélisation physique de la course de {selected_driver}..."):
+                                results = sim.run_strategy(starting_tyre, pit_stops)
+                                st.session_state.results = results
+                                st.session_state.sim_calculee = True
+                                st.success(f"Simulation terminée avec succès pour {selected_driver} au {selected_event}!")
+
+                except FileNotFoundError as fnf_err:
+                    st.error(f"🚨 {fnf_err}")
+                except Exception as sim_err:
+                    st.error(f"Une erreur est survenue pendant la simulation : {sim_err}  \n Veuillez essayer une autre stratégie.")
+
+            # 4. Affichage des résultats et rendus graphiques
             try:
-                track_base_time = data_loader.get_track_base_time(defaults.get("year"), selected_event)
-            except Exception:
-                track_base_time = track_info.get("base_lap_time_seconds", 85.0)
-                st.warning(
-                    "⚠️ Impossible de récupérer le temps de référence réel. Utilisation de la valeur par défaut.")
+                with st.spinner("🔄 Récupération des données historiques (FastF1)..."):
+                    historical_data, historical_pit_stops, recent_year = F1DataLoader._cached_historical_data(
+                        data_loader, selected_event, selected_driver
+                    )
+            except Exception as e:
+                st.warning(f"⚠️ Impossible de superposer les données réelles : {e}")
+                historical_data, historical_pit_stops, recent_year = None, None, None
 
-            try:
-                with st.spinner(f"Chargement de la signature d'usure de {selected_driver}..."):
-                    poly_coefficients = regression_engine.get_coefficients_for_driver(selected_event, selected_driver)
+            if st.session_state.sim_calculee and st.session_state.results:
+                res = st.session_state.results
 
-                if not poly_coefficients:
-                    st.error(f"Impossible de charger des données valides pour {selected_driver} à {selected_event}.")
-                else:
-                    sim = RaceSimulation(
-                        total_laps=total_laps,
-                        track_base_time=track_base_time,
-                        track_config=track_info,
-                        poly_config=poly_coefficients
+                # Création du système de 3 onglets
+                tab_dashboard, tab_gaps, tab_telemetry = st.tabs([
+                    "📊 Tableau de bord comparatif",
+                    "📈 Analyse graphique des performances",
+                    "🏎️ Télémétrie & Animation Live"
+                ])
+
+
+                # ==================================================================
+                # ONGLET 1 : Tableau comparatif
+                # ==================================================================
+                with tab_dashboard:
+                    # 1.SIMULATION
+                    st.markdown(f"### Simulation de {selected_driver} au {selected_event}") # Titre de la ligne
+                    col1, col2, col3 = st.columns(3)
+
+                    with col1: # Temps de course total
+                        st.metric(label="Temps de course total", value=Visualizer.format_race_time(res['total_race_time']))
+
+                    with col2: # Arrêts au stand: nombre d'arrêt et numéro du tour
+                        sim_pit_laps = list(res['pitstop_events'].keys())
+                        sim_count = len(sim_pit_laps)
+                        sim_value = f"{sim_count} (Tour{'s' if sim_count > 1 else ''} {', '.join(str(int(lap)) for lap in sim_pit_laps)})" if sim_count > 0 else "0"
+                        st.metric(label="Arrêts au stand", value=sim_value)
+
+                    with col3: # Types des pneumatiques choisies dans l'ordre
+                        sim_compounds = [starting_tyre] + list(pit_stops.values())
+                        st.metric(label="Choix des pneumatiques",
+                                  value=" - ".join([str(c).strip().title() for c in sim_compounds]))
+
+                    # 2. Course réelle
+                    # Vérification que les données existent bien sinon aucun affichage (sans arrêt du programme)
+                    if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
+                        st.markdown("---")
+                        st.markdown(f"### Résultats réels de {selected_driver} au {selected_event} de {recent_year}")
+                        col4, col5, col6 = st.columns(3)
+
+                        with col4: # Temps de course total
+                            real_total_seconds = historical_data['LapTimeSeconds'].sum()
+                            st.metric(label="Temps de course total", value=Visualizer.format_race_time(real_total_seconds))
+
+                        with col5: # Arrêts au stand: nombre d'arrêt et numéro du tour
+                            if 'historical_pit_stops' in locals() and historical_pit_stops is not None:
+                                real_count = len(historical_pit_stops)
+                                real_value = f"{real_count} (Tour{'s' if real_count > 1 else ''} {', '.join(str(int(lap)) for lap in historical_pit_stops)})" if real_count > 0 else "0"
+                            else:
+                                real_value = "Non disponible"
+                            st.metric(label="Arrêts au stand", value=real_value)
+
+                        with col6: # Types des pneumatiques choisies dans l'ordre
+                            # Nettoyage et tri des données de pneumatiques
+                            df_tires = historical_data.dropna(subset=['Compound']).sort_values('LapNumber')
+                            df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
+                                ['nan', 'none', 'unknown', ''])]
+
+                            if not df_tires.empty: #Vérification s'il y a eu un arrêt au stand = changement de pneu
+                                stints_sequence = df_tires.drop_duplicates(subset=['Stint'])['Compound'].tolist()
+
+                                real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
+                            else:
+                                real_strategy = "Non disponible"
+
+                            st.metric(label="Choix des pneumatiques", value=real_strategy)
+
+                    # 3. Stratégie optimale (Bouton Toggle)
+                    st.markdown("---")
+                    st.markdown("### 🤖 Assistant Stratégique")
+
+                    # Le bouton toggle
+                    afficher_ia = st.toggle("✨ Calculer et afficher la stratégie optimale", key="toggle_ia")
+
+                    # Initialisation des variables pour le graphique optimisé(vides par défaut)
+                    opt_lap_times = None
+                    opt_pit_events = None
+
+                    if afficher_ia:
+                        # On calcule uniquement si ce n'est pas déjà dans la mémoire
+                        if st.session_state.optimal_strategy is None:
+                            with st.spinner("Analyse des stratégies en cours (1 à 2 arrêts)..."):
+                                track_info = track_params
+                                try:
+                                    track_base_time = data_loader.get_track_base_time(defaults.get("year"), selected_event)
+                                except Exception:
+                                    track_base_time = track_info.get("base_lap_time_seconds", 85.0)
+
+                                poly_coefficients = regression_engine.get_coefficients_for_driver(selected_event,
+                                                                                                  selected_driver)
+                                sim_ia = RaceSimulation(total_laps, track_base_time, track_info, poly_coefficients)
+
+                                # Appel de la fonction IA
+                                st.session_state.optimal_strategy = sim_ia.find_optimal_stops_strategy()
+
+                        # On récupère les résultats de l'IA et on prépare les variables pour le graphique final
+                        opt_strat = st.session_state.optimal_strategy
+                        if opt_strat:
+                            opt_lap_times = opt_strat['results']["lap_times"]
+                            opt_pit_events = opt_strat['results']["pitstop_events"]
+
+                            st.success(f"✅ La meilleure stratégie trouvée est à **{opt_strat['type']}** !")
+                            col_ia1, col_ia2, col_ia3 = st.columns(3)
+                            with col_ia1:
+                                st.metric(label="Temps de course estimé (optimal)",
+                                          value=Visualizer.format_race_time(opt_strat['results']['total_race_time']))
+                            with col_ia2:
+                                ia_pit_laps = list(opt_strat['pit_stops'].keys())
+                                ia_count = len(ia_pit_laps)
+                                ia_value = f"{ia_count} (Tour{'s' if ia_count > 1 else ''} {', '.join(str(int(lap)) for lap in ia_pit_laps)})" if ia_count > 0 else "0"
+                                st.metric(label="Arrêts optimaux", value=ia_value)
+                            with col_ia3:
+                                ia_compounds = [opt_strat['starting_tyre']] + list(opt_strat['pit_stops'].values())
+                                st.metric(label="Pneumatiques idéaux",
+                                          value=" - ".join([str(c).strip().title() for c in ia_compounds]))
+                        else:
+                            st.warning("⚠️ L'Assistant Stratégique ne peut pas formuler de recommandation : les données historiques de ce pilote pour cette course sont insuffisantes (moins de 2 composés disponibles).")
+
+
+                # ==================================================================
+                # ONGLET 2 : GRAPHIQUES DES PERFORMANCES
+                # ==================================================================
+                with tab_gaps:
+                    # Graphique 1: Temps au tour
+                    st.subheader(f"📊 Analyse des performances au tour comparées - {selected_driver}")
+
+                    # Appel de la fonction plot_race_strategy
+                    fig_laps = Visualizer.plot_race_strategy(
+                        lap_times=res["lap_times"],
+                        pitstop_events=res["pitstop_events"],
+                        selected_driver=selected_driver,
+                        historical_data=historical_data,
+                        historical_pit_stops=historical_pit_stops,
+                        year=recent_year,
+                        optimal_lap_times=opt_lap_times,
+                        optimal_pit_events=opt_pit_events
+                    )
+                    st.pyplot(fig_laps)
+                    plt.close(fig_laps)
+
+                    # Graphique 2: Ecarts cumulés
+                    st.markdown("---")
+                    st.subheader("⏱️ Chronologie de la course (Gain / Perte de temps)")
+                    st.markdown(
+                        "Ce graphique montre l'évolution des écarts cumulés par rapport au rythme moyen en simulation. "
+                        "  \n Une ligne qui **descend** indique que le pilote gagne du temps. Un saut brutal représente un arrêt."
                     )
 
-                    if not sim.is_strategy_valid(starting_tyre, pit_stops):
-                        st.error(
-                            "🚨 Stratégie invalide selon le règlement de la FIA ! Vous devez utiliser au moins deux composés de pneus différents.")
-                    else:
-                        with st.spinner(f"Modélisation physique de la course de {selected_driver}..."):
-                            results = sim.run_strategy(starting_tyre, pit_stops)
-                            st.session_state.results = results
-                            st.session_state.sim_calculee = True
-                            st.success(f"Simulation terminée avec succès pour {selected_driver} au {selected_event}!")
+                    # Appel de la fonction Gap Chart
+                    fig_gap = Visualizer.plot_cumulative_gap(
+                        lap_times=res["lap_times"],
+                        pitstop_events=res["pitstop_events"],
+                        selected_driver=selected_driver,
+                        historical_data=historical_data,
+                        year=recent_year
+                    )
+                    st.pyplot(fig_gap)
+                    plt.close(fig_gap)  # Libère proprement la mémoire
 
-            except FileNotFoundError as fnf_err:
-                st.error(f"🚨 {fnf_err}")
-            except Exception as sim_err:
-                st.error(f"Une erreur est survenue pendant la simulation : {sim_err}  \n Veuillez essayer une autre stratégie.")
+                # ==================================================================
+                # ONGLET 3 : ANIMATION GÉOMÉTRIQUE EN TEMPS RÉEL
+                # ==================================================================
+                with tab_telemetry:
+                    st.subheader("🏎️ Animation de la Télémétrie en temps réel")
 
-        # 4. Affichage des résultats et rendus graphiques
-        try:
-            with st.spinner("🔄 Récupération des données historiques (FastF1)..."):
-                historical_data, historical_pit_stops, recent_year = F1DataLoader._cached_historical_data(
-                    data_loader, selected_event, selected_driver
-                )
-        except Exception as e:
-            st.warning(f"⚠️ Impossible de superposer les données réelles : {e}")
-            historical_data, historical_pit_stops, recent_year = None, None, None
+                    if st.button("🎬 Lancer l'animation sur le tracé"):
+                        try:
+                            with st.spinner("Récupération de la trajectoire en cache..."):
+                                telemetry_reelle = F1DataLoader._cached_telemetry_data(
+                                    data_loader, defaults.get("year"), selected_event, selected_driver
+                                )
 
-        if st.session_state.sim_calculee and st.session_state.results:
-            res = st.session_state.results
+                                if telemetry_reelle.empty:
+                                    st.warning("Aucune donnée de télémétrie spatiale valide trouvée pour ce Grand Prix.")
+                                else:
+                                    col_gauche, col_centre, col_droite = st.columns([1, 1, 1])
 
-            # Création du système de 3 onglets
-            tab_dashboard, tab_gaps, tab_telemetry = st.tabs([
-                "📊 Tableau de bord comparatif",
-                "📈 Analyse graphique des performances",
-                "🏎️ Télémétrie & Animation Live"
-            ])
+                                    with col_centre:
+                                        live_chart_slot = st.empty()
 
+                                    st.toast(f"Démarrage de la télémétrie pour {selected_driver}...", icon="🏎️")
+                                    total_points = len(telemetry_reelle)
+                                    nombre_frames_cible = 150
+                                    step = max(1, total_points // nombre_frames_cible)
 
-            # ==================================================================
-            # ONGLET 1 : Tableau comparatif
-            # ==================================================================
-            with tab_dashboard:
-                # 1.SIMULATION
-                st.markdown(f"### Simulation de {selected_driver} au {selected_event}") # Titre de la ligne
-                col1, col2, col3 = st.columns(3)
+                                    for i in range(0, total_points, step):
+                                        fig_live = Visualizer.plot_live_frame(telemetry_reelle, i)
+                                        live_chart_slot.pyplot(fig_live, use_container_width=True)
+                                        plt.close(fig_live)
+                                        time.sleep(0.04)
+                                    st.success(f"{selected_driver} a franchi la ligne d'arrivée !")
+                        except Exception as e:
+                            st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
+            else:
+                st.info("Utilisez les options de la barre latérale pour configurer la stratégie et lancer les calculs.")
 
-                with col1: # Temps de course total
-                    st.metric(label="Temps de course total", value=Visualizer.format_race_time(res['total_race_time']))
+                # --- ONGLET 2 : LE RAPPORT DE VALIDATION (MULTI-SAISONS SÉCURISÉ) ---
+                with onglet_val:
 
-                with col2: # Arrêts au stand: nombre d'arrêt et numéro du tour
-                    sim_pit_laps = list(res['pitstop_events'].keys())
-                    sim_count = len(sim_pit_laps)
-                    sim_value = f"{sim_count} (Tour{'s' if sim_count > 1 else ''} {', '.join(str(int(lap)) for lap in sim_pit_laps)})" if sim_count > 0 else "0"
-                    st.metric(label="Arrêts au stand", value=sim_value)
+                    st.header("🔬 Validation Scientifique Globale (Multi-Saisons)")
+                    st.markdown(
+                        "Cette section évalue la précision à long terme de notre modèle polynomial face aux réalités historiques de la F1 sur les saisons clés extraites.")
 
-                with col3: # Types des pneumatiques choisies dans l'ordre
-                    sim_compounds = [starting_tyre] + list(pit_stops.values())
-                    st.metric(label="Choix des pneumatiques",
-                              value=" - ".join([str(c).strip().title() for c in sim_compounds]))
-
-                # 2. Course réelle
-                # Vérification que les données existent bien sinon aucun affichage (sans arrêt du programme)
-                if 'historical_data' in locals() and historical_data is not None and not historical_data.empty:
-                    st.markdown("---")
-                    st.markdown(f"### Résultats réels de {selected_driver} au {selected_event} de {recent_year}")
-                    col4, col5, col6 = st.columns(3)
-
-                    with col4: # Temps de course total
-                        real_total_seconds = historical_data['LapTimeSeconds'].sum()
-                        st.metric(label="Temps de course total", value=Visualizer.format_race_time(real_total_seconds))
-
-                    with col5: # Arrêts au stand: nombre d'arrêt et numéro du tour
-                        if 'historical_pit_stops' in locals() and historical_pit_stops is not None:
-                            real_count = len(historical_pit_stops)
-                            real_value = f"{real_count} (Tour{'s' if real_count > 1 else ''} {', '.join(str(int(lap)) for lap in historical_pit_stops)})" if real_count > 0 else "0"
-                        else:
-                            real_value = "Non disponible"
-                        st.metric(label="Arrêts au stand", value=real_value)
-
-                    with col6: # Types des pneumatiques choisies dans l'ordre
-                        # Nettoyage et tri des données de pneumatiques
-                        df_tires = historical_data.dropna(subset=['Compound']).sort_values('LapNumber')
-                        df_tires = df_tires[~df_tires['Compound'].astype(str).str.lower().str.strip().isin(
-                            ['nan', 'none', 'unknown', ''])]
-
-                        if not df_tires.empty: #Vérification s'il y a eu un arrêt au stand = changement de pneu
-                            stints_sequence = df_tires.drop_duplicates(subset=['Stint'])['Compound'].tolist()
-
-                            real_strategy = " - ".join([str(c).strip().title() for c in stints_sequence])
-                        else:
-                            real_strategy = "Non disponible"
-
-                        st.metric(label="Choix des pneumatiques", value=real_strategy)
-
-                # 3. Stratégie optimale (Bouton Toggle)
-                st.markdown("---")
-                st.markdown("### 🤖 Assistant Stratégique")
-
-                # Le bouton toggle
-                afficher_ia = st.toggle("✨ Calculer et afficher la stratégie optimale", key="toggle_ia")
-
-                # Initialisation des variables pour le graphique optimisé(vides par défaut)
-                opt_lap_times = None
-                opt_pit_events = None
-
-                if afficher_ia:
-                    # On calcule uniquement si ce n'est pas déjà dans la mémoire
-                    if st.session_state.optimal_strategy is None:
-                        with st.spinner("Analyse des stratégies en cours (1 à 2 arrêts)..."):
-                            track_info = track_params
-                            try:
-                                track_base_time = data_loader.get_track_base_time(defaults.get("year"), selected_event)
-                            except Exception:
-                                track_base_time = track_info.get("base_lap_time_seconds", 85.0)
-
-                            poly_coefficients = regression_engine.get_coefficients_for_driver(selected_event,
-                                                                                              selected_driver)
-                            sim_ia = RaceSimulation(total_laps, track_base_time, track_info, poly_coefficients)
-
-                            # Appel de la fonction IA
-                            st.session_state.optimal_strategy = sim_ia.find_optimal_stops_strategy()
-
-                    # On récupère les résultats de l'IA et on prépare les variables pour le graphique final
-                    opt_strat = st.session_state.optimal_strategy
-                    if opt_strat:
-                        opt_lap_times = opt_strat['results']["lap_times"]
-                        opt_pit_events = opt_strat['results']["pitstop_events"]
-
-                        st.success(f"✅ La meilleure stratégie trouvée est à **{opt_strat['type']}** !")
-                        col_ia1, col_ia2, col_ia3 = st.columns(3)
-                        with col_ia1:
-                            st.metric(label="Temps de course estimé (optimal)",
-                                      value=Visualizer.format_race_time(opt_strat['results']['total_race_time']))
-                        with col_ia2:
-                            ia_pit_laps = list(opt_strat['pit_stops'].keys())
-                            ia_count = len(ia_pit_laps)
-                            ia_value = f"{ia_count} (Tour{'s' if ia_count > 1 else ''} {', '.join(str(int(lap)) for lap in ia_pit_laps)})" if ia_count > 0 else "0"
-                            st.metric(label="Arrêts optimaux", value=ia_value)
-                        with col_ia3:
-                            ia_compounds = [opt_strat['starting_tyre']] + list(opt_strat['pit_stops'].values())
-                            st.metric(label="Pneumatiques idéaux",
-                                      value=" - ".join([str(c).strip().title() for c in ia_compounds]))
-                    else:
-                        st.warning("⚠️ L'Assistant Stratégique ne peut pas formuler de recommandation : les données historiques de ce pilote pour cette course sont insuffisantes (moins de 2 composés disponibles).")
-
-
-            # ==================================================================
-            # ONGLET 2 : GRAPHIQUES DES PERFORMANCES
-            # ==================================================================
-            with tab_gaps:
-                # Graphique 1: Temps au tour
-                st.subheader(f"📊 Analyse des performances au tour comparées - {selected_driver}")
-
-                # Appel de la fonction plot_race_strategy
-                fig_laps = Visualizer.plot_race_strategy(
-                    lap_times=res["lap_times"],
-                    pitstop_events=res["pitstop_events"],
-                    selected_driver=selected_driver,
-                    historical_data=historical_data,
-                    historical_pit_stops=historical_pit_stops,
-                    year=recent_year,
-                    optimal_lap_times=opt_lap_times,
-                    optimal_pit_events=opt_pit_events
-                )
-                st.pyplot(fig_laps)
-                plt.close(fig_laps)
-
-                # Graphique 2: Ecarts cumulés
-                st.markdown("---")
-                st.subheader("⏱️ Chronologie de la course (Gain / Perte de temps)")
-                st.markdown(
-                    "Ce graphique montre l'évolution des écarts cumulés par rapport au rythme moyen en simulation. "
-                    "  \n Une ligne qui **descend** indique que le pilote gagne du temps. Un saut brutal représente un arrêt."
-                )
-
-                # Appel de la fonction Gap Chart
-                fig_gap = Visualizer.plot_cumulative_gap(
-                    lap_times=res["lap_times"],
-                    pitstop_events=res["pitstop_events"],
-                    selected_driver=selected_driver,
-                    historical_data=historical_data,
-                    year=recent_year
-                )
-                st.pyplot(fig_gap)
-                plt.close(fig_gap)  # Libère proprement la mémoire
-
-            # ==================================================================
-            # ONGLET 3 : ANIMATION GÉOMÉTRIQUE EN TEMPS RÉEL
-            # ==================================================================
-            with tab_telemetry:
-                st.subheader("🏎️ Animation de la Télémétrie en temps réel")
-
-                if st.button("🎬 Lancer l'animation sur le tracé"):
                     try:
-                        with st.spinner("Récupération de la trajectoire en cache..."):
-                            telemetry_reelle = F1DataLoader._cached_telemetry_data(
-                                data_loader, defaults.get("year"), selected_event, selected_driver
-                            )
+                        # Chargement instantané du JSON multi-saisons
+                        with open('validation_resultats.json', 'r', encoding='utf-8') as f:
+                            rapport_global = json.load(f)
 
-                            if telemetry_reelle.empty:
-                                st.warning("Aucune donnée de télémétrie spatiale valide trouvée pour ce Grand Prix.")
-                            else:
-                                col_gauche, col_centre, col_droite = st.columns([1, 1, 1])
+                        # Extraction dynamique des années réellement calculées et présentes dans le JSON
+                        annees_Disponibles = sorted([int(k) for k in rapport_global.keys()])
+                        maes = [rapport_global[str(a)]['erreur_globale_moyenne_secondes'] for a in annees_Disponibles]
 
-                                with col_centre:
-                                    live_chart_slot = st.empty()
+                        # 1. GRAPHIQUE D'ÉVOLUTION HISTORIQUE (VUE MACRO)
+                        st.subheader("📈 Évolution de la précision du simulateur au fil des ans")
 
-                                st.toast(f"Démarrage de la télémétrie pour {selected_driver}...", icon="🏎️")
-                                total_points = len(telemetry_reelle)
-                                nombre_frames_cible = 150
-                                step = max(1, total_points // nombre_frames_cible)
+                        df_evo = pd.DataFrame({"Saison": annees_Disponibles, "Erreur Moyenne (MAE en s)": maes})
 
-                                for i in range(0, total_points, step):
-                                    fig_live = Visualizer.plot_live_frame(telemetry_reelle, i)
-                                    live_chart_slot.pyplot(fig_live, use_container_width=True)
-                                    plt.close(fig_live)
-                                    time.sleep(0.04)
-                                st.success(f"{selected_driver} a franchi la ligne d'arrivée !")
-                    except Exception as e:
-                        st.warning(f"Impossible de générer la carte ou l'animation du circuit : {e}")
-        else:
-            st.info("Utilisez les options de la barre latérale pour configurer la stratégie et lancer les calculs.")
+                        fig_evo, ax_evo = plt.subplots(figsize=(8, 2.5))
+                        # On force l'affichage des années sous forme de texte sur l'axe X pour éviter des nombres à virgule (ex: 2021.5)
+                        sns.lineplot(x="Saison", y="Erreur Moyenne (MAE en s)", data=df_evo, marker="o",
+                                     color="#E10600", linewidth=2.5, ax=ax_evo)
+                        ax_evo.set_xticks(annees_Disponibles)
+                        ax_evo.set_xticklabels([str(a) for a in annees_Disponibles])
+                        ax_evo.set_ylabel("Écart Moyen (secondes)")
+                        ax_evo.set_xlabel("Saisons F1 Validées")
+                        ax_evo.grid(True, linestyle="--", alpha=0.5)
+                        st.pyplot(fig_evo)
 
+                        st.markdown("---")
 
+                        # 2. SÉLECTION DYNAMIQUE DE LA SAISON PAR L'UTILISATEUR
+                        st.subheader("🔍 Analyse détaillée par Saison")
+                        saison_choisie = st.selectbox(
+                            "Sélectionnez la saison à inspecter en détail :",
+                            options=[str(a) for a in annees_Disponibles],
+                            index=len(annees_Disponibles) - 1
+                            # Positionné par défaut sur la saison la plus récente (2025)
+                        )
+
+                        # Extraction des données spécifiques à la saison sélectionnée
+                        data_saison = rapport_global[saison_choisie]
+                        df_details = pd.DataFrame(data_saison['details_tous_les_calculs'])
+
+                        # Rendu des KPIs dynamiques
+                        mae = data_saison['erreur_globale_moyenne_secondes']
+                        fiabilite_30s = (df_details['ErreurAbsolue'] <= 30).mean() * 100
+
+                        col1, col2, col3 = st.columns(3)
+                        col1.metric(f"MAE Globale ({saison_choisie})", f"{mae} s",
+                                    help="Plus cette valeur est basse, plus le simulateur est proche de la réalité.")
+                        col2.metric(f"Précision à ±30s", f"{fiabilite_30s:.1f} %",
+                                    help="Pourcentage de pilotes dont le temps total simulé est à moins de 30s du vrai temps de course.")
+                        col3.metric(f"Échantillons validés", f"{len(df_details)} pilotes/GPs")
+
+                        # Graphique de Distribution de la saison choisie
+                        st.markdown("##")
+                        fig, ax = plt.subplots(figsize=(7, 2.5))
+                        sns.histplot(df_details['Erreur'], kde=True, ax=ax, color="#E10600", bins=15)
+                        ax.axvline(0, color='black', linestyle='--', alpha=0.8, label="Zéro Erreur")
+                        ax.set_title(f"Distribution des erreurs de simulation en {saison_choisie}")
+                        ax.set_xlabel("Erreur (en secondes) [Simulé - Réel]")
+                        ax.set_ylabel("Nombre de cas")
+                        ax.legend()
+                        st.pyplot(fig)
+
+                        # Analyse par circuit pour la saison choisie
+                        st.markdown("---")
+                        st.subheader(f"📍 Précision par tracé pour la saison {saison_choisie}")
+                        df_circuits = pd.DataFrame(
+                            list(data_saison['moyenne_par_circuit'].items()),
+                            columns=['Circuit', 'Erreur Moyenne (s)']
+                        ).sort_values(by='Erreur Moyenne (s)')
+
+                        fig2, ax2 = plt.subplots(figsize=(8, 4))
+                        sns.barplot(x='Erreur Moyenne (s)', y='Circuit', data=df_circuits, palette="coolwarm_r", ax=ax2)
+                        ax2.set_xlabel("Erreur Absolue Moyenne (secondes)")
+                        ax2.set_ylabel("")
+                        st.pyplot(fig2)
+
+                        # Pires cas de la saison choisie
+                        st.markdown("---")
+                        st.subheader(f"⚠️ Analyse des anomalies (Saison {saison_choisie})")
+                        st.write(
+                            "Voici les 5 écarts les plus importants. Idéal pour expliquer au jury les limites physiques de votre modèle (faits de course, pénalités) :")
+                        pires_cas = df_details.sort_values(by='ErreurAbsolue', ascending=False).head(5)
+                        pires_cas_visuels = pires_cas[
+                            ['Circuit', 'Driver', 'TempsReel', 'TempsSimule', 'Erreur']].copy()
+                        pires_cas_visuels['Erreur'] = pires_cas_visuels['Erreur'].map(
+                            lambda x: f"+{x}s" if x > 0 else f"{x}s")
+                        st.table(pires_cas_visuels)
+
+                    except FileNotFoundError:
+                        st.warning("⚠️ Fichier 'validation_resultats.json' introuvable à la racine du projet. "
+                                   "Veuillez exécuter le script `src/generer_validation.py` dans votre terminal pour compiler les données historiques.")
 if __name__ == "__main__":
     main()
