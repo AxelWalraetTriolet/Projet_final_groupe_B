@@ -115,9 +115,12 @@ def main():
                 if session.laps.empty or 'TrackStatus' not in session.laps.columns:
                     continue
 
-                # Exclusion des courses avec drapeau jaune/VSC/SC prolongé (Status 4 ou 6)
-                if session.laps['TrackStatus'].str.contains('4|6').any():
+                # --- FILTRE STRICT : EXCLUSION SI JAUNE, SC OU VSC ---
+                # Statuts : '4' = Safety Car, '6' = Virtual Safety Car
+                # Si l'un de ces statuts apparaît sur au moins un tour, on ignore la course.
+                if session.laps['TrackStatus'].str.contains('4|6', na=False).any():
                     continue
+                # -----------------------------------------------------
 
                 total_laps = int(session.laps['LapNumber'].max())
                 track_base_time = loader.get_track_base_time(saison, circuit)
@@ -158,7 +161,6 @@ def main():
                     except Exception:
                         continue
             except Exception:
-                # Échec silencieux pour ne pas polluer la console de l'évaluateur
                 continue
 
         if resultats_saison:
@@ -167,13 +169,23 @@ def main():
             moyenne_par_pilote = df_saison.groupby('Driver')['ErreurAbsolue'].mean().round(2).to_dict()
             erreur_globale_moyenne = round(df_saison['ErreurAbsolue'].mean(), 2)
 
+            # --- CALCUL DE LA PRÉCISION À +-30 SECONDES ---
+            total_echantillons = len(df_saison)
+            dans_la_fenetre = sum(1 for e in df_saison['Erreur'] if abs(e) <= 30)
+            precision_30s = round((dans_la_fenetre / total_echantillons) * 100, 1) if total_echantillons > 0 else 0.0
+            # -----------------------------------------------
+
+            # Dictionnaire structuré de manière synchrone avec app.py
             rapport_global[str(saison)] = {
-                'erreur_globale_moyenne_secondes': erreur_globale_moyenne,
-                'moyenne_par_circuit': moyenne_par_circuit,
-                'moyenne_par_pilote': moyenne_par_pilote,
+                'mae_globale': erreur_globale_moyenne,
+                'precision_30s': precision_30s,
+                'total_echantillons': total_echantillons,
+                'mae_par_circuit': moyenne_par_circuit,
+                'mae_par_pilote': moyenne_par_pilote,
+                'toutes_erreurs': df_saison['Erreur'].tolist(),
                 'details_tous_les_calculs': resultats_saison
             }
-            print(f" [OK] -> MAE : {erreur_globale_moyenne}s")
+            print(f" [OK] -> MAE : {erreur_globale_moyenne}s | Précision ±30s : {precision_30s}%")
         else:
             print(" [AUCUNE DONNÉE EXPLOITABLE]")
 
