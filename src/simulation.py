@@ -90,15 +90,15 @@ class RaceSimulation:
                 # Enregistrement de l'événement pour la télémétrie finale
                 pitstop_events[lap] = pit_time
 
+                # Changement de pneu et réinitialisation de l'âge de la gomme
+                current_tyre = pit_stops[lap].upper()
+
                 # Récupération des coefficients polynomiaux d2 pour le pneu actuel
                 coefs = self.poly_config.get(current_tyre)
                 if not coefs:
                     raise ValueError(
                         f"Le composé [{current_tyre}] n'est pas répertorié dans le fichier JSON des coefficients."
                     )
-
-                # Changement de pneu et réinitialisation de l'âge de la gomme
-                current_tyre = pit_stops[lap].upper()
                 tyre_age = -1
 
             # Accumulation des données physiques
