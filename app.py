@@ -543,11 +543,11 @@ def main():
                         fiabilite_30s = (df_details['ErreurAbsolue'] <= 30).mean() * 100
 
                         col1, col2, col3 = st.columns(3)
-                        col1.metric(f"MAE Globale ({saison_choisie})", f"{mae} s",
-                                    help="Plus cette valeur est basse, plus le simulateur est proche de la réalité.")
-                        col2.metric(f"Précision à ±30s", f"{fiabilite_30s:.1f} %",
-                                    help="Pourcentage de pilotes dont le temps total simulé est à moins de 30s du vrai temps de course.")
-                        col3.metric(f"Échantillons validés", f"{len(df_details)} pilotes/GPs")
+                        col1.metric(f"MAE Globale ({saison_choisie})", f"{mae} s")
+                        col2.metric(f"Précision à ±30s", f"{fiabilite_30s:.1f} %")
+                        col3.metric(f"Échantillons validés", f"{len(df_details)} pilotes/GPs",
+                                    help="Courses sans Safety Car ou Virtual Safety Car où le pilote a fini la course.")
+                        
 
                         # Graphique de Distribution de la saison choisie
                         st.markdown("##")
@@ -562,7 +562,7 @@ def main():
 
                         # Analyse par circuit pour la saison choisie
                         st.markdown("---")
-                        st.subheader(f"📍 Précision par tracé pour la saison {saison_choisie}")
+                        st.subheader(f"📍 Précision par circuit pour la saison {saison_choisie}")
                         df_circuits = pd.DataFrame(
                             list(data_saison['moyenne_par_circuit'].items()),
                             columns=['Circuit', 'Erreur Moyenne (s)']
@@ -578,7 +578,7 @@ def main():
                         st.markdown("---")
                         st.subheader(f"⚠️ Analyse des anomalies (Saison {saison_choisie})")
                         st.write(
-                            "Voici les 5 écarts les plus importants. Idéal pour expliquer au jury les limites physiques de votre modèle (faits de course, pénalités) :")
+                            "Voici les 5 écarts les plus importants.")
                         pires_cas = df_details.sort_values(by='ErreurAbsolue', ascending=False).head(5)
                         pires_cas_visuels = pires_cas[
                             ['Circuit', 'Driver', 'TempsReel', 'TempsSimule', 'Erreur']].copy()

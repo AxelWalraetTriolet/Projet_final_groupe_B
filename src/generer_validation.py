@@ -4,7 +4,7 @@ MODULE DE VALIDATION SCIENTIFIQUE
 
 Ce module automatise la comparaison entre les prédictions du modèle polynomial
 et les données de chronométrage réelles de la FIA issues de l'API FastF1.
-Saisons sélectionnées pour conformité API : 2019, 2024, 2025
+Saisons sélectionnées pour conformité API : 2024, 2025
 """
 
 import os
@@ -70,7 +70,7 @@ def main():
 
     Exécute l'algorithme de validation de bout en bout :
         1. Initialise les moteurs de données et de régression.
-        2. Boucle sur les saisons cibles (2019, 2024, 2025).
+        2. Boucle sur les saisons cibles (2024, 2025).
         3. Extrait les données de course réelles et exclut les sessions avec Safety Car.
         4. Exécute la classe `RaceSimulation` pour chaque pilote éligible.
         5. Calcule l'erreur absolue (MAE) par rapport à la réalité.
@@ -82,10 +82,10 @@ def main():
     :rtype: None
     """
     print("==================================================================")
-    print("🔬 DÉMARRAGE DU PIPELINE DE VALIDATION HISTORIQUE (2019 - 2025) ")
+    print("🔬 DÉMARRAGE DU PIPELINE DE VALIDATION HISTORIQUE (2024 - 2025) ")
     print("==================================================================")
     print("💡 Note : Pour respecter les quotas de l'API FastF1, la validation")
-    print("         se concentre sur 3 saisons clés : 2019, 2024 et 2025.")
+    print("         se concentre sur les 2 saisons les plus récentes : 2024 et 2025.")
     print("         Temps d'exécution estimé : ~5 minutes.\n")
 
     loader = F1DataLoader()
@@ -98,8 +98,8 @@ def main():
     circuits_disponibles = list(engine.coefficients_db.keys())
     rapport_global = {}
 
-    # Sélection de 3 saisons à valider
-    saisons_eval = [2019, 2024, 2025]
+    # Sélection des 2 saisons les plus récentes à valider
+    saisons_eval = [2024, 2025]
 
     for saison in saisons_eval:
         print(f"⏳ Analyse de la saison F1 {saison} en cours...", end="", flush=True)
@@ -107,7 +107,7 @@ def main():
 
         for circuit in circuits_disponibles:
             # Temporisation de sécurité (0.6s) pour stabiliser les requêtes API
-            time.sleep(0.6)
+            time.sleep(0.1)
 
             try:
                 session = loader.load_session_data(saison, circuit, 'R')
@@ -121,7 +121,7 @@ def main():
 
                 total_laps = int(session.laps['LapNumber'].max())
                 track_base_time = loader.get_track_base_time(saison, circuit)
-                pilotes = session.results[session.results['Status'] == 'Finished']['Abbreviation'].tolist()
+                pilotes = session.results[session.results['Status'].str.contains('Finished|\\+1 Lap|\\+2 Laps', na=False)]['Abbreviation'].tolist()
 
                 for driver in pilotes:
                     driver_laps = session.laps.pick_driver(driver)
