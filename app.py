@@ -152,7 +152,7 @@ def main():
                         plt.close(fig_dist)
 
                 with col_graphe2:
-                    st.markdown(f"**Précision (MAE) par tracé en {saison_choisie}**")
+                    st.markdown(f"**Précision (MAE) par circuit en {saison_choisie}**")
                     if circuits_mae:
                         circuits_tries = dict(sorted(circuits_mae.items(), key=lambda item: item[1]))
                         fig_circ, ax_circ = plt.subplots(figsize=(6, 4))
