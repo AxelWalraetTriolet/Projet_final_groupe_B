@@ -1,1922 +1,1922 @@
 {
     "2024": {
-        "mae_globale": 112.03,
-        "precision_30s": 15.3,
+        "mae_globale": 94.78,
+        "precision_30s": 26.6,
         "total_echantillons": 124,
         "mae_par_circuit": {
-            "Bahrain Grand Prix": 39.76,
-            "Belgian Grand Prix": 101.3,
-            "British Grand Prix": 290.08,
-            "Dutch Grand Prix": 71.81,
-            "Emilia Romagna Grand Prix": 38.68,
-            "Hungarian Grand Prix": 109.57,
-            "Italian Grand Prix": 90.91,
-            "Japanese Grand Prix": 240.42,
-            "Las Vegas Grand Prix": 98.4,
-            "Singapore Grand Prix": 45.64,
-            "Spanish Grand Prix": 74.77
+            "Bahrain Grand Prix": 43.95,
+            "Belgian Grand Prix": 66.64,
+            "British Grand Prix": 298.77,
+            "Dutch Grand Prix": 47.9,
+            "Emilia Romagna Grand Prix": 45.95,
+            "Hungarian Grand Prix": 75.7,
+            "Italian Grand Prix": 72.37,
+            "Japanese Grand Prix": 188.19,
+            "Las Vegas Grand Prix": 91.68,
+            "Singapore Grand Prix": 16.0,
+            "Spanish Grand Prix": 62.29
         },
         "mae_par_pilote": {
-            "ALB": 202.64,
-            "ALO": 193.87,
-            "BOT": 122.59,
-            "COL": 78.06,
-            "GAS": 125.8,
-            "HAM": 92.31,
-            "HUL": 182.86,
-            "LAW": 202.47,
-            "LEC": 60.24,
-            "MAG": 154.26,
-            "NOR": 90.85,
-            "OCO": 101.36,
-            "PER": 129.08,
-            "PIA": 100.09,
-            "RIC": 76.61,
-            "RUS": 74.35,
-            "SAI": 70.04,
-            "SAR": 309.84,
-            "STR": 120.25,
-            "TSU": 135.2,
-            "VER": 102.04,
-            "ZHO": 165.64
+            "ALB": 172.92,
+            "ALO": 115.0,
+            "BOT": 140.12,
+            "COL": 41.04,
+            "GAS": 103.0,
+            "HAM": 95.02,
+            "HUL": 172.84,
+            "LAW": 111.79,
+            "LEC": 37.48,
+            "MAG": 109.68,
+            "NOR": 75.23,
+            "OCO": 65.86,
+            "PER": 108.25,
+            "PIA": 84.3,
+            "RIC": 51.6,
+            "RUS": 84.77,
+            "SAI": 86.98,
+            "SAR": 183.99,
+            "STR": 120.18,
+            "TSU": 97.7,
+            "VER": 94.89,
+            "ZHO": 131.12
         },
         "toutes_erreurs": [
-            14.55,
-            -31.94,
-            -31.41,
-            -40.1,
-            -44.16,
-            31.19,
-            -84.96,
-            71.7,
-            -38.73,
-            8.91,
-            294.13,
-            328.7,
-            185.69,
-            258.74,
-            218.7,
-            395.97,
-            203.73,
-            130.81,
-            147.35,
-            -55.36,
-            36.3,
-            -15.94,
-            62.03,
-            -3.13,
-            -47.6,
-            -2.58,
-            -60.66,
-            -64.56,
-            -55.79,
-            48.29,
-            -10.03,
-            193.32,
-            4.21,
-            89.27,
-            33.59,
-            -141.66,
-            109.16,
-            105.34,
-            -31.78,
-            -263.63,
-            -255.3,
-            -254.75,
-            -318.5,
-            -223.25,
-            -285.9,
-            -275.56,
-            -288.57,
-            -351.61,
-            -250.68,
-            -386.77,
-            -326.42,
-            -97.58,
-            -42.66,
-            -136.06,
-            55.53,
-            -92.24,
-            -64.61,
-            -98.63,
-            -116.03,
-            -22.27,
-            -51.07,
-            -428.57,
-            -24.07,
-            -102.29,
-            -69.71,
-            -73.25,
-            -55.26,
-            -40.78,
-            -57.5,
+            -20.87,
+            -35.63,
+            -15.73,
+            -23.74,
+            -23.46,
+            55.33,
+            -69.0,
+            120.73,
+            -73.51,
+            -1.46,
+            204.06,
+            169.39,
+            213.07,
+            135.12,
+            178.72,
+            237.89,
+            218.02,
+            151.86,
+            185.62,
+            -44.17,
+            -44.26,
+            14.94,
+            4.61,
+            -14.6,
+            -130.43,
+            -12.08,
+            -59.67,
+            -88.75,
+            -73.16,
+            36.71,
+            -33.76,
+            115.34,
+            -8.74,
+            80.33,
+            2.26,
+            -153.71,
+            116.75,
+            56.79,
+            7.6,
+            -220.83,
+            -286.63,
+            -285.47,
+            -318.39,
+            -312.51,
+            -449.86,
+            -275.91,
+            -288.5,
+            -351.67,
+            -292.43,
+            -300.74,
+            -202.3,
+            -86.1,
+            -39.62,
+            -131.54,
+            7.76,
+            -93.64,
+            -78.19,
+            -206.93,
+            -128.93,
+            -8.58,
+            -40.95,
+            10.41,
+            8.56,
+            -69.95,
+            -49.89,
+            -72.73,
+            -52.89,
+            -145.7,
+            -17.95,
+            -31.09,
+            -74.92,
+            -17.94,
+            -166.26,
+            5.71,
+            -89.24,
+            -97.59,
+            -140.12,
+            41.71,
+            -67.24,
+            -50.08,
+            -8.3,
+            15.84,
+            5.6,
+            -8.06,
+            -12.37,
+            -12.59,
+            -189.01,
+            -131.44,
+            -30.33,
+            -55.15,
+            -52.5,
+            -30.6,
+            -85.39,
+            -163.82,
+            -53.02,
+            -107.82,
+            -161.37,
+            -49.97,
+            -63.64,
+            -1.94,
+            -85.27,
+            38.59,
+            -8.0,
+            9.29,
+            -1.64,
+            29.86,
+            7.69,
+            16.92,
+            -21.44,
+            -40.95,
             -36.71,
-            -97.37,
-            35.04,
-            -166.34,
-            -122.63,
-            -142.43,
-            -93.8,
-            -122.59,
-            -189.38,
-            -232.91,
-            161.28,
-            190.49,
-            20.15,
-            -48.56,
-            -90.39,
-            2.94,
-            89.85,
-            23.94,
-            -108.18,
-            -11.75,
-            -58.47,
-            -44.73,
-            -73.15,
-            -95.87,
-            -174.39,
-            -32.63,
-            -173.51,
-            -133.68,
-            -85.5,
-            -49.92,
-            -130.0,
-            -118.18,
-            65.95,
-            29.65,
-            -51.57,
-            -29.76,
-            -49.36,
-            -57.54,
-            -35.67,
-            22.99,
-            -40.17,
-            -20.54,
-            -48.49,
-            -57.61,
-            11.08,
-            -84.05,
-            -252.48,
-            -78.47,
-            -179.24,
-            -118.62,
-            -111.33,
-            -165.64,
-            -26.13,
-            -155.08,
-            -202.47
+            -68.82,
+            -60.92,
+            35.13,
+            -100.88,
+            -183.83,
+            -48.1,
+            -210.53,
+            -99.93,
+            -88.84,
+            -131.12,
+            -80.13,
+            -147.77,
+            -111.79
         ],
         "details_tous_les_calculs": [
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5504.74,
-                "TempsSimule": 5519.3,
-                "Erreur": 14.55,
-                "ErreurAbsolue": 14.55
+                "TempsSimule": 5483.87,
+                "Erreur": -20.87,
+                "ErreurAbsolue": 20.87
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 5527.2,
-                "TempsSimule": 5495.26,
-                "Erreur": -31.94,
-                "ErreurAbsolue": 31.94
+                "TempsSimule": 5491.56,
+                "Erreur": -35.63,
+                "ErreurAbsolue": 35.63
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5529.85,
-                "TempsSimule": 5498.44,
-                "Erreur": -31.41,
-                "ErreurAbsolue": 31.41
+                "TempsSimule": 5514.12,
+                "Erreur": -15.73,
+                "ErreurAbsolue": 15.73
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5544.41,
-                "TempsSimule": 5504.31,
-                "Erreur": -40.1,
-                "ErreurAbsolue": 40.1
+                "TempsSimule": 5520.67,
+                "Erreur": -23.74,
+                "ErreurAbsolue": 23.74
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5551.53,
-                "TempsSimule": 5507.37,
-                "Erreur": -44.16,
-                "ErreurAbsolue": 44.16
+                "TempsSimule": 5528.07,
+                "Erreur": -23.46,
+                "ErreurAbsolue": 23.46
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5553.2,
-                "TempsSimule": 5584.39,
-                "Erreur": 31.19,
-                "ErreurAbsolue": 31.19
+                "TempsSimule": 5608.53,
+                "Erreur": 55.33,
+                "ErreurAbsolue": 55.33
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 5555.07,
-                "TempsSimule": 5470.11,
-                "Erreur": -84.96,
-                "ErreurAbsolue": 84.96
+                "TempsSimule": 5486.06,
+                "Erreur": -69.0,
+                "ErreurAbsolue": 69.0
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5560.82,
-                "TempsSimule": 5632.52,
-                "Erreur": 71.7,
-                "ErreurAbsolue": 71.7
+                "TempsSimule": 5681.55,
+                "Erreur": 120.73,
+                "ErreurAbsolue": 120.73
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 5579.63,
-                "TempsSimule": 5540.9,
-                "Erreur": -38.73,
-                "ErreurAbsolue": 38.73
+                "TempsSimule": 5506.12,
+                "Erreur": -73.51,
+                "ErreurAbsolue": 73.51
             },
             {
                 "Circuit": "Bahrain Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5597.96,
-                "TempsSimule": 5606.87,
-                "Erreur": 8.91,
-                "ErreurAbsolue": 8.91
+                "TempsSimule": 5596.5,
+                "Erreur": -1.46,
+                "ErreurAbsolue": 1.46
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 4979.51,
-                "TempsSimule": 5273.65,
-                "Erreur": 294.13,
-                "ErreurAbsolue": 294.13
+                "TempsSimule": 5183.57,
+                "Erreur": 204.06,
+                "ErreurAbsolue": 204.06
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 4993.09,
-                "TempsSimule": 5321.79,
-                "Erreur": 328.7,
-                "ErreurAbsolue": 328.7
+                "TempsSimule": 5162.48,
+                "Erreur": 169.39,
+                "ErreurAbsolue": 169.39
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5004.89,
-                "TempsSimule": 5190.58,
-                "Erreur": 185.69,
-                "ErreurAbsolue": 185.69
+                "TempsSimule": 5217.96,
+                "Erreur": 213.07,
+                "ErreurAbsolue": 213.07
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5025.42,
-                "TempsSimule": 5284.16,
-                "Erreur": 258.74,
-                "ErreurAbsolue": 258.74
+                "TempsSimule": 5160.54,
+                "Erreur": 135.12,
+                "ErreurAbsolue": 135.12
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5011.33,
-                "TempsSimule": 5230.03,
-                "Erreur": 218.7,
-                "ErreurAbsolue": 218.7
+                "TempsSimule": 5190.05,
+                "Erreur": 178.72,
+                "ErreurAbsolue": 178.72
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 5030.6,
-                "TempsSimule": 5426.58,
-                "Erreur": 395.97,
-                "ErreurAbsolue": 395.97
+                "TempsSimule": 5268.49,
+                "Erreur": 237.89,
+                "ErreurAbsolue": 237.89
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5047.92,
-                "TempsSimule": 5251.65,
-                "Erreur": 203.73,
-                "ErreurAbsolue": 203.73
+                "TempsSimule": 5265.94,
+                "Erreur": 218.02,
+                "ErreurAbsolue": 218.02
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5036.81,
-                "TempsSimule": 5167.61,
-                "Erreur": 130.81,
-                "ErreurAbsolue": 130.81
+                "TempsSimule": 5188.67,
+                "Erreur": 151.86,
+                "ErreurAbsolue": 151.86
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 5045.07,
-                "TempsSimule": 5192.42,
-                "Erreur": 147.35,
-                "ErreurAbsolue": 147.35
+                "TempsSimule": 5230.69,
+                "Erreur": 185.62,
+                "ErreurAbsolue": 185.62
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5125.25,
-                "TempsSimule": 5069.9,
-                "Erreur": -55.36,
-                "ErreurAbsolue": 55.36
+                "TempsSimule": 5081.08,
+                "Erreur": -44.17,
+                "ErreurAbsolue": 44.17
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5125.98,
-                "TempsSimule": 5162.27,
-                "Erreur": 36.3,
-                "ErreurAbsolue": 36.3
+                "TempsSimule": 5081.72,
+                "Erreur": -44.26,
+                "ErreurAbsolue": 44.26
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5133.17,
-                "TempsSimule": 5117.23,
-                "Erreur": -15.94,
-                "ErreurAbsolue": 15.94
+                "TempsSimule": 5148.11,
+                "Erreur": 14.94,
+                "ErreurAbsolue": 14.94
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5139.38,
-                "TempsSimule": 5201.42,
-                "Erreur": 62.03,
-                "ErreurAbsolue": 62.03
+                "TempsSimule": 5143.99,
+                "Erreur": 4.61,
+                "ErreurAbsolue": 4.61
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5147.58,
-                "TempsSimule": 5144.44,
-                "Erreur": -3.13,
-                "ErreurAbsolue": 3.13
+                "TempsSimule": 5132.97,
+                "Erreur": -14.6,
+                "ErreurAbsolue": 14.6
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 5160.36,
-                "TempsSimule": 5112.75,
-                "Erreur": -47.6,
-                "ErreurAbsolue": 47.6
+                "TempsSimule": 5029.93,
+                "Erreur": -130.43,
+                "ErreurAbsolue": 130.43
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5172.41,
-                "TempsSimule": 5169.83,
-                "Erreur": -2.58,
-                "ErreurAbsolue": 2.58
+                "TempsSimule": 5160.32,
+                "Erreur": -12.08,
+                "ErreurAbsolue": 12.08
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 5180.03,
-                "TempsSimule": 5119.37,
-                "Erreur": -60.66,
-                "ErreurAbsolue": 60.66
+                "TempsSimule": 5120.36,
+                "Erreur": -59.67,
+                "ErreurAbsolue": 59.67
             },
             {
                 "Circuit": "Emilia Romagna Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5204.81,
-                "TempsSimule": 5140.24,
-                "Erreur": -64.56,
-                "ErreurAbsolue": 64.56
+                "TempsSimule": 5116.06,
+                "Erreur": -88.75,
+                "ErreurAbsolue": 88.75
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5300.23,
-                "TempsSimule": 5244.44,
-                "Erreur": -55.79,
-                "ErreurAbsolue": 55.79
+                "TempsSimule": 5227.07,
+                "Erreur": -73.16,
+                "ErreurAbsolue": 73.16
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5302.45,
-                "TempsSimule": 5350.73,
-                "Erreur": 48.29,
-                "ErreurAbsolue": 48.29
+                "TempsSimule": 5339.16,
+                "Erreur": 36.71,
+                "ErreurAbsolue": 36.71
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 5318.02,
-                "TempsSimule": 5307.99,
-                "Erreur": -10.03,
-                "ErreurAbsolue": 10.03
+                "TempsSimule": 5284.26,
+                "Erreur": -33.76,
+                "ErreurAbsolue": 33.76
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5322.55,
-                "TempsSimule": 5515.87,
-                "Erreur": 193.32,
-                "ErreurAbsolue": 193.32
+                "TempsSimule": 5437.88,
+                "Erreur": 115.34,
+                "ErreurAbsolue": 115.34
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5322.94,
-                "TempsSimule": 5327.15,
-                "Erreur": 4.21,
-                "ErreurAbsolue": 4.21
+                "TempsSimule": 5314.19,
+                "Erreur": -8.74,
+                "ErreurAbsolue": 8.74
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5331.26,
-                "TempsSimule": 5420.52,
-                "Erreur": 89.27,
-                "ErreurAbsolue": 89.27
+                "TempsSimule": 5411.59,
+                "Erreur": 80.33,
+                "ErreurAbsolue": 80.33
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5333.99,
-                "TempsSimule": 5367.57,
-                "Erreur": 33.59,
-                "ErreurAbsolue": 33.59
+                "TempsSimule": 5336.25,
+                "Erreur": 2.26,
+                "ErreurAbsolue": 2.26
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 5359.75,
-                "TempsSimule": 5218.09,
-                "Erreur": -141.66,
-                "ErreurAbsolue": 141.66
+                "TempsSimule": 5206.04,
+                "Erreur": -153.71,
+                "ErreurAbsolue": 153.71
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "GAS",
                 "TempsReel": 5362.25,
-                "TempsSimule": 5471.41,
-                "Erreur": 109.16,
-                "ErreurAbsolue": 109.16
+                "TempsSimule": 5479.0,
+                "Erreur": 116.75,
+                "ErreurAbsolue": 116.75
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "OCO",
                 "TempsReel": 5372.12,
-                "TempsSimule": 5477.45,
-                "Erreur": 105.34,
-                "ErreurAbsolue": 105.34
+                "TempsSimule": 5428.91,
+                "Erreur": 56.79,
+                "ErreurAbsolue": 56.79
             },
             {
                 "Circuit": "Spanish Grand Prix",
                 "Driver": "HUL",
                 "TempsReel": 5374.44,
-                "TempsSimule": 5342.66,
-                "Erreur": -31.78,
-                "ErreurAbsolue": 31.78
+                "TempsSimule": 5382.04,
+                "Erreur": 7.6,
+                "ErreurAbsolue": 7.6
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 4947.06,
-                "TempsSimule": 4683.43,
-                "Erreur": -263.63,
-                "ErreurAbsolue": 263.63
+                "TempsSimule": 4726.23,
+                "Erreur": -220.83,
+                "ErreurAbsolue": 220.83
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 4948.52,
-                "TempsSimule": 4693.22,
-                "Erreur": -255.3,
-                "ErreurAbsolue": 255.3
+                "TempsSimule": 4661.89,
+                "Erreur": -286.63,
+                "ErreurAbsolue": 286.63
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 4954.61,
-                "TempsSimule": 4699.86,
-                "Erreur": -254.75,
-                "ErreurAbsolue": 254.75
+                "TempsSimule": 4669.13,
+                "Erreur": -285.47,
+                "ErreurAbsolue": 285.47
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 4959.49,
-                "TempsSimule": 4640.98,
-                "Erreur": -318.5,
-                "ErreurAbsolue": 318.5
+                "TempsSimule": 4641.1,
+                "Erreur": -318.39,
+                "ErreurAbsolue": 318.39
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 4994.38,
-                "TempsSimule": 4771.13,
-                "Erreur": -223.25,
-                "ErreurAbsolue": 223.25
+                "TempsSimule": 4681.87,
+                "Erreur": -312.51,
+                "ErreurAbsolue": 312.51
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "HUL",
                 "TempsReel": 5002.78,
-                "TempsSimule": 4716.88,
-                "Erreur": -285.9,
-                "ErreurAbsolue": 285.9
+                "TempsSimule": 4552.92,
+                "Erreur": -449.86,
+                "ErreurAbsolue": 449.86
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5003.63,
-                "TempsSimule": 4728.07,
-                "Erreur": -275.56,
-                "ErreurAbsolue": 275.56
+                "TempsSimule": 4727.72,
+                "Erreur": -275.91,
+                "ErreurAbsolue": 275.91
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 5010.64,
-                "TempsSimule": 4722.06,
-                "Erreur": -288.57,
-                "ErreurAbsolue": 288.57
+                "TempsSimule": 4722.13,
+                "Erreur": -288.5,
+                "ErreurAbsolue": 288.5
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "ALB",
                 "TempsReel": 5015.45,
-                "TempsSimule": 4663.83,
-                "Erreur": -351.61,
-                "ErreurAbsolue": 351.61
+                "TempsSimule": 4663.77,
+                "Erreur": -351.67,
+                "ErreurAbsolue": 351.67
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "TSU",
                 "TempsReel": 5026.36,
-                "TempsSimule": 4775.69,
-                "Erreur": -250.68,
-                "ErreurAbsolue": 250.68
+                "TempsSimule": 4733.93,
+                "Erreur": -292.43,
+                "ErreurAbsolue": 292.43
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "SAR",
                 "TempsReel": 5036.02,
-                "TempsSimule": 4649.25,
-                "Erreur": -386.77,
-                "ErreurAbsolue": 386.77
+                "TempsSimule": 4735.28,
+                "Erreur": -300.74,
+                "ErreurAbsolue": 300.74
             },
             {
                 "Circuit": "British Grand Prix",
                 "Driver": "MAG",
                 "TempsReel": 5037.21,
-                "TempsSimule": 4710.79,
-                "Erreur": -326.42,
-                "ErreurAbsolue": 326.42
+                "TempsSimule": 4834.92,
+                "Erreur": -202.3,
+                "ErreurAbsolue": 202.3
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5881.99,
-                "TempsSimule": 5784.41,
-                "Erreur": -97.58,
-                "ErreurAbsolue": 97.58
+                "TempsSimule": 5795.89,
+                "Erreur": -86.1,
+                "ErreurAbsolue": 86.1
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5884.13,
-                "TempsSimule": 5841.47,
-                "Erreur": -42.66,
-                "ErreurAbsolue": 42.66
+                "TempsSimule": 5844.51,
+                "Erreur": -39.62,
+                "ErreurAbsolue": 39.62
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 5896.87,
-                "TempsSimule": 5760.81,
-                "Erreur": -136.06,
-                "ErreurAbsolue": 136.06
+                "TempsSimule": 5765.33,
+                "Erreur": -131.54,
+                "ErreurAbsolue": 131.54
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5901.68,
-                "TempsSimule": 5957.2,
-                "Erreur": 55.53,
-                "ErreurAbsolue": 55.53
+                "TempsSimule": 5909.44,
+                "Erreur": 7.76,
+                "ErreurAbsolue": 7.76
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5903.34,
-                "TempsSimule": 5811.09,
-                "Erreur": -92.24,
-                "ErreurAbsolue": 92.24
+                "TempsSimule": 5809.7,
+                "Erreur": -93.64,
+                "ErreurAbsolue": 93.64
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5905.06,
-                "TempsSimule": 5840.45,
-                "Erreur": -64.61,
-                "ErreurAbsolue": 64.61
+                "TempsSimule": 5826.88,
+                "Erreur": -78.19,
+                "ErreurAbsolue": 78.19
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 5921.78,
-                "TempsSimule": 5823.15,
-                "Erreur": -98.63,
-                "ErreurAbsolue": 98.63
+                "TempsSimule": 5714.85,
+                "Erreur": -206.93,
+                "ErreurAbsolue": 206.93
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5924.36,
-                "TempsSimule": 5808.32,
-                "Erreur": -116.03,
-                "ErreurAbsolue": 116.03
+                "TempsSimule": 5795.42,
+                "Erreur": -128.93,
+                "ErreurAbsolue": 128.93
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "TSU",
                 "TempsReel": 5959.25,
-                "TempsSimule": 5936.98,
-                "Erreur": -22.27,
-                "ErreurAbsolue": 22.27
+                "TempsSimule": 5950.67,
+                "Erreur": -8.58,
+                "ErreurAbsolue": 8.58
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5959.96,
-                "TempsSimule": 5908.89,
-                "Erreur": -51.07,
-                "ErreurAbsolue": 51.07
+                "TempsSimule": 5919.02,
+                "Erreur": -40.95,
+                "ErreurAbsolue": 40.95
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 5964.45,
-                "TempsSimule": 5535.88,
-                "Erreur": -428.57,
-                "ErreurAbsolue": 428.57
+                "TempsSimule": 5974.86,
+                "Erreur": 10.41,
+                "ErreurAbsolue": 10.41
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 4797.57,
-                "TempsSimule": 4773.49,
-                "Erreur": -24.07,
-                "ErreurAbsolue": 24.07
+                "TempsSimule": 4806.13,
+                "Erreur": 8.56,
+                "ErreurAbsolue": 8.56
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 4798.21,
-                "TempsSimule": 4695.92,
-                "Erreur": -102.29,
-                "ErreurAbsolue": 102.29
+                "TempsSimule": 4728.27,
+                "Erreur": -69.95,
+                "ErreurAbsolue": 69.95
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 4805.59,
-                "TempsSimule": 4735.88,
-                "Erreur": -69.71,
-                "ErreurAbsolue": 69.71
+                "TempsSimule": 4755.7,
+                "Erreur": -49.89,
+                "ErreurAbsolue": 49.89
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 4806.27,
-                "TempsSimule": 4733.02,
-                "Erreur": -73.25,
-                "ErreurAbsolue": 73.25
+                "TempsSimule": 4733.53,
+                "Erreur": -72.73,
+                "ErreurAbsolue": 72.73
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 4806.89,
-                "TempsSimule": 4751.63,
-                "Erreur": -55.26,
-                "ErreurAbsolue": 55.26
+                "TempsSimule": 4754.0,
+                "Erreur": -52.89,
+                "ErreurAbsolue": 52.89
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 4816.84,
-                "TempsSimule": 4776.06,
-                "Erreur": -40.78,
-                "ErreurAbsolue": 40.78
+                "TempsSimule": 4671.14,
+                "Erreur": -145.7,
+                "ErreurAbsolue": 145.7
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 4840.24,
-                "TempsSimule": 4782.73,
-                "Erreur": -57.5,
-                "ErreurAbsolue": 57.5
+                "TempsSimule": 4822.28,
+                "Erreur": -17.95,
+                "ErreurAbsolue": 17.95
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 4847.0,
-                "TempsSimule": 4810.29,
-                "Erreur": -36.71,
-                "ErreurAbsolue": 36.71
+                "TempsSimule": 4815.91,
+                "Erreur": -31.09,
+                "ErreurAbsolue": 31.09
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "OCO",
                 "TempsReel": 4849.59,
-                "TempsSimule": 4752.22,
-                "Erreur": -97.37,
-                "ErreurAbsolue": 97.37
+                "TempsSimule": 4774.67,
+                "Erreur": -74.92,
+                "ErreurAbsolue": 74.92
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "RIC",
                 "TempsReel": 4851.97,
-                "TempsSimule": 4887.01,
-                "Erreur": 35.04,
-                "ErreurAbsolue": 35.04
+                "TempsSimule": 4834.02,
+                "Erreur": -17.94,
+                "ErreurAbsolue": 17.94
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 4860.05,
-                "TempsSimule": 4693.71,
-                "Erreur": -166.34,
-                "ErreurAbsolue": 166.34
+                "TempsSimule": 4693.79,
+                "Erreur": -166.26,
+                "ErreurAbsolue": 166.26
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "ALB",
                 "TempsReel": 4860.69,
-                "TempsSimule": 4738.06,
-                "Erreur": -122.63,
-                "ErreurAbsolue": 122.63
+                "TempsSimule": 4866.4,
+                "Erreur": 5.71,
+                "ErreurAbsolue": 5.71
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "GAS",
                 "TempsReel": 4861.4,
-                "TempsSimule": 4718.97,
-                "Erreur": -142.43,
-                "ErreurAbsolue": 142.43
+                "TempsSimule": 4772.17,
+                "Erreur": -89.24,
+                "ErreurAbsolue": 89.24
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "MAG",
                 "TempsReel": 4863.67,
-                "TempsSimule": 4769.87,
-                "Erreur": -93.8,
-                "ErreurAbsolue": 93.8
+                "TempsSimule": 4766.09,
+                "Erreur": -97.59,
+                "ErreurAbsolue": 97.59
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "BOT",
                 "TempsReel": 4867.68,
-                "TempsSimule": 4745.09,
-                "Erreur": -122.59,
-                "ErreurAbsolue": 122.59
+                "TempsSimule": 4727.55,
+                "Erreur": -140.12,
+                "ErreurAbsolue": 140.12
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "TSU",
                 "TempsReel": 4873.78,
-                "TempsSimule": 4684.4,
-                "Erreur": -189.38,
-                "ErreurAbsolue": 189.38
+                "TempsSimule": 4915.48,
+                "Erreur": 41.71,
+                "ErreurAbsolue": 41.71
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "SAR",
                 "TempsReel": 4883.1,
-                "TempsSimule": 4650.19,
-                "Erreur": -232.91,
-                "ErreurAbsolue": 232.91
+                "TempsSimule": 4815.85,
+                "Erreur": -67.24,
+                "ErreurAbsolue": 67.24
             },
             {
                 "Circuit": "Belgian Grand Prix",
                 "Driver": "HUL",
                 "TempsReel": 4885.87,
-                "TempsSimule": 5047.15,
-                "Erreur": 161.28,
-                "ErreurAbsolue": 161.28
+                "TempsSimule": 4835.79,
+                "Erreur": -50.08,
+                "ErreurAbsolue": 50.08
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5445.52,
-                "TempsSimule": 5636.01,
-                "Erreur": 190.49,
-                "ErreurAbsolue": 190.49
+                "TempsSimule": 5437.21,
+                "Erreur": -8.3,
+                "ErreurAbsolue": 8.3
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5468.42,
-                "TempsSimule": 5488.56,
-                "Erreur": 20.15,
-                "ErreurAbsolue": 20.15
+                "TempsSimule": 5484.25,
+                "Erreur": 15.84,
+                "ErreurAbsolue": 15.84
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5470.96,
-                "TempsSimule": 5422.4,
-                "Erreur": -48.56,
-                "ErreurAbsolue": 48.56
+                "TempsSimule": 5476.55,
+                "Erreur": 5.6,
+                "ErreurAbsolue": 5.6
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5472.86,
-                "TempsSimule": 5382.46,
-                "Erreur": -90.39,
-                "ErreurAbsolue": 90.39
+                "TempsSimule": 5464.79,
+                "Erreur": -8.06,
+                "ErreurAbsolue": 8.06
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5477.66,
-                "TempsSimule": 5480.59,
-                "Erreur": 2.94,
-                "ErreurAbsolue": 2.94
+                "TempsSimule": 5465.29,
+                "Erreur": -12.37,
+                "ErreurAbsolue": 12.37
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 5485.06,
-                "TempsSimule": 5574.91,
-                "Erreur": 89.85,
-                "ErreurAbsolue": 89.85
+                "TempsSimule": 5472.47,
+                "Erreur": -12.59,
+                "ErreurAbsolue": 12.59
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5490.14,
-                "TempsSimule": 5514.08,
-                "Erreur": 23.94,
-                "ErreurAbsolue": 23.94
+                "TempsSimule": 5301.12,
+                "Erreur": -189.01,
+                "ErreurAbsolue": 189.01
             },
             {
                 "Circuit": "Dutch Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 5495.12,
-                "TempsSimule": 5386.94,
-                "Erreur": -108.18,
-                "ErreurAbsolue": 108.18
+                "TempsSimule": 5363.68,
+                "Erreur": -131.44,
+                "ErreurAbsolue": 131.44
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 4480.73,
-                "TempsSimule": 4468.98,
-                "Erreur": -11.75,
-                "ErreurAbsolue": 11.75
+                "TempsSimule": 4450.39,
+                "Erreur": -30.33,
+                "ErreurAbsolue": 30.33
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 4483.39,
-                "TempsSimule": 4424.92,
-                "Erreur": -58.47,
-                "ErreurAbsolue": 58.47
+                "TempsSimule": 4428.24,
+                "Erreur": -55.15,
+                "ErreurAbsolue": 55.15
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 4486.88,
-                "TempsSimule": 4442.15,
-                "Erreur": -44.73,
-                "ErreurAbsolue": 44.73
+                "TempsSimule": 4434.38,
+                "Erreur": -52.5,
+                "ErreurAbsolue": 52.5
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 4496.35,
-                "TempsSimule": 4423.2,
-                "Erreur": -73.15,
-                "ErreurAbsolue": 73.15
+                "TempsSimule": 4465.75,
+                "Erreur": -30.6,
+                "ErreurAbsolue": 30.6
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 4503.55,
-                "TempsSimule": 4407.67,
-                "Erreur": -95.87,
-                "ErreurAbsolue": 95.87
+                "TempsSimule": 4418.15,
+                "Erreur": -85.39,
+                "ErreurAbsolue": 85.39
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 4518.66,
-                "TempsSimule": 4344.27,
-                "Erreur": -174.39,
-                "ErreurAbsolue": 174.39
+                "TempsSimule": 4354.84,
+                "Erreur": -163.82,
+                "ErreurAbsolue": 163.82
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 4520.44,
-                "TempsSimule": 4487.81,
-                "Erreur": -32.63,
-                "ErreurAbsolue": 32.63
+                "TempsSimule": 4467.42,
+                "Erreur": -53.02,
+                "ErreurAbsolue": 53.02
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 4534.88,
-                "TempsSimule": 4361.37,
-                "Erreur": -173.51,
-                "ErreurAbsolue": 173.51
+                "TempsSimule": 4427.05,
+                "Erreur": -107.82,
+                "ErreurAbsolue": 107.82
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "ALB",
                 "TempsReel": 4548.18,
-                "TempsSimule": 4414.5,
-                "Erreur": -133.68,
-                "ErreurAbsolue": 133.68
+                "TempsSimule": 4386.81,
+                "Erreur": -161.37,
+                "ErreurAbsolue": 161.37
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "MAG",
                 "TempsReel": 4539.03,
-                "TempsSimule": 4453.53,
-                "Erreur": -85.5,
-                "ErreurAbsolue": 85.5
+                "TempsSimule": 4489.06,
+                "Erreur": -49.97,
+                "ErreurAbsolue": 49.97
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 4549.22,
-                "TempsSimule": 4499.3,
-                "Erreur": -49.92,
-                "ErreurAbsolue": 49.92
+                "TempsSimule": 4485.59,
+                "Erreur": -63.64,
+                "ErreurAbsolue": 63.64
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "COL",
                 "TempsReel": 4562.04,
-                "TempsSimule": 4432.03,
-                "Erreur": -130.0,
-                "ErreurAbsolue": 130.0
+                "TempsSimule": 4560.09,
+                "Erreur": -1.94,
+                "ErreurAbsolue": 1.94
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "RIC",
                 "TempsReel": 4559.18,
-                "TempsSimule": 4440.99,
-                "Erreur": -118.18,
-                "ErreurAbsolue": 118.18
+                "TempsSimule": 4473.9,
+                "Erreur": -85.27,
+                "ErreurAbsolue": 85.27
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 6052.57,
-                "TempsSimule": 6118.52,
-                "Erreur": 65.95,
-                "ErreurAbsolue": 65.95
+                "TempsSimule": 6091.17,
+                "Erreur": 38.59,
+                "ErreurAbsolue": 38.59
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 6073.52,
-                "TempsSimule": 6103.16,
-                "Erreur": 29.65,
-                "ErreurAbsolue": 29.65
+                "TempsSimule": 6065.51,
+                "Erreur": -8.0,
+                "ErreurAbsolue": 8.0
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 6094.39,
-                "TempsSimule": 6042.82,
-                "Erreur": -51.57,
-                "ErreurAbsolue": 51.57
+                "TempsSimule": 6103.68,
+                "Erreur": 9.29,
+                "ErreurAbsolue": 9.29
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 6113.61,
-                "TempsSimule": 6083.85,
-                "Erreur": -29.76,
-                "ErreurAbsolue": 29.76
+                "TempsSimule": 6111.97,
+                "Erreur": -1.64,
+                "ErreurAbsolue": 1.64
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 6115.0,
-                "TempsSimule": 6065.64,
-                "Erreur": -49.36,
-                "ErreurAbsolue": 49.36
+                "TempsSimule": 6144.86,
+                "Erreur": 29.86,
+                "ErreurAbsolue": 29.86
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 6137.82,
-                "TempsSimule": 6080.28,
-                "Erreur": -57.54,
-                "ErreurAbsolue": 57.54
+                "TempsSimule": 6145.51,
+                "Erreur": 7.69,
+                "ErreurAbsolue": 7.69
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 6148.61,
-                "TempsSimule": 6112.94,
-                "Erreur": -35.67,
-                "ErreurAbsolue": 35.67
+                "TempsSimule": 6165.53,
+                "Erreur": 16.92,
+                "ErreurAbsolue": 16.92
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 4925.97,
-                "TempsSimule": 4948.96,
-                "Erreur": 22.99,
-                "ErreurAbsolue": 22.99
+                "TempsSimule": 4904.53,
+                "Erreur": -21.44,
+                "ErreurAbsolue": 21.44
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 4933.28,
-                "TempsSimule": 4893.12,
-                "Erreur": -40.17,
-                "ErreurAbsolue": 40.17
+                "TempsSimule": 4892.33,
+                "Erreur": -40.95,
+                "ErreurAbsolue": 40.95
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 4937.87,
-                "TempsSimule": 4917.33,
-                "Erreur": -20.54,
-                "ErreurAbsolue": 20.54
+                "TempsSimule": 4901.17,
+                "Erreur": -36.71,
+                "ErreurAbsolue": 36.71
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 4940.25,
-                "TempsSimule": 4891.76,
-                "Erreur": -48.49,
-                "ErreurAbsolue": 48.49
+                "TempsSimule": 4871.43,
+                "Erreur": -68.82,
+                "ErreurAbsolue": 68.82
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 4942.55,
-                "TempsSimule": 4884.94,
-                "Erreur": -57.61,
-                "ErreurAbsolue": 57.61
+                "TempsSimule": 4881.63,
+                "Erreur": -60.92,
+                "ErreurAbsolue": 60.92
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 4969.35,
-                "TempsSimule": 4980.43,
-                "Erreur": 11.08,
-                "ErreurAbsolue": 11.08
+                "TempsSimule": 5004.48,
+                "Erreur": 35.13,
+                "ErreurAbsolue": 35.13
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 4977.33,
-                "TempsSimule": 4893.29,
-                "Erreur": -84.05,
-                "ErreurAbsolue": 84.05
+                "TempsSimule": 4876.46,
+                "Erreur": -100.88,
+                "ErreurAbsolue": 100.88
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "HUL",
                 "TempsReel": 4985.78,
-                "TempsSimule": 4733.3,
-                "Erreur": -252.48,
-                "ErreurAbsolue": 252.48
+                "TempsSimule": 4801.94,
+                "Erreur": -183.83,
+                "ErreurAbsolue": 183.83
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "TSU",
                 "TempsReel": 4988.78,
-                "TempsSimule": 4910.31,
-                "Erreur": -78.47,
-                "ErreurAbsolue": 78.47
+                "TempsSimule": 4940.68,
+                "Erreur": -48.1,
+                "ErreurAbsolue": 48.1
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "PER",
                 "TempsReel": 4989.08,
-                "TempsSimule": 4809.84,
-                "Erreur": -179.24,
-                "ErreurAbsolue": 179.24
+                "TempsSimule": 4778.55,
+                "Erreur": -210.53,
+                "ErreurAbsolue": 210.53
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 4995.16,
-                "TempsSimule": 4876.54,
-                "Erreur": -118.62,
-                "ErreurAbsolue": 118.62
+                "TempsSimule": 4895.23,
+                "Erreur": -99.93,
+                "ErreurAbsolue": 99.93
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "MAG",
                 "TempsReel": 4995.77,
-                "TempsSimule": 4884.44,
-                "Erreur": -111.33,
-                "ErreurAbsolue": 111.33
+                "TempsSimule": 4906.93,
+                "Erreur": -88.84,
+                "ErreurAbsolue": 88.84
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "ZHO",
                 "TempsReel": 5000.05,
-                "TempsSimule": 4834.42,
-                "Erreur": -165.64,
-                "ErreurAbsolue": 165.64
+                "TempsSimule": 4868.93,
+                "Erreur": -131.12,
+                "ErreurAbsolue": 131.12
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "COL",
                 "TempsReel": 5001.14,
-                "TempsSimule": 4975.01,
-                "Erreur": -26.13,
-                "ErreurAbsolue": 26.13
+                "TempsSimule": 4921.01,
+                "Erreur": -80.13,
+                "ErreurAbsolue": 80.13
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5010.07,
-                "TempsSimule": 4854.99,
-                "Erreur": -155.08,
-                "ErreurAbsolue": 155.08
+                "TempsSimule": 4862.3,
+                "Erreur": -147.77,
+                "ErreurAbsolue": 147.77
             },
             {
                 "Circuit": "Las Vegas Grand Prix",
                 "Driver": "LAW",
                 "TempsReel": 5016.97,
-                "TempsSimule": 4814.51,
-                "Erreur": -202.47,
-                "ErreurAbsolue": 202.47
+                "TempsSimule": 4905.18,
+                "Erreur": -111.79,
+                "ErreurAbsolue": 111.79
             }
         ]
     },
     "2025": {
-        "mae_globale": 115.51,
-        "precision_30s": 21.2,
+        "mae_globale": 50.15,
+        "precision_30s": 32.5,
         "total_echantillons": 80,
         "mae_par_circuit": {
-            "Abu Dhabi Grand Prix": 95.99,
-            "Chinese Grand Prix": 153.46,
-            "Hungarian Grand Prix": 51.34,
-            "Italian Grand Prix": 111.38,
-            "Japanese Grand Prix": 128.48,
-            "Singapore Grand Prix": 138.63
+            "Abu Dhabi Grand Prix": 51.08,
+            "Chinese Grand Prix": 38.83,
+            "Hungarian Grand Prix": 55.21,
+            "Italian Grand Prix": 59.35,
+            "Japanese Grand Prix": 48.5,
+            "Singapore Grand Prix": 48.94
         },
         "mae_par_pilote": {
-            "ALB": 164.03,
-            "ALO": 146.98,
-            "ANT": 147.46,
-            "BEA": 156.19,
-            "BOR": 86.69,
-            "DOO": 187.26,
-            "GAS": 132.27,
-            "HAD": 75.17,
-            "HAM": 139.75,
-            "HUL": 51.89,
-            "LAW": 164.4,
-            "LEC": 74.09,
-            "NOR": 123.31,
-            "OCO": 98.53,
-            "PIA": 124.4,
-            "RUS": 99.69,
-            "SAI": 56.73,
-            "STR": 77.22,
-            "TSU": 114.64,
-            "VER": 87.72
+            "ALB": 80.12,
+            "ALO": 61.52,
+            "ANT": 61.25,
+            "BEA": 36.36,
+            "BOR": 39.06,
+            "DOO": 22.22,
+            "GAS": 48.89,
+            "HAD": 51.35,
+            "HAM": 89.71,
+            "HUL": 18.49,
+            "LAW": 52.97,
+            "LEC": 50.96,
+            "NOR": 44.01,
+            "OCO": 20.7,
+            "PIA": 61.06,
+            "RUS": 43.58,
+            "SAI": 51.63,
+            "STR": 70.44,
+            "TSU": 70.67,
+            "VER": 17.85
         },
         "toutes_erreurs": [
-            189.33,
-            288.62,
-            26.78,
-            177.08,
-            264.25,
-            -54.85,
-            54.63,
-            -87.36,
-            164.04,
-            -11.0,
-            238.24,
-            -69.54,
-            132.27,
-            -25.96,
-            -356.18,
-            36.99,
-            -63.87,
-            69.32,
-            -130.78,
-            601.36,
-            324.27,
-            201.28,
-            41.61,
-            201.23,
-            199.55,
-            27.25,
-            21.55,
-            112.87,
-            122.8,
-            85.97,
-            -36.95,
-            -18.35,
-            23.86,
-            -5.27,
-            -31.83,
-            131.58,
-            42.59,
-            -54.12,
-            -63.97,
-            -68.21,
-            -40.61,
-            12.04,
-            -33.86,
-            -58.6,
-            -1.28,
-            11.4,
-            -112.99,
-            -90.39,
-            -115.43,
-            -119.15,
-            -52.18,
-            -74.91,
-            -227.22,
-            -161.37,
-            -488.55,
-            26.06,
-            81.7,
-            67.46,
-            -32.7,
-            -318.22,
-            -51.49,
-            -198.16,
-            -78.57,
-            -393.28,
-            161.06,
-            -21.67,
-            -1.81,
-            9.04,
-            63.31,
-            108.92,
-            25.04,
-            -312.82,
-            66.79,
-            -54.81,
-            -46.43,
-            -127.89,
-            3.24,
-            -113.0,
-            -45.51,
-            -374.43
+            17.73,
+            88.33,
+            47.38,
+            15.38,
+            93.26,
+            -40.93,
+            107.78,
+            -90.76,
+            -54.25,
+            -43.84,
+            44.29,
+            -57.78,
+            48.89,
+            -0.42,
+            -41.18,
+            -32.03,
+            5.53,
+            33.46,
+            -58.22,
+            22.08,
+            38.84,
+            59.54,
+            -31.86,
+            2.5,
+            -78.13,
+            76.06,
+            -13.77,
+            -8.41,
+            32.81,
+            -12.91,
+            -124.63,
+            -3.25,
+            66.12,
+            -52.92,
+            -38.3,
+            154.87,
+            67.34,
+            -15.67,
+            76.8,
+            -24.22,
+            -0.65,
+            -22.49,
+            -63.51,
+            -99.47,
+            12.14,
+            -13.39,
+            -95.56,
+            -85.47,
+            -69.18,
+            -67.37,
+            -50.38,
+            -43.48,
+            -86.25,
+            -64.68,
+            -57.49,
+            45.69,
+            2.65,
+            5.42,
+            39.18,
+            39.93,
+            68.4,
+            -118.36,
+            -85.82,
+            -35.04,
+            31.72,
+            -105.33,
+            1.82,
+            -4.0,
+            -11.32,
+            -16.11,
+            -26.14,
+            -69.68,
+            -4.95,
+            -126.11,
+            -13.18,
+            2.9,
+            -129.82,
+            -89.55,
+            79.9,
+            -104.7
         ],
         "details_tous_les_calculs": [
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 4926.98,
-                "TempsSimule": 5116.31,
-                "Erreur": 189.33,
-                "ErreurAbsolue": 189.33
+                "TempsSimule": 4944.71,
+                "Erreur": 17.73,
+                "ErreurAbsolue": 17.73
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 4928.41,
-                "TempsSimule": 5217.03,
-                "Erreur": 288.62,
-                "ErreurAbsolue": 288.62
+                "TempsSimule": 5016.74,
+                "Erreur": 88.33,
+                "ErreurAbsolue": 88.33
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 4929.11,
-                "TempsSimule": 4955.89,
-                "Erreur": 26.78,
-                "ErreurAbsolue": 26.78
+                "TempsSimule": 4976.49,
+                "Erreur": 47.38,
+                "ErreurAbsolue": 47.38
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 4943.08,
-                "TempsSimule": 5120.16,
-                "Erreur": 177.08,
-                "ErreurAbsolue": 177.08
+                "TempsSimule": 4958.46,
+                "Erreur": 15.38,
+                "ErreurAbsolue": 15.38
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 4944.34,
-                "TempsSimule": 5208.59,
-                "Erreur": 264.25,
-                "ErreurAbsolue": 264.25
+                "TempsSimule": 5037.6,
+                "Erreur": 93.26,
+                "ErreurAbsolue": 93.26
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "ANT",
                 "TempsReel": 4945.65,
-                "TempsSimule": 4890.81,
-                "Erreur": -54.85,
-                "ErreurAbsolue": 54.85
+                "TempsSimule": 4904.73,
+                "Erreur": -40.93,
+                "ErreurAbsolue": 40.93
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 4956.16,
-                "TempsSimule": 5010.8,
-                "Erreur": 54.63,
-                "ErreurAbsolue": 54.63
+                "TempsSimule": 5063.94,
+                "Erreur": 107.78,
+                "ErreurAbsolue": 107.78
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "HAD",
                 "TempsReel": 4964.12,
-                "TempsSimule": 4876.76,
-                "Erreur": -87.36,
-                "ErreurAbsolue": 87.36
+                "TempsSimule": 4873.35,
+                "Erreur": -90.76,
+                "ErreurAbsolue": 90.76
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "ALB",
                 "TempsReel": 4967.35,
-                "TempsSimule": 5131.39,
-                "Erreur": 164.04,
-                "ErreurAbsolue": 164.04
+                "TempsSimule": 4913.1,
+                "Erreur": -54.25,
+                "ErreurAbsolue": 54.25
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "BEA",
                 "TempsReel": 4981.51,
-                "TempsSimule": 4970.52,
-                "Erreur": -11.0,
-                "ErreurAbsolue": 11.0
+                "TempsSimule": 4937.67,
+                "Erreur": -43.84,
+                "ErreurAbsolue": 43.84
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 4984.32,
-                "TempsSimule": 5222.56,
-                "Erreur": 238.24,
-                "ErreurAbsolue": 238.24
+                "TempsSimule": 5028.61,
+                "Erreur": 44.29,
+                "ErreurAbsolue": 44.29
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "TSU",
                 "TempsReel": 4985.38,
-                "TempsSimule": 4915.84,
-                "Erreur": -69.54,
-                "ErreurAbsolue": 69.54
+                "TempsSimule": 4927.61,
+                "Erreur": -57.78,
+                "ErreurAbsolue": 57.78
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "GAS",
                 "TempsReel": 4989.1,
-                "TempsSimule": 5121.38,
-                "Erreur": 132.27,
-                "ErreurAbsolue": 132.27
+                "TempsSimule": 5038.0,
+                "Erreur": 48.89,
+                "ErreurAbsolue": 48.89
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5001.11,
-                "TempsSimule": 4975.15,
-                "Erreur": -25.96,
-                "ErreurAbsolue": 25.96
+                "TempsSimule": 5000.69,
+                "Erreur": -0.42,
+                "ErreurAbsolue": 0.42
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "DOO",
                 "TempsReel": 5008.3,
-                "TempsSimule": 4652.11,
-                "Erreur": -356.18,
-                "ErreurAbsolue": 356.18
+                "TempsSimule": 4967.11,
+                "Erreur": -41.18,
+                "ErreurAbsolue": 41.18
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "HUL",
                 "TempsReel": 5008.94,
-                "TempsSimule": 5045.93,
-                "Erreur": 36.99,
-                "ErreurAbsolue": 36.99
+                "TempsSimule": 4976.91,
+                "Erreur": -32.03,
+                "ErreurAbsolue": 32.03
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "LAW",
                 "TempsReel": 5009.72,
-                "TempsSimule": 4945.85,
-                "Erreur": -63.87,
-                "ErreurAbsolue": 63.87
+                "TempsSimule": 5015.25,
+                "Erreur": 5.53,
+                "ErreurAbsolue": 5.53
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "OCO",
                 "TempsReel": 5010.42,
-                "TempsSimule": 5079.74,
-                "Erreur": 69.32,
-                "ErreurAbsolue": 69.32
+                "TempsSimule": 5043.88,
+                "Erreur": 33.46,
+                "ErreurAbsolue": 33.46
             },
             {
                 "Circuit": "Japanese Grand Prix",
                 "Driver": "BOR",
                 "TempsReel": 5010.88,
-                "TempsSimule": 4880.1,
-                "Erreur": -130.78,
-                "ErreurAbsolue": 130.78
+                "TempsSimule": 4952.66,
+                "Erreur": -58.22,
+                "ErreurAbsolue": 58.22
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5455.03,
-                "TempsSimule": 6056.38,
-                "Erreur": 601.36,
-                "ErreurAbsolue": 601.36
+                "TempsSimule": 5477.11,
+                "Erreur": 22.08,
+                "ErreurAbsolue": 22.08
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5464.77,
-                "TempsSimule": 5789.04,
-                "Erreur": 324.27,
-                "ErreurAbsolue": 324.27
+                "TempsSimule": 5503.61,
+                "Erreur": 38.84,
+                "ErreurAbsolue": 38.84
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5466.12,
-                "TempsSimule": 5667.4,
-                "Erreur": 201.28,
-                "ErreurAbsolue": 201.28
+                "TempsSimule": 5525.66,
+                "Erreur": 59.54,
+                "ErreurAbsolue": 59.54
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5471.68,
-                "TempsSimule": 5513.29,
-                "Erreur": 41.61,
-                "ErreurAbsolue": 41.61
+                "TempsSimule": 5439.82,
+                "Erreur": -31.86,
+                "ErreurAbsolue": 31.86
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "OCO",
                 "TempsReel": 5505.0,
-                "TempsSimule": 5706.23,
-                "Erreur": 201.23,
-                "ErreurAbsolue": 201.23
+                "TempsSimule": 5507.5,
+                "Erreur": 2.5,
+                "ErreurAbsolue": 2.5
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "ANT",
                 "TempsReel": 5508.77,
-                "TempsSimule": 5708.33,
-                "Erreur": 199.55,
-                "ErreurAbsolue": 199.55
+                "TempsSimule": 5430.64,
+                "Erreur": -78.13,
+                "ErreurAbsolue": 78.13
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "ALB",
                 "TempsReel": 5511.35,
-                "TempsSimule": 5538.59,
-                "Erreur": 27.25,
-                "ErreurAbsolue": 27.25
+                "TempsSimule": 5587.4,
+                "Erreur": 76.06,
+                "ErreurAbsolue": 76.06
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "BEA",
                 "TempsReel": 5516.33,
-                "TempsSimule": 5537.88,
-                "Erreur": 21.55,
-                "ErreurAbsolue": 21.55
+                "TempsSimule": 5502.56,
+                "Erreur": -13.77,
+                "ErreurAbsolue": 13.77
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5525.23,
-                "TempsSimule": 5638.1,
-                "Erreur": 112.87,
-                "ErreurAbsolue": 112.87
+                "TempsSimule": 5516.82,
+                "Erreur": -8.41,
+                "ErreurAbsolue": 8.41
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5531.41,
-                "TempsSimule": 5654.21,
-                "Erreur": 122.8,
-                "ErreurAbsolue": 122.8
+                "TempsSimule": 5564.23,
+                "Erreur": 32.81,
+                "ErreurAbsolue": 32.81
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "HAD",
                 "TempsReel": 5533.9,
-                "TempsSimule": 5619.87,
-                "Erreur": 85.97,
-                "ErreurAbsolue": 85.97
+                "TempsSimule": 5521.0,
+                "Erreur": -12.91,
+                "ErreurAbsolue": 12.91
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "LAW",
                 "TempsReel": 5536.17,
-                "TempsSimule": 5499.22,
-                "Erreur": -36.95,
-                "ErreurAbsolue": 36.95
+                "TempsSimule": 5411.54,
+                "Erreur": -124.63,
+                "ErreurAbsolue": 124.63
             },
             {
                 "Circuit": "Chinese Grand Prix",
                 "Driver": "DOO",
                 "TempsReel": 5533.43,
-                "TempsSimule": 5515.08,
-                "Erreur": -18.35,
-                "ErreurAbsolue": 18.35
+                "TempsSimule": 5530.18,
+                "Erreur": -3.25,
+                "ErreurAbsolue": 3.25
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5721.23,
-                "TempsSimule": 5745.09,
-                "Erreur": 23.86,
-                "ErreurAbsolue": 23.86
+                "TempsSimule": 5787.35,
+                "Erreur": 66.12,
+                "ErreurAbsolue": 66.12
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5721.93,
-                "TempsSimule": 5716.66,
-                "Erreur": -5.27,
-                "ErreurAbsolue": 5.27
+                "TempsSimule": 5669.01,
+                "Erreur": -52.92,
+                "ErreurAbsolue": 52.92
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5743.15,
-                "TempsSimule": 5711.31,
-                "Erreur": -31.83,
-                "ErreurAbsolue": 31.83
+                "TempsSimule": 5704.84,
+                "Erreur": -38.3,
+                "ErreurAbsolue": 38.3
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5758.79,
-                "TempsSimule": 5890.37,
-                "Erreur": 131.58,
-                "ErreurAbsolue": 131.58
+                "TempsSimule": 5913.66,
+                "Erreur": 154.87,
+                "ErreurAbsolue": 154.87
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 5780.27,
-                "TempsSimule": 5822.86,
-                "Erreur": 42.59,
-                "ErreurAbsolue": 42.59
+                "TempsSimule": 5847.61,
+                "Erreur": 67.34,
+                "ErreurAbsolue": 67.34
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "BOR",
                 "TempsReel": 5787.4,
-                "TempsSimule": 5733.28,
-                "Erreur": -54.12,
-                "ErreurAbsolue": 54.12
+                "TempsSimule": 5771.73,
+                "Erreur": -15.67,
+                "ErreurAbsolue": 15.67
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5789.4,
-                "TempsSimule": 5725.43,
-                "Erreur": -63.97,
-                "ErreurAbsolue": 63.97
+                "TempsSimule": 5866.21,
+                "Erreur": 76.8,
+                "ErreurAbsolue": 76.8
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "LAW",
                 "TempsReel": 5790.68,
-                "TempsSimule": 5722.47,
-                "Erreur": -68.21,
-                "ErreurAbsolue": 68.21
+                "TempsSimule": 5766.47,
+                "Erreur": -24.22,
+                "ErreurAbsolue": 24.22
             },
             {
                 "Circuit": "Hungarian Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5793.88,
-                "TempsSimule": 5753.27,
-                "Erreur": -40.61,
-                "ErreurAbsolue": 40.61
+                "TempsSimule": 5793.23,
+                "Erreur": -0.65,
+                "ErreurAbsolue": 0.65
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 4404.32,
-                "TempsSimule": 4416.37,
-                "Erreur": 12.04,
-                "ErreurAbsolue": 12.04
+                "TempsSimule": 4381.84,
+                "Erreur": -22.49,
+                "ErreurAbsolue": 22.49
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 4423.53,
-                "TempsSimule": 4389.67,
-                "Erreur": -33.86,
-                "ErreurAbsolue": 33.86
+                "TempsSimule": 4360.02,
+                "Erreur": -63.51,
+                "ErreurAbsolue": 63.51
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 4425.68,
-                "TempsSimule": 4367.08,
-                "Erreur": -58.6,
-                "ErreurAbsolue": 58.6
+                "TempsSimule": 4326.21,
+                "Erreur": -99.47,
+                "ErreurAbsolue": 99.47
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 4429.95,
-                "TempsSimule": 4428.67,
-                "Erreur": -1.28,
-                "ErreurAbsolue": 1.28
+                "TempsSimule": 4442.09,
+                "Erreur": 12.14,
+                "ErreurAbsolue": 12.14
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 4437.21,
-                "TempsSimule": 4448.61,
-                "Erreur": 11.4,
-                "ErreurAbsolue": 11.4
+                "TempsSimule": 4423.82,
+                "Erreur": -13.39,
+                "ErreurAbsolue": 13.39
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 4441.77,
-                "TempsSimule": 4328.78,
-                "Erreur": -112.99,
-                "ErreurAbsolue": 112.99
+                "TempsSimule": 4346.21,
+                "Erreur": -95.56,
+                "ErreurAbsolue": 95.56
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "ALB",
                 "TempsReel": 4454.86,
-                "TempsSimule": 4364.47,
-                "Erreur": -90.39,
-                "ErreurAbsolue": 90.39
+                "TempsSimule": 4369.39,
+                "Erreur": -85.47,
+                "ErreurAbsolue": 85.47
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "BOR",
                 "TempsReel": 4462.81,
-                "TempsSimule": 4347.38,
-                "Erreur": -115.43,
-                "ErreurAbsolue": 115.43
+                "TempsSimule": 4393.62,
+                "Erreur": -69.18,
+                "ErreurAbsolue": 69.18
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "ANT",
                 "TempsReel": 4459.09,
-                "TempsSimule": 4339.94,
-                "Erreur": -119.15,
-                "ErreurAbsolue": 119.15
+                "TempsSimule": 4391.72,
+                "Erreur": -67.37,
+                "ErreurAbsolue": 67.37
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "HAD",
                 "TempsReel": 4468.22,
-                "TempsSimule": 4416.03,
-                "Erreur": -52.18,
-                "ErreurAbsolue": 52.18
+                "TempsSimule": 4417.84,
+                "Erreur": -50.38,
+                "ErreurAbsolue": 50.38
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 4468.79,
-                "TempsSimule": 4393.89,
-                "Erreur": -74.91,
-                "ErreurAbsolue": 74.91
+                "TempsSimule": 4425.31,
+                "Erreur": -43.48,
+                "ErreurAbsolue": 43.48
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "BEA",
                 "TempsReel": 4473.61,
-                "TempsSimule": 4246.39,
-                "Erreur": -227.22,
-                "ErreurAbsolue": 227.22
+                "TempsSimule": 4387.36,
+                "Erreur": -86.25,
+                "ErreurAbsolue": 86.25
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "TSU",
                 "TempsReel": 4485.03,
-                "TempsSimule": 4323.65,
-                "Erreur": -161.37,
-                "ErreurAbsolue": 161.37
+                "TempsSimule": 4420.34,
+                "Erreur": -64.68,
+                "ErreurAbsolue": 64.68
             },
             {
                 "Circuit": "Italian Grand Prix",
                 "Driver": "LAW",
                 "TempsReel": 4486.68,
-                "TempsSimule": 3998.13,
-                "Erreur": -488.55,
-                "ErreurAbsolue": 488.55
+                "TempsSimule": 4429.18,
+                "Erreur": -57.49,
+                "ErreurAbsolue": 57.49
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 6022.37,
-                "TempsSimule": 6048.43,
-                "Erreur": 26.06,
-                "ErreurAbsolue": 26.06
+                "TempsSimule": 6068.06,
+                "Erreur": 45.69,
+                "ErreurAbsolue": 45.69
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 6027.8,
-                "TempsSimule": 6109.5,
-                "Erreur": 81.7,
-                "ErreurAbsolue": 81.7
+                "TempsSimule": 6030.45,
+                "Erreur": 2.65,
+                "ErreurAbsolue": 2.65
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 6028.43,
-                "TempsSimule": 6095.89,
-                "Erreur": 67.46,
-                "ErreurAbsolue": 67.46
+                "TempsSimule": 6033.85,
+                "Erreur": 5.42,
+                "ErreurAbsolue": 5.42
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 6030.51,
-                "TempsSimule": 5997.81,
-                "Erreur": -32.7,
-                "ErreurAbsolue": 32.7
+                "TempsSimule": 6069.69,
+                "Erreur": 39.18,
+                "ErreurAbsolue": 39.18
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "ANT",
                 "TempsReel": 6056.05,
-                "TempsSimule": 5737.83,
-                "Erreur": -318.22,
-                "ErreurAbsolue": 318.22
+                "TempsSimule": 6095.98,
+                "Erreur": 39.93,
+                "ErreurAbsolue": 39.93
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 6068.36,
-                "TempsSimule": 6016.87,
-                "Erreur": -51.49,
-                "ErreurAbsolue": 51.49
+                "TempsSimule": 6136.76,
+                "Erreur": 68.4,
+                "ErreurAbsolue": 68.4
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 6103.03,
-                "TempsSimule": 5904.87,
-                "Erreur": -198.16,
-                "ErreurAbsolue": 198.16
+                "TempsSimule": 5984.68,
+                "Erreur": -118.36,
+                "ErreurAbsolue": 118.36
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 6102.62,
-                "TempsSimule": 6024.05,
-                "Erreur": -78.57,
-                "ErreurAbsolue": 78.57
+                "TempsSimule": 6016.8,
+                "Erreur": -85.82,
+                "ErreurAbsolue": 85.82
             },
             {
                 "Circuit": "Singapore Grand Prix",
                 "Driver": "BEA",
                 "TempsReel": 6115.89,
-                "TempsSimule": 5722.62,
-                "Erreur": -393.28,
-                "ErreurAbsolue": 393.28
+                "TempsSimule": 6080.86,
+                "Erreur": -35.04,
+                "ErreurAbsolue": 35.04
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "VER",
                 "TempsReel": 5167.47,
-                "TempsSimule": 5328.53,
-                "Erreur": 161.06,
-                "ErreurAbsolue": 161.06
+                "TempsSimule": 5199.19,
+                "Erreur": 31.72,
+                "ErreurAbsolue": 31.72
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "PIA",
                 "TempsReel": 5180.06,
-                "TempsSimule": 5158.39,
-                "Erreur": -21.67,
-                "ErreurAbsolue": 21.67
+                "TempsSimule": 5074.73,
+                "Erreur": -105.33,
+                "ErreurAbsolue": 105.33
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "NOR",
                 "TempsReel": 5184.04,
-                "TempsSimule": 5182.23,
-                "Erreur": -1.81,
-                "ErreurAbsolue": 1.81
+                "TempsSimule": 5185.86,
+                "Erreur": 1.82,
+                "ErreurAbsolue": 1.82
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "LEC",
                 "TempsReel": 5190.75,
-                "TempsSimule": 5199.79,
-                "Erreur": 9.04,
-                "ErreurAbsolue": 9.04
+                "TempsSimule": 5186.75,
+                "Erreur": -4.0,
+                "ErreurAbsolue": 4.0
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "RUS",
                 "TempsReel": 5216.03,
-                "TempsSimule": 5279.34,
-                "Erreur": 63.31,
-                "ErreurAbsolue": 63.31
+                "TempsSimule": 5204.71,
+                "Erreur": -11.32,
+                "ErreurAbsolue": 11.32
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "ALO",
                 "TempsReel": 5235.03,
-                "TempsSimule": 5343.95,
-                "Erreur": 108.92,
-                "ErreurAbsolue": 108.92
+                "TempsSimule": 5218.93,
+                "Erreur": -16.11,
+                "ErreurAbsolue": 16.11
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "OCO",
                 "TempsReel": 5237.34,
-                "TempsSimule": 5262.39,
-                "Erreur": 25.04,
-                "ErreurAbsolue": 25.04
+                "TempsSimule": 5211.2,
+                "Erreur": -26.14,
+                "ErreurAbsolue": 26.14
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "HAM",
                 "TempsReel": 5240.14,
-                "TempsSimule": 4927.32,
-                "Erreur": -312.82,
-                "ErreurAbsolue": 312.82
+                "TempsSimule": 5170.46,
+                "Erreur": -69.68,
+                "ErreurAbsolue": 69.68
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "HUL",
                 "TempsReel": 5246.48,
-                "TempsSimule": 5313.27,
-                "Erreur": 66.79,
-                "ErreurAbsolue": 66.79
+                "TempsSimule": 5241.54,
+                "Erreur": -4.95,
+                "ErreurAbsolue": 4.95
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "STR",
                 "TempsReel": 5241.99,
-                "TempsSimule": 5187.18,
-                "Erreur": -54.81,
-                "ErreurAbsolue": 54.81
+                "TempsSimule": 5115.88,
+                "Erreur": -126.11,
+                "ErreurAbsolue": 126.11
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "BOR",
                 "TempsReel": 5248.51,
-                "TempsSimule": 5202.08,
-                "Erreur": -46.43,
-                "ErreurAbsolue": 46.43
+                "TempsSimule": 5235.33,
+                "Erreur": -13.18,
+                "ErreurAbsolue": 13.18
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "BEA",
                 "TempsReel": 5243.63,
-                "TempsSimule": 5115.74,
-                "Erreur": -127.89,
-                "ErreurAbsolue": 127.89
+                "TempsSimule": 5246.53,
+                "Erreur": 2.9,
+                "ErreurAbsolue": 2.9
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "SAI",
                 "TempsReel": 5249.63,
-                "TempsSimule": 5252.87,
-                "Erreur": 3.24,
-                "ErreurAbsolue": 3.24
+                "TempsSimule": 5119.8,
+                "Erreur": -129.82,
+                "ErreurAbsolue": 129.82
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "TSU",
                 "TempsReel": 5251.26,
-                "TempsSimule": 5138.26,
-                "Erreur": -113.0,
-                "ErreurAbsolue": 113.0
+                "TempsSimule": 5161.71,
+                "Erreur": -89.55,
+                "ErreurAbsolue": 89.55
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "ANT",
                 "TempsReel": 5251.87,
-                "TempsSimule": 5206.36,
-                "Erreur": -45.51,
-                "ErreurAbsolue": 45.51
+                "TempsSimule": 5331.77,
+                "Erreur": 79.9,
+                "ErreurAbsolue": 79.9
             },
             {
                 "Circuit": "Abu Dhabi Grand Prix",
                 "Driver": "ALB",
                 "TempsReel": 5252.8,
-                "TempsSimule": 4878.37,
-                "Erreur": -374.43,
-                "ErreurAbsolue": 374.43
+                "TempsSimule": 5148.1,
+                "Erreur": -104.7,
+                "ErreurAbsolue": 104.7
             }
         ]
     }
