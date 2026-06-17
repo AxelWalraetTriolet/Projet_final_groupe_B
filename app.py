@@ -205,12 +205,6 @@ def main():
         st.info(
             f"📊 **Analyse active :** Simulation de la course de **{st.session_state.home_driver}** au **{st.session_state.home_event}**")
 
-        if st.sidebar.button("🏠 Revenir à l'accueil"):
-            st.session_state.validated = False
-            st.session_state.sim_calculee = False
-            st.session_state['page_active'] = 'accueil'
-            st.rerun()
-
         st.title("🏎️ Simulateur de course F1")
         st.markdown("---")
 
