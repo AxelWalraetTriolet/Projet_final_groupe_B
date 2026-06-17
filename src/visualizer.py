@@ -182,30 +182,80 @@ class Visualizer:
     def plot_live_frame(telemetry, current_index):
         """
         Génère une frame unique pour l'animation live.
-        Affiche le circuit gris et un point brillant pour la voiture.
-        :param telemetry: Données de télémétrie FastF1 (coordonnées spatiales ('X', 'Y'))
+        Affiche le circuit complet dont le trait change de couleur selon la vitesse,
+        et un point brillant pour la position actuelle de la voiture.
+
+        :param telemetry: Données de télémétrie FastF1 (coordonnées 'X', 'Y' et 'Speed')
         :type telemetry: pandas.DataFrame
         :param current_index: l'indice actuel dans le tableau de télémétrie représentant la position de la voiture
         :type current_index: int
         :return: La figure Matplotlib représentant l'état de l'animation à l'instant ciblé
         :rtype: matplotlib.figure.Figure
         """
+        # Importations locales nécessaires pour cette méthode
+        from matplotlib.collections import LineCollection
+        import matplotlib.colors as mcolors
+        import numpy as np
+
+        # 1. Extraction des données nécessaires
         x = telemetry['X'].values
         y = telemetry['Y'].values
+        vitesse = telemetry['Speed'].values
+        total_points = len(x)
 
         fig, ax = plt.subplots(figsize=(6, 6))
 
-        # 1. Dessiner le circuit complet en arrière-plan (gris)
-        ax.plot(x, y, color='#D3D3D3', linewidth=3, zorder=1)
+        # 1. Dessiner le circuit avec le degradé de vitesse
 
-        # 2. Dessiner la position actuelle de la voiture (point rouge brillant)
-        if current_index < len(x):
-            ax.scatter(x[current_index], y[current_index], color='#FF4500', s=150, edgecolors='black', zorder=2,
-                       label="Votre Pilote")
+        # Création des paires de points pour les segments : [[x1, y1], [x2, y2]], etc.
+        points = np.array([x, y]).T.reshape(-1, 1, 2)
+        segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
-        # Ajustements esthétiques
-        ax.axis('equal')
-        ax.set_axis_off()
+        # Définition de la palette de couleurs (Colormap) avec 'RdYlGn' : Rouge = Lent, Jaune = Moyen, Vert = Rapide
+        cmap = plt.get_cmap('RdYlGn')
+
+        # Normalisation : associer la vitesse minimale au rouge et la maximale au vert
+        # On définit des limites fixes (ex: 30 à 340 km/h) pour que les couleurs restent
+        # cohérentes d'une course à l'autre, quel que soit le pilote.
+        vmin = 30
+        vmax = 340
+        norm = plt.Normalize(vmin=vmin, vmax=vmax)
+
+        lc = LineCollection(segments, cmap=cmap, norm=norm, zorder=1) # Création de la collection de lignes avec le dégradé de couleur
+        lc.set_array(vitesse) # Attribution des valeurs de vitesse à chaque segment pour déterminer sa couleur
+        lc.set_linewidth(5) # Définition de l'épaisseur du trait du circuit
+        ax.add_collection(lc) # Ajout du circuit coloré au graphique
+
+        # 2. Dessiner la voiture et la vitesse instantanée en km/h
+        if 0 <= current_index < total_points:
+            # Récupération de la position et de la vitesse actuelle
+            cur_x = x[current_index]
+            cur_y = y[current_index]
+            cur_speed = vitesse[current_index]
+
+            # Dessiner la voiture : un point brillant avec un contour net
+            ax.scatter(cur_x, cur_y, color='#FF4500', s=180, edgecolors='black',
+                       linewidth=2, zorder=3, label="Votre Pilote")
+
+            # Afficher la vitesse en texte numérique à côté de la voiture
+            # On ajoute un fond blanc semi-transparent pour la lisibilité
+            ax.text(cur_x + (np.max(x) - np.min(x)) * 0.05, cur_y, f"{int(cur_speed)} km/h",
+                    color='#FF4500', fontsize=16, weight='bold', va='center',
+                    bbox=dict(facecolor='white', alpha=0.7, edgecolor='none', boxstyle='round,pad=0.3'),
+                    zorder=4)
+
+
+        # 3. Ajout de la barre de couleur en légende
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])  # Nécessaire pour Matplotlib
+        cbar = fig.colorbar(sm, ax=ax, orientation='horizontal', pad=0.03, aspect=40)
+        cbar.set_label('Vitesse (km/h)', fontsize=10)
+        cbar.ax.tick_params(labelsize=8)
+
+        # Ajustements esthétiques finaux
+        ax.axis('equal')  # Éviter que le circuit ne soit déformé géométriquement
+        ax.set_axis_off()  # Masquer les axes X,Y inutiles
+        ax.set_title("Télémétrie Live : Vitesse sur le tracé", fontsize=11, pad=10, weight='bold')
         plt.tight_layout()
 
         return fig
