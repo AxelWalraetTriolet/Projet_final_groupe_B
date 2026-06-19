@@ -190,7 +190,7 @@ def main():
             print(" [AUCUNE DONNÉE EXPLOITABLE]")
 
     # Écriture propre du fichier final à la racine
-    chemin_sortie = os.path.normpath(os.path.join(os.path.dirname(__file__), "../validation_resultats.json"))
+    chemin_sortie = os.path.normpath(os.path.join(os.path.dirname(__file__), "validation_resultats.json"))
     with open(chemin_sortie, 'w', encoding='utf-8') as f:
         json.dump(rapport_global, f, indent=4, ensure_ascii=False)
 
