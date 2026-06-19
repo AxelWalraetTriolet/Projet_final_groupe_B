@@ -20,7 +20,7 @@ from sklearn.pipeline import make_pipeline
 logging.getLogger('fastf1').setLevel(logging.CRITICAL)
 logging.getLogger('matplotlib').setLevel(logging.CRITICAL)
 
-CACHE_DIR = 'fastf1_cache'
+CACHE_DIR = 'src/fastf1_cache'
 if not os.path.exists(CACHE_DIR):
     os.makedirs(CACHE_DIR)
 fastf1.Cache.enable_cache(CACHE_DIR)
@@ -178,7 +178,7 @@ def main():
                 base_finale[circuit][driver][compound] = ajuster_spline_morceaux(group)
 
     # Exportation directe du fichier JSON à la racine
-    with open('../coefficients_pilotes_saisons.json', 'w', encoding='utf-8') as f:
+    with open('coefficients_pilotes_saisons.json', 'w', encoding='utf-8') as f:
         json.dump(base_finale, f, indent=4)
 
 
