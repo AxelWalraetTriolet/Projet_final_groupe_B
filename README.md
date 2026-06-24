@@ -11,14 +11,14 @@ La simulation est réalisée en supposant une course par temps sec, sans prendre
 * **Génération de modèle prédicitif de performance**: Détermination des coefficients par la méthode de régression par spline cubique robuste projetée sur un polynome d'ordre 2 à partir d'une moyenne des données *FastF1* de 2019 à 2025 après filtrage des anomalies de chronométrage et valeurs atypiques. Exportation des coefficients obtenus par pilote, course et type de pneumatiques dans un fichier .json
 * **Moteur Physique & Stochastique :** Calcul dynamique du temps au tour indexé sur l'usure non linéaire des pneus et la consommation de carburant. Gestion des arrêts aux stands avec intégration d'une loi de probabilité à 3 scénarios pour simuler les erreurs humaines (arrêt optimal, léger contretemps ou problème technique majeur).
 * **Validation des Règles FIA :** Algorithme de contrôle bloquant automatiquement les stratégies non conformes au règlement sportif (obligation d'utiliser au moins deux composés de pneus différents par course).
-* **Protocole de Validation:** Pipeline de calcul automatisé comparant le temps global de course simulé au temps réel officiel de la FIA pour chaque pilote (données sans Safety Car). L'analyse est indexée sur 3 saisons clés (2019, 2024, 2025)s.
+* **Protocole de Validation:** Pipeline de calcul automatisé comparant le temps global de course simulé au temps réel officiel de la FIA pour chaque pilote (données sans Safety Car). L'analyse est indexée sur les 2 saisons les plus récentes (2024 et 2025).
 * **Pipeline de Données Réelles :** Connexion et gestion de cache local avec l'API `FastF1` pour extraire les données officielles de chronométrage et de télémétrie spatiale.
 * **Analyses Graphiques (Visualisation) :** 
   * Tableau récapitulatif et comparatif du résultat de la simulation et des choix de stratégie. 
   * Courbe d'évolution du rythme de course et repérage visuel des arrêts.
   * Graphique d'écarts cumulés par rapport à un temps de référence.
   * Tracé géométrique en 2D du circuit généré par coordonnées GPS.
-  * **Rapport de performance interactif** : Évolution de la MAE (*Mean Absolute Error*) inter-saisons, histogramme de distribution du biais du simulateur, précision par tracé et tableau de diagnostic des pires cas réels (faits de course, pénalités).
+  * **Rapport de performance interactif** : Évolution de la MAE (*Mean Absolute Error*) inter-saisons, histogramme de distribution du biais du simulateur et précision par circuit.
 * **Interface Utilisateur :** Tableau de bord web interactif divisé en onglets complémentaires propulsé par `Streamlit`.
 
 
