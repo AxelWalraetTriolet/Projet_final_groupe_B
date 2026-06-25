@@ -22,6 +22,7 @@ class F1DataLoader:
 
     def load_session_data(self, year, gp, event_type='R'):
         """Loads a specific F1 race (e.g., year=2025, gp='Monaco').
+
         :param year: Année de la session choisie.
         :type year: int
         :param gp: Nom du circuit choisi.
@@ -39,6 +40,7 @@ class F1DataLoader:
     def get_driver_telemetry(self, session, driver_code):
         """
         Récupère la télémétrie du tour le plus rapide d'un pilote pour une session donnée.
+
         :param session: L'objet session FastF1 préalablement chargé.
         :type session: fastf1.core.Session
         :param driver_code: Le code du pilote (ex: 'VER', 'HAM', 'LEC').
@@ -53,6 +55,7 @@ class F1DataLoader:
     def get_event_laps_count(self, year, gp_name, event_type='R'):
         """
         Récupère le nombre total de tours pour un GP donné sans charger toute la télémétrie.
+
         :param year: Année de la saison de Formule 1.
         :type year: int
         :param gp_name: Nom du circuit ou du Grand Prix (ex: 'Bahrain', 'Spa').
@@ -79,6 +82,7 @@ class F1DataLoader:
     def get_track_base_time(self, year, gp_name, event_type='R'):
         """
         Récupère le meilleur temps au tour global de la course pour servir de base réaliste au moteur de simulation.
+
         :param year: Année de la saison de Formule 1.
         :type year: int
         :param gp_name: Nom du circuit ou du Grand Prix.
@@ -102,6 +106,7 @@ class F1DataLoader:
     def load_multi_season_coefficients(self):
         """
         Charge  les coefficients pluri-annuels stockés à la racine du projet.
+
         :return: Un dictionnaire contenant la structure complète des coefficients par circuit, pilote et composé.
         :rtype: dict
         :raises FileNotFoundError: Si le fichier 'coefficients_pilotes_saisons.json' n'existe pas à l'emplacement attendu.
@@ -123,6 +128,7 @@ class F1DataLoader:
         """
         Parcourt les années à l'envers pour trouver l'année la plus récente
         où le pilote a croisé le drapeau à damier (classé / a fini la course).
+
         :param selected_event: Le nom du Grand Prix à tester (ex: 'Monaco').
         :type selected_event: str
         :param selected_driver: Le code du pilote recherché (ex: 'LEC').
@@ -162,6 +168,7 @@ class F1DataLoader:
         """
         Récupère les temps au tour et les tours de passage par les stands
         pour un pilote, un circuit et une année donnée.
+
         :param year: Année de la saison.
         :type year: int
         :param selected_event: Nom du Grand Prix (ex: 'Monaco').

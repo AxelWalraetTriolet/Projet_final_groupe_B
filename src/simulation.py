@@ -1,6 +1,9 @@
 """
 MOTEUR DE SIMULATION
+====================
+
 Ce module simule le déroulement d'une course de F1 avec:
+
  - les modèles prédictifs de dégradation des pneus
  - des aléas pour l'arrêt aux stands
 """
@@ -44,6 +47,7 @@ class RaceSimulation:
         """
         Exécute la simulation de la course tour par tour selon la stratégie choisie.
         pit_stops est un dictionnaire. Ex: {15: 'HARD'} signifie arrêt au tour 15.
+
         :param starting_tyre: Le composé pneumatique de départ (ex: 'SOFT', 'MEDIUM', 'HARD').
         :type starting_tyre: str
         :param pit_stops: Dictionnaire associant le numéro du tour de l'arrêt au nouveau composé choisi.
@@ -115,6 +119,7 @@ class RaceSimulation:
     def is_strategy_valid(self, starting_tyre, pit_stops):
         """
         Vérifie si la stratégie respecte la réglementation de la FIA (au moins deux composés différents obligatoires).
+
         :param starting_tyre: Le composé pneumatique utilisé au départ de la course (ex: 'SOFT').
         :type starting_tyre: str
         :param pit_stops: Dictionnaire répertoriant les arrêts aux stands, avec le numéro du tour en clé
@@ -135,6 +140,7 @@ class RaceSimulation:
         Trouve la meilleure stratégie à adopter pour une course et un pilote
         (choix du tour d'arrêts, du nombre d'arrêts et du type de pneu). Pour alléger le programme on ne prend
         en compte qu'au maximum deux arrêts.
+
         :return: Un dictionnaire décrivant la stratégie optimale trouvée, structuré ainsi :
                 - ``"type"`` (str) : Le type de stratégie ('1 arrêt' ou '2 arrêts').
                 - ``"starting_tyre"`` (str) : Le composé du premier relais.

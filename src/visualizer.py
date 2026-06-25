@@ -1,6 +1,7 @@
 """
 AFFICHAGE DES RESULTATS
 Ce module permet d'afficher:
+
 - un temps formaté en h/min/s
 - l'évolution des temps au tour fonction du nombre de tours pour le cas simulé et le cas réel
 - l'écart au tour par rapport à un tour de référence de la simulation et comparaison avec le cas réel
@@ -16,6 +17,7 @@ class Visualizer:
     def format_race_time(total_seconds):
         """
         Convertit un temps en secondes en une chaîne lisible : heures, minutes et secondes.
+
         :param total_seconds : temps en secondes
         :type total_seconds: float
         :return: le temps formaté en h/min/s
@@ -38,6 +40,7 @@ class Visualizer:
         Génère un graphique Matplotlib montrant l'évolution des temps au tour simulés,
         marque visuellement l'emplacement de l'arrêt au stand, superpose les données réelles
         ainsi que la stratégie IA, avec un axe Y calculé dynamiquement de façon simplifiée.
+
         :param lap_times: Liste des temps au tour simulés en secondes.
         :type lap_times: list[float]
         :param pitstop_events: Dictionnaire associant le numéro du tour de l'arrêt à ses détails.
@@ -137,6 +140,7 @@ class Visualizer:
     def plot_circuit_layout(telemetry):
         """
         Génère un graphique représentant le tracé en 2D du circuit avec un code couleur basé sur la vitesse du pilote.
+
         :param telemetry: Données de télémétrie FastF1 (coordonnées X, Y et Speed)
         :type telemetry: pandas.DataFrame
         :return: La figure Matplotlib affichant la carte du tracé avec son dégradé de vitesse
@@ -265,6 +269,7 @@ class Visualizer:
         """
         Génère un graphique d'écarts cumulés par rapport à un rythme de référence de la simulation.
         Permet de visualiser les gains/pertes de temps, les arrêts et les écarts Simu vs Réel.
+
         :param lap_times: Liste des temps au tour simulés en secondes.
         :type lap_times: list[float]
         :param pitstop_events: Dictionnaire contenant les tours des arrêts au stand simulés en clés.

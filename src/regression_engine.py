@@ -40,6 +40,7 @@ class RegressionEngine:
         """
         Récupère les coefficients bruts (SOFT, MEDIUM, HARD) extraits de la frontière
         inférieure des données de performance pour un pilote et un circuit spécifiques.
+
         :param circuit_name: Le nom du Grand Prix sélectionné.
         :type circuit_name: str
         :param driver_name: Le code du pilote sélectionné (ex: 'VER').
