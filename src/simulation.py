@@ -32,10 +32,10 @@ class RaceSimulation:
             # 85% de chance : Arrêt optimal et réussi
             random_delay = random.uniform(2.2, 2.8)
         elif tirage < 0.96:
-            # 11% de chance : Léger contretemps (ex: écrou récalcitrant)
+            # 11% de chance : Léger contretemps
             random_delay = random.uniform(4.0, 6.0)
         else:
-            # 4% de chance : Problème majeur (ex: pistolet cassé, aileron changé)
+            # 4% de chance : Problème majeur
             random_delay = random.uniform(10.0, 15.0)
 
         return base_loss + random_delay
