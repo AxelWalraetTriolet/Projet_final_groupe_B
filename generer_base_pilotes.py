@@ -1,5 +1,7 @@
 """
 MOTEUR D'EXTRACTION ET DE MODELISATION PREDICTIVE DES COEFFICIENTS DE DEGRADATION F1.
+=====================================================================================
+
 Ce module extrait les données historiques de chronométrage via l'API FastF1, applique
 un filtrage robuste des anomalies de course, puis ajuste un modèle mathématique
 (Spline cubique projetée sur un polynôme d'ordre 2) afin de générer les coefficients

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 MODULE DE VALIDATION SCIENTIFIQUE
+=================================
 
 Ce module automatise la comparaison entre les prédictions du modèle polynomial
 et les données de chronométrage réelles de la FIA issues de l'API FastF1.

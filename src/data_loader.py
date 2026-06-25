@@ -1,5 +1,7 @@
 """
 GESTIONNAIRE DES DONNEES FastF1
+===============================
+
 Ce module centralise la récupération, le cache et le formatage des données
 officielles de la Formule 1 (via l'API FastF1) ainsi que le chargement des
 coefficients de performance.

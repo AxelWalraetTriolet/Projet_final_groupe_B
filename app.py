@@ -1,5 +1,7 @@
 """
 APPLICATION PRINCIPALE
+======================
+
 Ce module : - définit l'interface utilisateur Streamlit avec notamment la page d'accueil,
             - récupère les choix de stratégie de l'utilisateur,
             - effectue les calculs de la simulation choisie et le calcul de la stratégie optimale si demandé

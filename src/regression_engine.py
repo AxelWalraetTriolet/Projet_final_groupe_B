@@ -1,5 +1,7 @@
 """
 MOTEUR DE RÉGRESSION : INTERFACE DES COEFFICIENTS
+=================================================
+
 Ce module sert d'interface d'accès aux coefficients polynomiaux stockés localement au format JSON.
 Il extrait les données de performance des pneus (Soft, Medium, Hard) pour un circuit donné.
 """

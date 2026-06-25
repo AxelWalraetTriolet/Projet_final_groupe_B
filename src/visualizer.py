@@ -1,5 +1,7 @@
 """
 AFFICHAGE DES RESULTATS
+=======================
+
 Ce module permet d'afficher:
 
 - un temps formaté en h/min/s
