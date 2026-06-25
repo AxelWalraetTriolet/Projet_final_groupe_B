@@ -8,11 +8,12 @@ L'application permet à un ingénieur de course virtuel de configurer une strat�
 La simulation est réalisée en supposant une course par temps sec, sans prendre en compte les incidents de course potentiels.
 
 ## Fonctionnalités 
-* **Génération de modèle prédicitif de performance**: Détermination des coefficients par la méthode de régression par spline cubique robuste projetée sur un polynome d'ordre 2 à partir d'une moyenne des données *FastF1* de 2019 à 2025 après filtrage des anomalies de chronométrage et valeurs atypiques. Exportation des coefficients obtenus par pilote, course et type de pneumatiques dans un fichier .json
+* **Génération de modèle prédictif de performance :** Détermination des coefficients par la méthode de régression par spline cubique robuste projetée sur un polynome d'ordre 2 à partir d'une moyenne des données *FastF1* de 2019 à 2025 après filtrage des anomalies de chronométrage et valeurs atypiques. Exportation des coefficients obtenus par pilote, course et type de pneumatiques dans un fichier .json
 * **Moteur Physique & Stochastique :** Calcul dynamique du temps au tour indexé sur l'usure non linéaire des pneus et la consommation de carburant. Gestion des arrêts aux stands avec intégration d'une loi de probabilité à 3 scénarios pour simuler les erreurs humaines (arrêt optimal, léger contretemps ou problème technique majeur).
 * **Validation des Règles FIA :** Algorithme de contrôle bloquant automatiquement les stratégies non conformes au règlement sportif (obligation d'utiliser au moins deux composés de pneus différents par course).
-* **Protocole de Validation:** Pipeline de calcul automatisé comparant le temps global de course simulé au temps réel officiel de la FIA pour chaque pilote (données sans Safety Car). L'analyse est indexée sur les 2 saisons les plus récentes (2024 et 2025).
+* **Protocole de Validation :** Pipeline de calcul automatisé comparant le temps global de course simulé au temps réel officiel de la FIA pour chaque pilote (données sans Safety Car). L'analyse est indexée sur les 2 saisons les plus récentes (2024 et 2025).
 * **Pipeline de Données Réelles :** Connexion et gestion de cache local avec l'API `FastF1` pour extraire les données officielles de chronométrage et de télémétrie spatiale.
+* **Calcul de stratégie optimale :**  Détermination de la stratégie optimale (temps total de course minimum) pour le circuit et pilote souhaité.
 * **Analyses Graphiques (Visualisation) :** 
   * Tableau récapitulatif et comparatif du résultat de la simulation et des choix de stratégie. 
   * Courbe d'évolution du rythme de course et repérage visuel des arrêts.
@@ -27,6 +28,7 @@ La simulation est réalisée en supposant une course par temps sec, sans prendre
 * `requirements.txt` : Liste des dépendances logicielles du projet.
 * `coefficients_pilotes_saisons.json`: Base de données locale contenant les coefficients polynomiaux de dégradation ($\beta_0, \beta_1, \beta_2, \beta_3$) classés par circuit, par pilote et par composé pneumatique.
 * `validation_resultats.json` : Base de données locale générée contenant les métriques de validation calculées (KPIs, erreurs par tracé, pires prédictions).
+* `pyproject.toml`:
 * `src/` : Bibliothèque centrale contenant les classes orientées objet (POO) du moteur :
   * `_init_.py`: Fichier d'initialisation du package python
   * `data_loader.py` : Extracteur et gestionnaire des données de télémétrie FastF1 avec gestion de cache.
@@ -104,6 +106,11 @@ cd ..
 ```
 streamlit run app.py
 ```
+
+## Vérification & Validation
+Le modèle a été validé pour les saisons 2024 & 2025, en comparant les résultats réels avec ceux calculés par le simulateur.   
+Les résultats de validation sont accessibles depuis l'interface *Streamlit* dans l'onglet situé en haut à gauche *Vérifier le modèle*. 
+
 
 ## Limites actuelles
 * **Gestion de la météo :** Simulation restreinte au temps sec (pas de gestion des pneus Intermédiaires/Pluie).
