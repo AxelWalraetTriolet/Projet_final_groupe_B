@@ -28,7 +28,7 @@ La simulation est réalisée en supposant une course par temps sec, sans prendre
 * `requirements.txt` : Liste des dépendances logicielles du projet.
 * `coefficients_pilotes_saisons.json`: Base de données locale contenant les coefficients polynomiaux de dégradation ($\beta_0, \beta_1, \beta_2, \beta_3$) classés par circuit, par pilote et par composé pneumatique.
 * `validation_resultats.json` : Base de données locale générée contenant les métriques de validation calculées (KPIs, erreurs par tracé, pires prédictions).
-* `pyproject.toml`:
+* `pyproject.toml`: Fichier de configuration du package python
 * `src/` : Bibliothèque centrale contenant les classes orientées objet (POO) du moteur :
   * `_init_.py`: Fichier d'initialisation du package python
   * `data_loader.py` : Extracteur et gestionnaire des données de télémétrie FastF1 avec gestion de cache.
@@ -94,17 +94,17 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-### 3. Compiler et valider le modèle
+### 3. Lancer l'application localement
+```
+streamlit run app.py
+```
+
+**Note sur les données :** Les fichiers de configuration et de validation .json requis sont directement inclus dans le dépôt lors du clone. Vous n'avez pas besoin de les régénérer pour utiliser le simulateur. Cependant, si vous souhaitez mettre à jour les données, vous pouvez exécuter : 
 ```
 cd src
 python generer_base_pilotes.py
 python generer_validation.py
 cd ..
-```
-
-### 4. Lancer l'application localement
-```
-streamlit run app.py
 ```
 
 ## Vérification & Validation
