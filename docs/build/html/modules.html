@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="fr" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>src &#8212; Documentation Simulateur de stratégie de course F1 </title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=d1a510d7"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/translations.js?v=e6b791cb"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="src package" href="src.html" />
+    <link rel="prev" title="Simulateur de stratégie de course F1 documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="src">
+<h1>src<a class="headerlink" href="#src" title="Lien vers cette rubrique">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.html">src package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.data_loader">src.data_loader module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#gestionnaire-des-donnees-fastf1">GESTIONNAIRE DES DONNEES FastF1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader"><code class="docutils literal notranslate"><span class="pre">F1DataLoader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader.find_most_recent_year"><code class="docutils literal notranslate"><span class="pre">F1DataLoader.find_most_recent_year()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader.get_driver_telemetry"><code class="docutils literal notranslate"><span class="pre">F1DataLoader.get_driver_telemetry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader.get_event_laps_count"><code class="docutils literal notranslate"><span class="pre">F1DataLoader.get_event_laps_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader.get_historical_driver_data"><code class="docutils literal notranslate"><span class="pre">F1DataLoader.get_historical_driver_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader.get_track_base_time"><code class="docutils literal notranslate"><span class="pre">F1DataLoader.get_track_base_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader.load_multi_season_coefficients"><code class="docutils literal notranslate"><span class="pre">F1DataLoader.load_multi_season_coefficients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.data_loader.F1DataLoader.load_session_data"><code class="docutils literal notranslate"><span class="pre">F1DataLoader.load_session_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.regression_engine">src.regression_engine module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#moteur-de-regression-interface-des-coefficients">MOTEUR DE RÉGRESSION : INTERFACE DES COEFFICIENTS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#src.regression_engine.RegressionEngine"><code class="docutils literal notranslate"><span class="pre">RegressionEngine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.regression_engine.RegressionEngine.get_coefficients_for_driver"><code class="docutils literal notranslate"><span class="pre">RegressionEngine.get_coefficients_for_driver()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.simulation">src.simulation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#moteur-de-simulation">MOTEUR DE SIMULATION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#src.simulation.RaceSimulation"><code class="docutils literal notranslate"><span class="pre">RaceSimulation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.simulation.RaceSimulation.find_optimal_stops_strategy"><code class="docutils literal notranslate"><span class="pre">RaceSimulation.find_optimal_stops_strategy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.simulation.RaceSimulation.is_strategy_valid"><code class="docutils literal notranslate"><span class="pre">RaceSimulation.is_strategy_valid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.simulation.RaceSimulation.run_strategy"><code class="docutils literal notranslate"><span class="pre">RaceSimulation.run_strategy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.simulation.RaceSimulation.simulate_pitstop"><code class="docutils literal notranslate"><span class="pre">RaceSimulation.simulate_pitstop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.visualizer">src.visualizer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#affichage-des-resultats">AFFICHAGE DES RESULTATS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#src.visualizer.Visualizer"><code class="docutils literal notranslate"><span class="pre">Visualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.visualizer.Visualizer.format_race_time"><code class="docutils literal notranslate"><span class="pre">Visualizer.format_race_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.visualizer.Visualizer.plot_circuit_layout"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_circuit_layout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.visualizer.Visualizer.plot_cumulative_gap"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_cumulative_gap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.visualizer.Visualizer.plot_live_frame"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_live_frame()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.visualizer.Visualizer.plot_race_strategy"><code class="docutils literal notranslate"><span class="pre">Visualizer.plot_race_strategy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Simulateur de stratégie de course F1</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">src</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.html">src package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="Chapitre précédent">Simulateur de stratégie de course F1 documentation</a></li>
+      <li>Next: <a href="src.html" title="Chapitre suivant">src package</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Paul SERRA ; Naïs VIGROUX ; Axel WALRAET-TRIOLET.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/modules.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
